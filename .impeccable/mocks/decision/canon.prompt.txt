@@ -1,0 +1,11 @@
+Use case: ui-mockup
+Asset type: high-fidelity desktop website visual-direction comp, first viewport, 1536x1024 landscape
+Primary request: Design the category-standard version of the RakanSales homepage at excellent craft. It should feel comparable in polish to leading modern omnichannel CRM and AI SaaS websites, with clear conversion hierarchy and authentic product proof. This is the familiar alternative, not the recommended experimental direction.
+Input images: Image 1 is the authentic RakanSales conversations interface and must be used as the primary product screenshot; Image 2 supplies official brand colors #23B750 and #62D816 with black and white.
+Structure: compact single-line navigation with RakanSales logo, Product, Solutions, Pricing, Resources, Company, Log In, Book a Demo. Centered-to-left hero copy above or beside one large product screenshot. Exact headline "Run your entire sales operation from one place." Exact supporting text "Find leads, manage conversations, automate follow-ups, and understand what drives revenue." Buttons "Book a Demo" and "Start Free Trial". A clean customer-proof strip begins below the fold but contains neutral logo placeholders only, no invented brand names.
+Style/medium: exceptionally polished mainstream B2B SaaS landing page, Altone-like bold sans, restrained green gradient field, soft product screenshot depth, clear spacing, reliable and friendly.
+Color palette: white and off-white base, near-black text, #23B750 primary accent, #62D816 secondary.
+Composition/framing: full desktop browser viewport; hero and both CTAs fully visible; screenshot is large and readable; top navigation stays one line.
+Text (verbatim): exact headline, supporting text, CTA and nav labels above.
+Constraints: authentic branding and product screenshot, plausible WordPress-ready structure, no invented metrics, customers, testimonials, pricing or certifications, no em dash.
+Avoid: purple AI gradients, tiny dashboard collage, excessive glass, three identical feature cards, excessive pills, illegible text, fake dashboards, poster composition, watermarks.

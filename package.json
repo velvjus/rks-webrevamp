@@ -1,0 +1,8 @@
+{
+  "name": "rakansales-website-q3-revamp",
+  "private": true,
+  "description": "RakanSales website redesign comps and planning artifacts.",
+  "dependencies": {
+    "lucide-static": "^1.33.0"
+  }
+}

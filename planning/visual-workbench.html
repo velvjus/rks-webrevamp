@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RakanSales Homepage — Visual & Content Collaborative Workbench</title>
+  <style>
+    :root {
+      --bg-base: #080B0E;
+      --bg-surface: #0F151B;
+      --bg-surface-elevated: #161E25;
+      --bg-input: #121920;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #00D084;
+      --brand-green: #00D084;
+      --brand-green-glow: rgba(0, 208, 132, 0.2);
+      --text-primary: #FFFFFF;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Fixed Header */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 21, 27, 0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      background: var(--brand-green);
+      color: #05080A;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-title h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .save-indicator {
+      font-size: 12px;
+      color: var(--brand-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .save-indicator::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand-green);
+      box-shadow: 0 0 8px var(--brand-green);
+    }
+
+    button.btn {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    button.btn:hover {
+      border-color: var(--brand-green);
+      background: #1C2630;
+    }
+
+    button.btn-primary {
+      background: var(--brand-green);
+      color: #05080A;
+      border-color: var(--brand-green);
+      font-weight: 600;
+    }
+
+    button.btn-primary:hover {
+      background: #00BA76;
+      box-shadow: 0 0 16px var(--brand-green-glow);
+    }
+
+    button.btn-reset {
+      font-size: 10px;
+      padding: 2px 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button.btn-reset:hover {
+      color: #F43F5E;
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    /* Main Container */
+    .app-container {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      flex: 1;
+      max-width: 1800px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: sticky;
+      top: 57px;
+      height: calc(100vh - 57px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: var(--bg-base);
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 8px 10px 4px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface);
+    }
+
+    .sidebar-link.active {
+      color: var(--brand-green);
+      background: var(--bg-surface-elevated);
+      font-weight: 600;
+    }
+
+    .sidebar-link span.num {
+      font-family: monospace;
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .sidebar-link span.badge-status {
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 28px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      overflow-y: auto;
+    }
+
+    /* Global References Card (Top of page) */
+    .global-card {
+      background: linear-gradient(145deg, #101820 0%, #0D1318 100%);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-margin-top: 80px;
+    }
+
+    .global-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .global-header h2 {
+      font-size: 18px;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .global-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      scroll-margin-top: 80px;
+      transition: border-color 0.2s ease;
+    }
+
+    .section-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .section-header {
+      background: var(--bg-surface-elevated);
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-number {
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-green);
+      background: rgba(0, 208, 132, 0.1);
+      border: 1px solid rgba(0, 208, 132, 0.3);
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+    }
+
+    .section-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-select {
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .status-select:focus {
+      border-color: var(--brand-green);
+    }
+
+    /* 2-Column Split Grid */
+    .section-split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: 540px;
+    }
+
+    /* Left Column: All 3 Specs are Editable */
+    .spec-column {
+      padding: 22px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: rgba(10, 14, 18, 0.5);
+    }
+
+    .spec-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .spec-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .spec-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--brand-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Editable Textareas on Left */
+    .editable-spec-area {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #E2E8F0;
+      line-height: 1.55;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .editable-spec-area.copy-area {
+      min-height: 160px;
+    }
+
+    .editable-spec-area.design-area {
+      min-height: 100px;
+    }
+
+    .editable-spec-area.visual-area {
+      min-height: 80px;
+    }
+
+    .editable-spec-area:focus {
+      border-color: var(--brand-green);
+      box-shadow: 0 0 10px rgba(0, 208, 132, 0.15);
+      background: #141C24;
+    }
+
+    /* Right Column: User Workspace for Visuals, Links, Notes */
+    .workspace-column {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg-surface);
+    }
+
+    .workspace-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .workspace-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 130px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .notes-textarea:focus {
+      border-color: #38BDF8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+    }
+
+    .notes-textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Link Inputs */
+    .link-input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .link-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: 7px 10px;
+      font-size: 12.5px;
+      outline: none;
+    }
+
+    .link-input:focus {
+      border-color: #38BDF8;
+    }
+
+    .links-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .link-chip {
+      background: var(--bg-surface-elevated);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38BDF8;
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      max-width: 100%;
+      word-break: break-all;
+    }
+
+    .link-chip a {
+      color: #38BDF8;
+      text-decoration: none;
+    }
+
+    .link-chip a:hover {
+      text-decoration: underline;
+    }
+
+    .link-chip button.del-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0 2px;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .link-chip button.del-btn:hover {
+      color: #F43F5E;
+    }
+
+    /* Dropzone & Screenshots */
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      text-align: center;
+      background: rgba(18, 25, 32, 0.4);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--brand-green);
+      background: rgba(0, 208, 132, 0.04);
+    }
+
+    .dropzone p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .dropzone p strong {
+      color: var(--text-secondary);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .image-preview-card {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .image-preview-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s ease;
+    }
+
+    .image-preview-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .image-preview-card .remove-img-btn {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #FFF;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    .image-preview-card .remove-img-btn:hover {
+      background: #F43F5E;
+    }
+
+    /* Modal for Image Preview */
+    .img-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .img-modal.active {
+      display: flex;
+    }
+
+    .img-modal img {
+      max-width: 92%;
+      max-height: 92%;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    /* Responsive */
+    @media (max-width: 1150px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .section-split, .global-grid {
+        grid-template-columns: 1fr;
+      }
+      .spec-column {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Fixed Bar -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span class="brand-badge">RakanSales Q3</span>
+      <h1>Homepage Content & Visual Collaborative Workbench</h1>
+    </div>
+    <div class="top-actions">
+      <div class="save-indicator" id="saveIndicator">Auto-saved to Browser</div>
+      <button class="btn" onclick="document.getElementById('importFile').click()">Import JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
+      <button class="btn" onclick="exportData()">Export JSON</button>
+      <button class="btn" onclick="exportMarkdown()">Export Markdown</button>
+      <button class="btn btn-primary" onclick="window.print()">Print / PDF</button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Left Sticky Navigation -->
+    <nav class="sidebar" id="sidebarNav">
+      <a class="sidebar-link active" href="#global-refs">
+        <span>🌐 <strong>Global References</strong></span>
+      </a>
+      <div class="sidebar-label">13 Homepage Sections</div>
+      <!-- Links injected dynamically -->
+    </nav>
+
+    <!-- Main Content Stream -->
+    <main class="content-area" id="sectionsContainer">
+
+      <!-- Universal / Global References Section (At the very top) -->
+      <section class="global-card" id="global-refs">
+        <div class="global-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Universal & Global Design References
+          </h2>
+          <span style="font-size: 12px; color: #94A3B8;">Apply across the whole website (Colors, Typography, Moodboards, Benchmark Sites)</span>
+        </div>
+
+        <div class="global-grid">
+          <!-- Left: Global Notes & Guidelines -->
+          <div class="workspace-block">
+            <div class="workspace-label">
+              <span>Overall Design Philosophy & Moodboard Notes</span>
+            </div>
+            <textarea 
+              class="notes-textarea" 
+              style="min-height: 140px;"
+              placeholder="Add global design notes, branding expectations, typography preferences (Altone), color tones (#00D084 emerald on dark mineral), motion guidelines..." 
+              oninput="updateGlobalNotes(this.value)"
+              id="global-notes-area"></textarea>
+          </div>
+
+          <!-- Right: Global Links & Moodboard Screenshots -->
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="workspace-block">
+              <div class="workspace-label">
+                <span>Universal Inspiration Links / Figma / Reference Sites</span>
+              </div>
+              <div class="link-input-row">
+                <input 
+                  type="url" 
+                  class="link-input" 
+                  id="link-input-global" 
+                  placeholder="https://linear.app, https://stripe.com, Figma link..." 
+                  onkeydown="if(event.key==='Enter'){ addGlobalLink(); }"
+                />
+                <button class="btn" onclick="addGlobalLink()">Add Link</button>
+              </div>
+              <div class="links-list" id="links-list-global"></div>
+            </div>
+
+            <div class="workspace-block">
+              <div class="workspace-label">
+                <span>Global Visuals & Moodboard Images (Ctrl+V Paste / Drop)</span>
+              </div>
+              <div class="dropzone" id="dropzone-global" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'global')">
+                <p><strong>Click to upload</strong> or drag & drop / <strong>Ctrl+V paste</strong> screenshot here</p>
+                <input type="file" accept="image/*" multiple onchange="handleFileInput(event, 'global')" />
+              </div>
+              <div class="images-grid" id="images-grid-global"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Section Cards rendered here -->
+    </main>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div class="img-modal" id="imageModal" onclick="closeImageModal()">
+    <img id="modalImg" src="" alt="Full Preview" />
+  </div>
+
+  <script>
+    // Default 13 Sections Data Pre-populated
+    const DEFAULT_SECTIONS_DATA = [
+      {
+        id: "sec-01",
+        num: "01",
+        title: "Navigation & Header",
+        copy: `[Logo: RakanSales (Green vector glyph)]\n\n[Mega-Menus]\n• Product (Inbox, Pipeline, Web Forms, AI Lead Finder, AI Automation, AI Charts)\n• Solutions (SME Owners, Sales Managers, Enterprise Teams)\n• Resources (Blog, Guides, Playbooks, FAQ, Help Center)\n• Pricing | Why RakanSales\n\n[Actions]\n• Language: EN / BM\n• Secondary: Contact Us\n• Primary: Log In`,
+        design: "Sticky blurred bar (height: 72px, backdrop-filter: blur(16px), fine mineral border). Hover-revealed 3-column mega-menus with 150ms ease-out reveal. Full mobile side drawer.",
+        visual: "Brand SVG 'rakansales-logo-green.svg', clean 16px Lucide outline icons (globe, chevron, arrow)."
+      },
+      {
+        id: "sec-02",
+        num: "02",
+        title: "Hero Section",
+        copy: `[Update Pill]\n[NEW] AI Lead Finder is now in RakanSales · See what's new →\n\n[Headline]\nThe sales operating system for growing teams.\n\n[Supporting Copy]\nFind leads, manage conversations, automate follow-ups, and close more deals from one AI-powered sales workspace.\n\n[CTAs]\n• Primary: Explore the Platform\n• Secondary: Book a Demo\n\n[Proof]\n★★★★★ 4.9/5 from growing Malaysian sales teams`,
+        design: "Centered bold headline leading into an elevated 2.5D interactive product stage. Mouse-tracking radial ambient glow + 3 live interactive floating cards (Deal stage transition, Right-click context menu, Round-robin routing chip).",
+        visual: "RakanSales Conversations interface ('conversations.png') + real team member avatars (Mel Wong, Mei Ting, Nurul Huda)."
+      },
+      {
+        id: "sec-03",
+        num: "03",
+        title: "Trust Strip / Why Trust RakanSales",
+        copy: `[Headline]\nBuilt in Malaysia for teams that sell through conversations.\n\n[Badges]\n1. Built by VeecoTech (10+ years enterprise engineering)\n2. ISO/IEC 27001:2022 Certified (Data security in every workflow)\n3. Malaysia Digital Status (Built for local business requirements)\n4. Available on iOS & Android (Full mobile sales apps)\n\n[Sub-Bar]\nTrusted by ambitious businesses across Malaysia (Partner Logo Marquee)`,
+        design: "4-card horizontal mineral grid with subtle hover elevation and border glow. Continuous CSS marquee for approved customer & partner logos.",
+        visual: "Official vector badges for ISO 27001, Malaysia Digital, VeecoTech seal, and App Store / Google Play."
+      },
+      {
+        id: "sec-04",
+        num: "04",
+        title: "System Summary (3 Growth Engines)",
+        copy: `[Headline]\nYour entire sales operation. Working as one.\n\n[Sub-headline]\nDiscover opportunities, turn conversations into revenue, and scale what works with every customer, workflow, and insight connected.\n\n[3 Engines]\n• 01 Discover: AI Lead Finder, Web Forms, Inbound Channels\n• 02 Convert: WhatsApp & Social Inbox, Pipeline & Deals (RM 18,500)\n• 03 Scale: AI Qualification, AI Charts (RM 1.24M forecast), Add-ons`,
+        design: "3-column equal-height bento card grid with code-native live HTML/CSS UI scenes inside each card (lead feed, chat thread + deal ticket, forecast curve).",
+        visual: "Token-aligned HTML/CSS vector product scenes (Discover, Convert, Scale)."
+      },
+      {
+        id: "sec-05",
+        num: "05",
+        title: "Platform Video Showcase ('What is RakanSales')",
+        copy: `[Eyebrow]\nPLATFORM WALKTHROUGH\n\n[Headline]\nSee how modern Malaysian sales teams run on RakanSales.\n\n[Sub-headline]\nWatch a 2-minute overview of how inquiries transform into closed revenue through one automated, connected system.\n\n[Play Button & Tags]\nWatch Platform Tour (2:15) · Omnichannel Inbox · AI Routing · Deal Pipelines · Analytics`,
+        design: "16:9 cinematic container with ambient emerald gradient rim glow (box-shadow: 0 20px 80px rgba(0,208,132,0.15)). Hover-scaling play trigger opening a chaptered video modal.",
+        visual: "High-definition video poster preview frame showing the RakanSales multi-tab dashboard with dark frosted overlay."
+      },
+      {
+        id: "sec-06",
+        num: "06",
+        title: "Quote & Philosophy Section",
+        copy: `[Eyebrow]\nTHE RAKANSALES DIFFERENCE\n\n[Editorial Quote]\n\"Your sales system shouldn't sleep when your office closes. Capture every lead in seconds, qualify intent with AI, and scale your revenue at any hour.\"\n\n[Supporting Line]\nBuilt to give Malaysian business owners peace of mind and sales teams continuous momentum.`,
+        design: "Full-width mineral black statement section (bg: #0B0F12, padding 120px 24px) with large editorial typography (Altone SemiBold 36-48px) and subtle emerald text gradients.",
+        visual: "Dark ambient grid backdrop with faint glowing network nodes symbolizing 24/7 background automation."
+      },
+      {
+        id: "sec-07",
+        num: "07",
+        title: "5-Step Flow (Capture → Engage → Automate → Close → Grow)",
+        copy: `[Headline]\nHow RakanSales powers your complete sales lifecycle.\n\n[Steps]\n• 01 CAPTURE: Web forms, WhatsApp clicks, ads, AI Lead Finder\n• 02 ENGAGE: Shared WhatsApp, IG, FB, Email & Live Chat inbox\n• 03 AUTOMATE: AI FAQ replies, intent scoring, round-robin routing\n• 04 CLOSE: Visual Kanban pipeline, deal valuation, follow-ups\n• 05 GROW: Natural-language AI Charts & revenue analytics`,
+        design: "Split-screen sticky scroll component: Left sticky 5-step progress bar syncing active stage copy; Right pinned viewport cross-fading corresponding UI screens.",
+        visual: "5 synchronized high-res UI screenshots (Web Forms, Conversations, AI Rules, Kanban Pipeline, AI Charts)."
+      },
+      {
+        id: "sec-08",
+        num: "08",
+        title: "Integrations ('No Conversation Left Behind')",
+        copy: `[Eyebrow]\nCONNECTED CHANNELS & ECOSYSTEM\n\n[Headline]\nNo conversation left behind. Connect every customer touchpoint.\n\n[Problem vs Solution]\n• Problem: Disconnected chat apps cause slow replies, lost enquiries, and untracked quotes.\n• Solution: Every message, attachment, and lead status synchronizes into one shared platform.\n\n[Channels]\nWhatsApp Business API · Facebook · Instagram · Live Chat · TikTok · Telegram · LINE · Gmail · Outlook · SMS · REST API`,
+        design: "Central Hub-and-Spoke diagram on a dark blueprint grid. Orbiting channel badges with animated dashed connector lines pulsing toward the central hub.",
+        visual: "Official SVG channel badges on frosted dark glass circles (56px)."
+      },
+      {
+        id: "sec-09",
+        num: "09",
+        title: "RAKAN AI & Core Modules (Accordion + Dynamic View)",
+        copy: `[Eyebrow]\nRAKAN AI & CAPABILITIES\n\n[Headline]\nIntelligent features built for real sales momentum.\n\n[Accordion Items]\n1. AI Sales Assistant & Knowledge Base (Drafts answers from company FAQs)\n2. Predictive Lead Scoring (Evaluates buyer intent & budget)\n3. Smart Multi-Channel Follow-Ups (Automated WhatsApp/Email triggers)\n4. AI Charts & Natural Language Analytics (Ask questions, get visual graphs)\n\n[CTA]\nExplore All Features & Add-ons →`,
+        design: "2 columns: Left vertical accordion; Right high-res product viewport switching screenshots seamlessly on tab change (200ms ease-out).",
+        visual: "4 section-specific screenshots: AI Assistant Drawer, Lead Scoring Badge, Sequence Builder, AI Charts View."
+      },
+      {
+        id: "sec-10",
+        num: "10",
+        title: "Industries & Use Cases",
+        copy: `[Eyebrow]\nBUILT FOR MALAYSIAN COMMERCE\n\n[Headline]\nTailored for how your industry sells.\n\n[Industries]\n• 01 B2B & Manufacturing (Quotation tracking, multi-contact deals)\n• 02 Professional Services & Agencies (Automated bookings, client notes)\n• 03 Real Estate & Property (Instant ad lead distribution, WhatsApp nurture)\n• 04 Automotive & High-Touch Retail (Unified showroom WhatsApp, test-drive alerts)`,
+        design: "Horizontal industry selector tabs controlling structured Problem/Solution & Key Modules spotlight cards below.",
+        visual: "Sector-specific workflow diagrams and realistic Malaysian business scenario chips."
+      },
+      {
+        id: "sec-11",
+        num: "11",
+        title: "Social Media & Community (Instagram Feed)",
+        copy: `[Eyebrow]\nCOMMUNITY & UPDATES\n\n[Headline]\nFollow the journey on Instagram.\n\n[Posts]\n• Playbook: 3 WhatsApp automation mistakes Malaysian SMEs make\n• Feature: Inside Rakan AI: How natural-language lead qualification works\n• Founder: Why disconnected sales tools cost more than you think\n• Update: Introducing AI Charts: Turn questions into visual revenue answers\n\n[CTA]\nFollow @rakansales on Instagram →`,
+        design: "4-column responsive grid (4:5 ratio) with hover zoom, likes/comment overlay, and direct link.",
+        visual: "4 branded social post cards using emerald/mineral styling, typography, and UI snippet insets."
+      },
+      {
+        id: "sec-12",
+        num: "12",
+        title: "High-Impact Call-to-Action (CTA)",
+        copy: `[Eyebrow]\nREADY TO TRANSFORM YOUR SALES?\n\n[Headline]\nStreamline your sales operation today.\n\n[Sub-headline]\nJoin forward-thinking Malaysian businesses managing leads, conversations, pipelines, and revenue in one unified operating system.\n\n[Actions]\n• Primary: Book a 1-on-1 Demo\n• Secondary: Start Free Trial\n\n[Reassurance]\n✓ 14-day free trial · ✓ No credit card required · ✓ Local Malaysian onboarding & support`,
+        design: "High-contrast conversion banner with emerald-to-mineral gradient border and centered soft radial glow.",
+        visual: "Elevated #00D084 primary button and crisp high-contrast typography."
+      },
+      {
+        id: "sec-13",
+        num: "13",
+        title: "Site Footer",
+        copy: `[Brand Column]\n• Logo: RakanSales (White / Green mark)\n• Tagline: The AI-powered sales operating system built for how modern Malaysian businesses sell.\n• Backing: A product by VeecoTech · ISO/IEC 27001 Certified · Malaysia Digital Status\n\n[Columns]\n• Product (Inbox, Pipeline, Web Forms, AI Lead Finder, AI Charts, Marketplace)\n• Solutions (SME Owners, Sales Managers, Enterprise, B2B, Services, Real Estate)\n• Resources (Blog, Playbooks, Stories, Help Center, API Docs)\n• Company & Legal (About, Careers, Contact, Privacy, Terms, Security)\n\n[Bottom]\n© 2026 RakanSales (VeecoTech Software Sdn Bhd) · iOS & Android Badges`,
+        design: "5-column desktop footer over deep black finish (#06080A), responsive stacked grid on mobile, WCAG 2.2 AA accessible touch targets.",
+        visual: "Vector SVG social icons, ISO/MD certification marks, App Store / Google Play download badges."
+      }
+    ];
+
+    // Master Storage Key
+    const MASTER_STORAGE_KEY = "rakansales_workbench_master_storage";
+
+    // Auto-migrate any older storage keys (v1, v2) into master storage
+    function loadSavedDataWithMigration() {
+      let state = { global: { notes: "", links: [], images: [] }, sections: {} };
+
+      try {
+        // Check Master key first
+        const masterRaw = localStorage.getItem(MASTER_STORAGE_KEY);
+        if (masterRaw) {
+          state = JSON.parse(masterRaw);
+        } else {
+          // Check v2
+          const v2Raw = localStorage.getItem("rakansales_workbench_data_v2");
+          if (v2Raw) {
+            state = JSON.parse(v2Raw);
+          } else {
+            // Check v1
+            const v1Raw = localStorage.getItem("rakansales_workbench_data_v1");
+            if (v1Raw) {
+              const v1Data = JSON.parse(v1Raw);
+              state = { global: { notes: "", links: [], images: [] }, sections: v1Data };
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Storage parse error", e);
+      }
+
+      if (!state.global) state.global = { notes: "", links: [], images: [] };
+      if (!state.sections) state.sections = {};
+
+      // Save migrated state to Master key
+      localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify(state));
+      return state;
+    }
+
+    function saveUserData(data) {
+      try {
+        localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify(data));
+        showSavedIndicator();
+      } catch (e) {
+        console.error("Failed to save data", e);
+      }
+    }
+
+    function showSavedIndicator() {
+      const indicator = document.getElementById("saveIndicator");
+      indicator.style.opacity = "1";
+      indicator.innerText = "Saved (" + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) + ")";
+    }
+
+    let userState = loadSavedDataWithMigration();
+
+    // Render Navigation & Sections
+    function renderApp() {
+      const sidebarNav = document.getElementById("sidebarNav");
+      const sectionsContainer = document.getElementById("sectionsContainer");
+
+      // Populate Global inputs
+      document.getElementById("global-notes-area").value = userState.global.notes || "";
+      document.getElementById("links-list-global").innerHTML = renderLinks("global", userState.global.links || []);
+      document.getElementById("images-grid-global").innerHTML = renderImages("global", userState.global.images || []);
+
+      sidebarNav.innerHTML = `
+        <a class="sidebar-link active" href="#global-refs">
+          <span>🌐 <strong>Global References</strong></span>
+        </a>
+        <div class="sidebar-label">13 Homepage Sections</div>
+      `;
+
+      DEFAULT_SECTIONS_DATA.forEach((sec, idx) => {
+        const secUser = userState.sections[sec.id] || { 
+          copy: sec.copy, 
+          design: sec.design,
+          visual: sec.visual,
+          notes: "", 
+          links: [], 
+          images: [], 
+          status: "Draft" 
+        };
+
+        const activeCopy = secUser.copy !== undefined ? secUser.copy : sec.copy;
+        const activeDesign = secUser.design !== undefined ? secUser.design : sec.design;
+        const activeVisual = secUser.visual !== undefined ? secUser.visual : sec.visual;
+
+        // Sidebar link
+        const navLink = document.createElement("a");
+        navLink.href = `#${sec.id}`;
+        navLink.className = "sidebar-link";
+        navLink.innerHTML = `
+          <span><span class="num">${sec.num}</span> ${sec.title}</span>
+          <span class="badge-status" id="sidebar-status-${sec.id}">${secUser.status || "Draft"}</span>
+        `;
+        sidebarNav.appendChild(navLink);
+
+        // Section card
+        const card = document.createElement("section");
+        card.id = sec.id;
+        card.className = "section-card";
+        card.innerHTML = `
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <span class="section-number">${sec.num}</span>
+              <h3>${sec.title}</h3>
+            </div>
+            <select class="status-select" onchange="updateStatus('${sec.id}', this.value)">
+              <option value="Draft" ${secUser.status === "Draft" ? "selected" : ""}>Status: Draft</option>
+              <option value="In Progress" ${secUser.status === "In Progress" ? "selected" : ""}>Status: In Progress</option>
+              <option value="Ready for Review" ${secUser.status === "Ready for Review" ? "selected" : ""}>Status: Ready for Review</option>
+              <option value="Approved" ${secUser.status === "Approved" ? "selected" : ""}>Status: Approved ✓</option>
+            </select>
+          </div>
+
+          <div class="section-split">
+            <!-- Left Column: Editable Copywriting, UI Plan, and Visual Assets -->
+            <div class="spec-column">
+              <!-- 1. Copywriting -->
+              <div class="spec-block">
+                <div class="spec-label-row">
+                  <span class="spec-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    Drafted Copywriting (Editable)
+                  </span>
+                  <button class="btn-reset" onclick="resetField('${sec.id}', 'copy')" title="Reset copy to original draft">Reset</button>
+                </div>
+                <textarea 
+                  class="editable-spec-area copy-area" 
+                  id="copy-area-${sec.id}"
+                  placeholder="Edit copywriting here..." 
+                  oninput="updateField('${sec.id}', 'copy', this.value)">${escapeHtml(activeCopy)}</textarea>
+              </div>
+
+              <!-- 2. UI & Interaction Design Plan -->
+              <div class="spec-block">
+                <div class="spec-label-row">
+                  <span class="spec-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    UI / Interaction Design Plan (Editable)
+                  </span>
+                  <button class="btn-reset" onclick="resetField('${sec.id}', 'design')" title="Reset design plan to original">Reset</button>
+                </div>
+                <textarea 
+                  class="editable-spec-area design-area" 
+                  id="design-area-${sec.id}"
+                  placeholder="Edit UI and interaction plan here..." 
+                  oninput="updateField('${sec.id}', 'design', this.value)">${escapeHtml(activeDesign)}</textarea>
+              </div>
+
+              <!-- 3. Visual & Media Assets -->
+              <div class="spec-block">
+                <div class="spec-label-row">
+                  <span class="spec-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Visual & Media Assets (Editable)
+                  </span>
+                  <button class="btn-reset" onclick="resetField('${sec.id}', 'visual')" title="Reset visual specs to original">Reset</button>
+                </div>
+                <textarea 
+                  class="editable-spec-area visual-area" 
+                  id="visual-area-${sec.id}"
+                  placeholder="Edit visual and asset requirements here..." 
+                  oninput="updateField('${sec.id}', 'visual', this.value)">${escapeHtml(activeVisual)}</textarea>
+              </div>
+            </div>
+
+            <!-- Right Column: User Visual Expectations, Links & Pasted Images -->
+            <div class="workspace-column" id="workspace-${sec.id}">
+              <div class="workspace-block">
+                <div class="workspace-label">
+                  <span>Your Design Notes & Feedback</span>
+                </div>
+                <textarea 
+                  class="notes-textarea" 
+                  placeholder="Type your feedback, layout preferences, animation tweaks for this section..." 
+                  oninput="updateNotes('${sec.id}', this.value)">${escapeHtml(secUser.notes || "")}</textarea>
+              </div>
+
+              <div class="workspace-block">
+                <div class="workspace-label">
+                  <span>Inspiration Links & References</span>
+                </div>
+                <div class="link-input-row">
+                  <input 
+                    type="url" 
+                    class="link-input" 
+                    id="link-input-${sec.id}" 
+                    placeholder="https://example.com/reference" 
+                    onkeydown="if(event.key==='Enter'){ addLink('${sec.id}'); }"
+                  />
+                  <button class="btn" onclick="addLink('${sec.id}')">Add Link</button>
+                </div>
+                <div class="links-list" id="links-list-${sec.id}">
+                  ${renderLinks(sec.id, secUser.links || [])}
+                </div>
+              </div>
+
+              <div class="workspace-block">
+                <div class="workspace-label">
+                  <span>Visuals & Screenshots (Ctrl+V Paste / Drop)</span>
+                </div>
+                <div class="dropzone" id="dropzone-${sec.id}" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, '${sec.id}')">
+                  <p><strong>Click to upload</strong> or drag & drop / <strong>Ctrl+V paste</strong> screenshot here</p>
+                  <input type="file" accept="image/*" multiple onchange="handleFileInput(event, '${sec.id}')" />
+                </div>
+                <div class="images-grid" id="images-grid-${sec.id}">
+                  ${renderImages(sec.id, secUser.images || [])}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        sectionsContainer.appendChild(card);
+      });
+    }
+
+    // Helper functions
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function renderLinks(secId, links) {
+      return links.map((link, idx) => `
+        <div class="link-chip">
+          <a href="${link}" target="_blank" rel="noopener noreferrer">${link.replace(/^https?:\/\//, '')}</a>
+          <button class="del-btn" onclick="deleteLink('${secId}', ${idx})" title="Remove link">×</button>
+        </div>
+      `).join('');
+    }
+
+    function renderImages(secId, images) {
+      return images.map((imgSrc, idx) => `
+        <div class="image-preview-card">
+          <img src="${imgSrc}" alt="Section Reference" onclick="openImageModal('${imgSrc}')" />
+          <button class="remove-img-btn" onclick="deleteImage('${secId}', ${idx})" title="Remove image">×</button>
+        </div>
+      `).join('');
+    }
+
+    // Global Section Updaters
+    function updateGlobalNotes(val) {
+      userState.global.notes = val;
+      saveUserData(userState);
+    }
+
+    function addGlobalLink() {
+      const input = document.getElementById("link-input-global");
+      const val = input.value.trim();
+      if (!val) return;
+      if (!userState.global.links) userState.global.links = [];
+      userState.global.links.push(val);
+      saveUserData(userState);
+      input.value = "";
+      document.getElementById("links-list-global").innerHTML = renderLinks("global", userState.global.links);
+    }
+
+    // Section Updaters
+    function getSec(secId) {
+      if (!userState.sections[secId]) {
+        const def = DEFAULT_SECTIONS_DATA.find(s => s.id === secId);
+        userState.sections[secId] = { 
+          copy: def ? def.copy : "", 
+          design: def ? def.design : "",
+          visual: def ? def.visual : "",
+          notes: "", 
+          links: [], 
+          images: [], 
+          status: "Draft" 
+        };
+      }
+      return userState.sections[secId];
+    }
+
+    function updateField(secId, field, val) {
+      const sec = getSec(secId);
+      sec[field] = val;
+      saveUserData(userState);
+    }
+
+    function resetField(secId, field) {
+      const def = DEFAULT_SECTIONS_DATA.find(s => s.id === secId);
+      if (def && confirm(`Reset ${field} to original default?`)) {
+        const sec = getSec(secId);
+        sec[field] = def[field];
+        document.getElementById(`${field}-area-${secId}`).value = def[field];
+        saveUserData(userState);
+      }
+    }
+
+    function updateStatus(secId, statusVal) {
+      const sec = getSec(secId);
+      sec.status = statusVal;
+      saveUserData(userState);
+      const badge = document.getElementById(`sidebar-status-${secId}`);
+      if (badge) badge.innerText = statusVal;
+    }
+
+    function updateNotes(secId, notesVal) {
+      const sec = getSec(secId);
+      sec.notes = notesVal;
+      saveUserData(userState);
+    }
+
+    function addLink(secId) {
+      const input = document.getElementById(`link-input-${secId}`);
+      const val = input.value.trim();
+      if (!val) return;
+      const sec = getSec(secId);
+      if (!sec.links) sec.links = [];
+      sec.links.push(val);
+      saveUserData(userState);
+      input.value = "";
+      document.getElementById(`links-list-${secId}`).innerHTML = renderLinks(secId, sec.links);
+    }
+
+    function deleteLink(secId, index) {
+      if (secId === "global") {
+        userState.global.links.splice(index, 1);
+        saveUserData(userState);
+        document.getElementById("links-list-global").innerHTML = renderLinks("global", userState.global.links);
+      } else if (userState.sections[secId] && userState.sections[secId].links) {
+        userState.sections[secId].links.splice(index, 1);
+        saveUserData(userState);
+        document.getElementById(`links-list-${secId}`).innerHTML = renderLinks(secId, userState.sections[secId].links);
+      }
+    }
+
+    function deleteImage(secId, index) {
+      if (secId === "global") {
+        userState.global.images.splice(index, 1);
+        saveUserData(userState);
+        document.getElementById("images-grid-global").innerHTML = renderImages("global", userState.global.images);
+      } else if (userState.sections[secId] && userState.sections[secId].images) {
+        userState.sections[secId].images.splice(index, 1);
+        saveUserData(userState);
+        document.getElementById(`images-grid-${secId}`).innerHTML = renderImages(secId, userState.sections[secId].images);
+      }
+    }
+
+    // Drag & Drop / File Input Handler
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add("dragover");
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove("dragover");
+    }
+
+    function handleDrop(e, secId) {
+      e.preventDefault();
+      e.currentTarget.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        processFiles(e.dataTransfer.files, secId);
+      }
+    }
+
+    function handleFileInput(e, secId) {
+      if (e.target.files && e.target.files.length > 0) {
+        processFiles(e.target.files, secId);
+      }
+    }
+
+    function processFiles(files, secId) {
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith("image/")) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const base64 = evt.target.result;
+          if (secId === "global") {
+            if (!userState.global.images) userState.global.images = [];
+            userState.global.images.push(base64);
+            saveUserData(userState);
+            document.getElementById("images-grid-global").innerHTML = renderImages("global", userState.global.images);
+          } else {
+            const sec = getSec(secId);
+            if (!sec.images) sec.images = [];
+            sec.images.push(base64);
+            saveUserData(userState);
+            document.getElementById(`images-grid-${secId}`).innerHTML = renderImages(secId, sec.images);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Global Paste listener (allows pasting an image directly into the active section or global section)
+    document.addEventListener("paste", function(e) {
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      let targetSecId = null;
+
+      const activeEl = document.activeElement;
+      if (activeEl && (activeEl.id === "global-notes-area" || activeEl.closest("#global-refs"))) {
+        targetSecId = "global";
+      } else {
+        const closestCard = activeEl ? activeEl.closest(".section-card") : null;
+        if (closestCard) {
+          targetSecId = closestCard.id;
+        } else {
+          const hoveredGlobal = document.querySelector("#global-refs:hover");
+          if (hoveredGlobal) {
+            targetSecId = "global";
+          } else {
+            const hoveredCard = document.querySelector(".section-card:hover");
+            if (hoveredCard) targetSecId = hoveredCard.id;
+          }
+        }
+      }
+
+      if (!targetSecId) return;
+
+      for (let item of items) {
+        if (item.type.indexOf("image") !== -1) {
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const base64 = evt.target.result;
+            if (targetSecId === "global") {
+              if (!userState.global.images) userState.global.images = [];
+              userState.global.images.push(base64);
+              saveUserData(userState);
+              document.getElementById("images-grid-global").innerHTML = renderImages("global", userState.global.images);
+            } else {
+              const sec = getSec(targetSecId);
+              if (!sec.images) sec.images = [];
+              sec.images.push(base64);
+              saveUserData(userState);
+              document.getElementById(`images-grid-${targetSecId}`).innerHTML = renderImages(targetSecId, sec.images);
+            }
+          };
+          reader.readAsDataURL(blob);
+        }
+      }
+    });
+
+    // Image Modal
+    function openImageModal(src) {
+      document.getElementById("modalImg").src = src;
+      document.getElementById("imageModal").classList.add("active");
+    }
+
+    function closeImageModal() {
+      document.getElementById("imageModal").classList.remove("active");
+    }
+
+    // Import JSON File
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported.global || imported.sections) {
+            userState = imported;
+          } else {
+            userState = { global: { notes: "", links: [], images: [] }, sections: imported };
+          }
+          saveUserData(userState);
+          renderApp();
+          alert("Workbench data imported successfully!");
+        } catch (err) {
+          alert("Invalid JSON backup file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Export Data (JSON)
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `rakansales_homepage_workbench_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // Export Markdown Summary
+    function exportMarkdown() {
+      let md = `# RakanSales Homepage — Collaborative Blueprint\n\nExported on: ${new Date().toLocaleString()}\n\n---\n\n`;
+      
+      // Global section
+      md += `## 🌐 Universal & Global Design References\n\n`;
+      md += `### Global Notes & Guidelines\n${userState.global.notes || '*(No global notes added)*'}\n\n`;
+      if (userState.global.links && userState.global.links.length > 0) {
+        md += `### Universal Reference Links\n`;
+        userState.global.links.forEach(l => md += `- ${l}\n`);
+        md += `\n`;
+      }
+      if (userState.global.images && userState.global.images.length > 0) {
+        md += `*(${userState.global.images.length} global moodboard image(s) attached)*\n\n`;
+      }
+      md += `---\n\n`;
+
+      // 13 Sections
+      DEFAULT_SECTIONS_DATA.forEach(sec => {
+        const u = userState.sections[sec.id] || {};
+        const activeCopy = u.copy !== undefined ? u.copy : sec.copy;
+        const activeDesign = u.design !== undefined ? u.design : sec.design;
+        const activeVisual = u.visual !== undefined ? u.visual : sec.visual;
+
+        md += `## ${sec.num}. ${sec.title}\n`;
+        md += `**Status**: ${u.status || 'Draft'}\n\n`;
+        md += `### Copywriting\n\`\`\`\n${activeCopy}\n\`\`\`\n\n`;
+        md += `### UI / Interaction Design Plan\n${activeDesign}\n\n`;
+        md += `### Visual & Media Assets\n${activeVisual}\n\n`;
+        md += `### User Design Notes & Feedback\n${u.notes || '*(No feedback added)*'}\n\n`;
+        if (u.links && u.links.length > 0) {
+          md += `### Reference Links\n`;
+          u.links.forEach(l => md += `- ${l}\n`);
+          md += `\n`;
+        }
+        if (u.images && u.images.length > 0) {
+          md += `### Attached Visuals\n*(${u.images.length} image(s) attached in workbench)*\n\n`;
+        }
+        md += `---\n\n`;
+      });
+
+      const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(md);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `rakansales_homepage_collaborative_spec_${new Date().toISOString().slice(0,10)}.md`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // Initialize
+    window.addEventListener("DOMContentLoaded", renderApp);
+  </script>
+</body>
+</html>

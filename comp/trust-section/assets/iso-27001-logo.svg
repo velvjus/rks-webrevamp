@@ -1,0 +1,31 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 48" fill="none" aria-label="ISO/IEC 27001:2022 Certified">
+  <g fill="currentColor">
+    <!-- Outer Globe Ring -->
+    <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2.6" fill="none"/>
+    
+    <!-- Top Arc (Latitude) -->
+    <path d="M 8.5 16 C 13.5 19.5, 34.5 19.5, 39.5 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <!-- Bottom Arc (Latitude) -->
+    <path d="M 8.5 32 C 13.5 28.5, 34.5 28.5, 39.5 32" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    
+    <!-- Vertical Longitude Arcs (Top) -->
+    <path d="M 16.5 5 C 20 10, 20.5 14, 20.5 16.5" stroke="currentColor" stroke-width="2.2" fill="none"/>
+    <path d="M 31.5 5 C 28 10, 27.5 14, 27.5 16.5" stroke="currentColor" stroke-width="2.2" fill="none"/>
+    
+    <!-- Vertical Longitude Arcs (Bottom) -->
+    <path d="M 20.5 31.5 C 20.5 34, 20 38, 16.5 43" stroke="currentColor" stroke-width="2.2" fill="none"/>
+    <path d="M 27.5 31.5 C 27.5 34, 28 38, 31.5 43" stroke="currentColor" stroke-width="2.2" fill="none"/>
+    
+    <!-- ISO Bold Serif Wordmark in Center -->
+    <!-- I -->
+    <path d="M 9.5 18 H 15.5 V 20 H 13.7 V 28 H 15.5 V 30 H 9.5 V 28 H 11.3 V 20 H 9.5 V 18 Z"/>
+    <!-- S -->
+    <path d="M 24.2 18 C 21.6 18 19.8 19.4 19.8 21.5 C 19.8 24.6 24.6 24.2 24.6 26.4 C 24.6 27.4 23.6 28.1 22.3 28.1 C 21 28.1 19.8 27.4 19.4 26.2 L 17.6 26.9 C 18.2 28.9 20 30.1 22.3 30.1 C 25.1 30.1 26.8 28.6 26.8 26.3 C 26.8 23.1 22 23.5 22 21.5 C 22 20.6 22.8 20 24 20 C 25.1 20 26.1 20.6 26.5 21.6 L 28.2 20.8 C 27.5 19.1 26 18 24.2 18 Z"/>
+    <!-- O -->
+    <path d="M 34 18 C 30.7 18 28.5 20.6 28.5 24 C 28.5 27.4 30.7 30 34 30 C 37.3 30 39.5 27.4 39.5 24 C 39.5 20.6 37.3 18 34 18 Z M 34 20.1 C 35.8 20.1 37.1 21.8 37.1 24 C 37.1 26.2 35.8 27.9 34 27.9 C 32.2 27.9 30.9 26.2 30.9 24 C 30.9 21.8 32.2 20.1 34 20.1 Z"/>
+    
+    <!-- ISO/IEC 27001:2022 Text -->
+    <text x="54" y="23" font-family="Altone, Arial, sans-serif" font-weight="700" font-size="15.5" letter-spacing="-0.02em" fill="currentColor">ISO/IEC</text>
+    <text x="54" y="38" font-family="Altone, Arial, sans-serif" font-weight="600" font-size="12.5" letter-spacing="0.03em" fill="currentColor" opacity="0.85">27001:2022</text>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+﻿{
+  "rewrites": [
+    { "source": "/", "destination": "/comp/header-navigation/index.html" },
+    { "source": "/(.*)", "destination": "/comp/header-navigation/" }
+  ]
+}

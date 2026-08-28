@@ -1,0 +1,15 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" fill="none" aria-label="Malaysia Digital Status">
+  <g fill="currentColor">
+    <!-- MD Ribbon / Monogram Icon -->
+    <!-- Left ribbon fold (M left) -->
+    <path d="M8 38L18 10H26L16 38H8Z"/>
+    <!-- Middle peak (M center) -->
+    <path d="M19 10L27 28L35 10H43L31 38H23L19 10Z" opacity="0.85"/>
+    <!-- Right loop (D bow) -->
+    <path d="M33 10H43C48 10 52 14 50.5 20C49 26 44 38 37 38H27L33 10ZM36.5 16L32.5 32H36C40 32 43 25 44 20C44.5 17.5 43 16 40.5 16H36.5Z"/>
+    
+    <!-- MALAYSIA DIGITAL Wordmark -->
+    <text x="58" y="23" font-family="Altone, Arial, sans-serif" font-weight="700" font-size="14.5" letter-spacing="0.08em" fill="currentColor">MALAYSIA</text>
+    <text x="58" y="37" font-family="Altone, Arial, sans-serif" font-weight="600" font-size="12" letter-spacing="0.14em" fill="currentColor" opacity="0.8">DIGITAL</text>
+  </g>
+</svg>

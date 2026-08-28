@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EDF2F7"/>
+    </linearGradient>
+    <filter id="cardShadow3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="680" fill="url(#bgGrad3)"/>
+
+  <g transform="translate(30, 24)">
+    <rect width="1140" height="632" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#cardShadow3)"/>
+
+    <!-- Top Chrome -->
+    <rect width="1140" height="52" rx="20" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect y="32" width="1140" height="20" fill="#F8FAFC"/>
+    <line x1="0" y1="52" x2="1140" y2="52" stroke="#E2E8F0" stroke-width="1"/>
+
+    <circle cx="28" cy="26" r="6" fill="#EF4444"/>
+    <circle cx="48" cy="26" r="6" fill="#F59E0B"/>
+    <circle cx="68" cy="26" r="6" fill="#10B981"/>
+
+    <g transform="translate(100, 16)">
+      <rect width="190" height="22" rx="11" fill="#E7F6EC"/>
+      <text x="12" y="15" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#15803D" letter-spacing="0.5">⚡ MULTI-CHANNEL CADENCES</text>
+      <text x="205" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#64748B">/ workflows / quote-followup-sequence.flow</text>
+    </g>
+
+    <g transform="translate(970, 15)">
+      <rect width="140" height="24" rx="12" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="1"/>
+      <circle cx="14" cy="12" r="4" fill="#15803D"/>
+      <text x="26" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#334155" letter-spacing="0.5">CADENCE ACTIVE</text>
+    </g>
+
+    <!-- Content Stage -->
+    <!-- Workflow Top Header Stats -->
+    <g transform="translate(24, 72)">
+      <rect width="1092" height="70" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+      <text x="20" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#0F172A">High-Value Quotation Smart Sequence</text>
+      <text x="20" y="48" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">Target: Deals &gt; RM 50,000 pending quotation feedback</text>
+
+      <!-- KPI Pills -->
+      <g transform="translate(560, 18)">
+        <rect width="160" height="34" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="14" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#64748B">Response Rate: <tspan font-weight="700" fill="#15803D">+48.2%</tspan></text>
+      </g>
+      <g transform="translate(730, 18)">
+        <rect width="160" height="34" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="14" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#64748B">Deal Velocity: <tspan font-weight="700" fill="#2563EB">2.4h Avg</tspan></text>
+      </g>
+      <g transform="translate(900, 18)">
+        <rect width="160" height="34" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="14" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#64748B">Unsubscribe Rate: <tspan font-weight="700" fill="#0F172A">0.0%</tspan></text>
+      </g>
+    </g>
+
+    <!-- Visual Sequence Tree Nodes -->
+    <g transform="translate(24, 160)">
+      <!-- Node 1: Trigger -->
+      <g transform="translate(0, 0)">
+        <rect width="330" height="180" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <circle cx="28" cy="28" r="14" fill="#FEF3C7"/>
+        <text x="21" y="32" font-size="14">⏱️</text>
+        <rect x="52" y="16" width="70" height="20" rx="10" fill="#FEF3C7"/>
+        <text x="62" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="700" fill="#D97706">TRIGGER</text>
+        <text x="16" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="700" fill="#0F172A">Deal Idle &gt; 24h after Quote</text>
+        <text x="16" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">Condition: Quotation sent &gt; RM 50k</text>
+        <text x="16" y="108" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">No customer reply within 24 hours.</text>
+        <rect x="16" y="132" width="130" height="22" rx="6" fill="#F1F5F9"/>
+        <text x="26" y="147" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#475569">Status: Listening (Active)</text>
+      </g>
+
+      <!-- Connector 1 -->
+      <g transform="translate(330, 90)">
+        <line x1="0" y1="0" x2="50" y2="0" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 4"/>
+        <polygon points="50,0 42,-4 42,4" fill="#94A3B8"/>
+      </g>
+
+      <!-- Node 2: Action (WhatsApp Contextual Message) -->
+      <g transform="translate(380, 0)">
+        <rect width="360" height="180" rx="12" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+        <circle cx="28" cy="28" r="14" fill="#DCFCE7"/>
+        <text x="21" y="32" font-size="14">💬</text>
+        <rect x="52" y="16" width="150" height="20" rx="10" fill="#DCFCE7"/>
+        <text x="62" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="700" fill="#15803D">WHATSAPP AUTOMATION</text>
+        <text x="16" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0F172A">"Hi {{first_name}}, following up on quote..."</text>
+        
+        <rect x="16" y="80" width="328" height="54" rx="6" fill="#FFFFFF" stroke="#BBF7D0" stroke-width="1"/>
+        <text x="24" y="98" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#334155">"Hi Mel, checking in to see if you had any questions</text>
+        <text x="24" y="114" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#334155">about proposal #RM90K for {{company_name}}?"</text>
+
+        <text x="16" y="152" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#15803D">Channel: Official WhatsApp Business API</text>
+      </g>
+
+      <!-- Connector 2 -->
+      <g transform="translate(740, 90)">
+        <line x1="0" y1="0" x2="50" y2="0" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 4"/>
+        <polygon points="50,0 42,-4 42,4" fill="#94A3B8"/>
+      </g>
+
+      <!-- Node 3: Safety Guardrail (Instant Pause) -->
+      <g transform="translate(790, 0)">
+        <rect width="302" height="180" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <circle cx="28" cy="28" r="14" fill="#EFF6FF"/>
+        <text x="21" y="32" font-size="14">🛡️</text>
+        <rect x="52" y="16" width="120" height="20" rx="10" fill="#DBEAFE"/>
+        <text x="62" y="30" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="700" fill="#2563EB">SAFETY GUARDRAIL</text>
+        <text x="16" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0F172A">Auto-Pause on Prospect Reply</text>
+        <text x="16" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">Sequence halts instantly the moment customer responds to prevent automated messaging conflicts.</text>
+        <rect x="16" y="132" width="130" height="22" rx="6" fill="#DCFCE7"/>
+        <text x="24" y="147" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="700" fill="#15803D">✓ Zero Robotic Fails</text>
+      </g>
+    </g>
+
+    <!-- Bottom Stage Automation Logs -->
+    <g transform="translate(24, 360)">
+      <rect width="1092" height="150" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+      <text x="20" y="28" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="700" fill="#0F172A">Recent Automation Cadence Executions</text>
+      
+      <!-- Log Row 1 -->
+      <g transform="translate(20, 42)">
+        <rect width="1052" height="42" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="16" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#0F172A">KK Steel Manufacturing</text>
+        <text x="240" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#64748B">Step 2: 24h Check-in WhatsApp Dispatched</text>
+        <rect x="680" y="10" width="90" height="22" rx="11" fill="#DCFCE7"/>
+        <text x="692" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="700" fill="#15803D">DELIVERED</text>
+        <text x="820" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">Replied in 12 mins (Auto-Paused)</text>
+      </g>
+
+      <!-- Log Row 2 -->
+      <g transform="translate(20, 92)">
+        <rect width="1052" height="42" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+        <text x="16" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#0F172A">Apex Logistics Sdn Bhd</text>
+        <text x="240" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#64748B">Step 1: Quotation Link Viewed &gt; WhatsApp Reminder Scheduled</text>
+        <rect x="680" y="10" width="90" height="22" rx="11" fill="#DBEAFE"/>
+        <text x="692" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="700" fill="#2563EB">SCHEDULED</text>
+        <text x="820" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#64748B">Dispatches tomorrow at 10:00 AM</text>
+      </g>
+    </g>
+  </g>
+</svg>

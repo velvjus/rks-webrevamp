@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RakanSales homepage structure and content wireframe for review." />
+    <title>RakanSales Homepage Wireframe</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!--
+      THESIS: Present RakanSales as one connected sales operating system, not a list of CRM features.
+      OWN-WORLD: Deliberately neutral review wireframe with one RakanSales green accent and structural grayscale.
+      STORY: Understand the platform, follow the connected workflow, evaluate trust, then request a demo or trial.
+      FIRST VIEWPORT: Plain positioning and real product evidence with both conversion routes visible.
+      FORM: Responsive low-fidelity homepage review artifact. Visual direction is intentionally deferred.
+    -->
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container nav-shell">
+        <a class="brand" href="#top" aria-label="RakanSales wireframe home">
+          <span class="brand-mark" aria-hidden="true">R</span>
+          <span>RakanSales</span>
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation">
+          Menu
+        </button>
+
+        <nav id="primary-navigation" class="primary-navigation" aria-label="Primary navigation">
+          <a href="#platform">Product</a>
+          <a href="#workflow">Solutions</a>
+          <a href="#pricing-note">Pricing</a>
+          <a href="#resources-note">Resources</a>
+          <a href="#trust">Company</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="text-link" href="https://app.rakansales.com/app/login">Log In</a>
+          <a class="button button-secondary" href="#final-cta">Book a Demo</a>
+          <a class="button button-primary" href="#final-cta">Start Free Trial</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="top" class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <h1>Run your entire sales operation from one place.</h1>
+            <p class="hero-intro">Find leads, manage every conversation, automate follow-ups, move deals forward, and understand what drives revenue with one AI-powered sales operating system.</p>
+            <div class="button-row">
+              <a class="button button-primary" href="#final-cta">Book a Demo</a>
+              <a class="button button-secondary" href="#platform">Explore the Platform</a>
+            </div>
+            <p class="review-note">Review focus: positioning, section order, content, and conversion hierarchy.</p>
+          </div>
+
+          <figure class="product-frame">
+            <img src="assets/conversations.png" alt="RakanSales conversation workspace showing a shared inbox, AI-supported conversation, and contact details." />
+            <figcaption>Real product evidence: Conversations workspace</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="trust-strip" aria-labelledby="trust-strip-title">
+        <div class="container trust-strip-grid">
+          <h2 id="trust-strip-title">Built in Malaysia for teams that sell through conversations.</h2>
+          <ul class="trust-items" aria-label="Available trust evidence">
+            <li>Built by VeecoTech</li>
+            <li>ISO certification</li>
+            <li>Malaysia Digital</li>
+            <li>iOS and Android apps</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section problem-section">
+        <div class="container narrow">
+          <h2>Sales breaks when every step lives in a different tool.</h2>
+          <p>Leads arrive from ads, WhatsApp, social media, email, forms, referrals, and events. Teams then copy information between inboxes, spreadsheets, calendars, and CRMs. Ownership becomes unclear, follow-ups slow down, and management cannot see what is converting.</p>
+          <p class="strong-copy">RakanSales connects the complete journey, from finding a prospect to understanding why the deal closed.</p>
+        </div>
+      </section>
+
+      <section id="platform" class="section platform-section">
+        <div class="container">
+          <div class="section-heading">
+            <h2>One operating system for the complete sales journey.</h2>
+            <p>Six connected layers give growing teams one place to discover, engage, sell, automate, understand, and extend.</p>
+          </div>
+
+          <div class="platform-layout">
+            <div class="platform-tabs" role="tablist" aria-label="Sales operating system layers">
+              <button id="tab-discover" role="tab" aria-selected="true" aria-controls="panel-discover" data-tab="discover">Discover</button>
+              <button id="tab-engage" role="tab" aria-selected="false" aria-controls="panel-engage" data-tab="engage">Engage</button>
+              <button id="tab-sell" role="tab" aria-selected="false" aria-controls="panel-sell" data-tab="sell">Sell</button>
+              <button id="tab-automate" role="tab" aria-selected="false" aria-controls="panel-automate" data-tab="automate">Automate</button>
+              <button id="tab-understand" role="tab" aria-selected="false" aria-controls="panel-understand" data-tab="understand">Understand</button>
+              <button id="tab-extend" role="tab" aria-selected="false" aria-controls="panel-extend" data-tab="extend">Extend</button>
+            </div>
+
+            <div class="platform-panels">
+              <article id="panel-discover" role="tabpanel" aria-labelledby="tab-discover" data-panel="discover">
+                <h3>Discover new opportunities.</h3>
+                <p>Find and capture prospects through Lead Finder, web forms, name-card scanning, imports, and connected lead sources.</p>
+                <ul><li>Lead Finder</li><li>Web Forms</li><li>Name-card Scanner</li><li>Lead Capture</li></ul>
+              </article>
+              <article id="panel-engage" role="tabpanel" aria-labelledby="tab-engage" data-panel="engage" hidden>
+                <h3>Engage from one shared workspace.</h3>
+                <p>Bring WhatsApp, Facebook, Instagram, email, forms, and customer context into one team inbox.</p>
+                <ul><li>Omnichannel Inbox</li><li>Contact Timeline</li><li>Team Notes</li><li>Smart Filtering</li></ul>
+              </article>
+              <article id="panel-sell" role="tabpanel" aria-labelledby="tab-sell" data-panel="sell" hidden>
+                <h3>Keep every opportunity moving.</h3>
+                <p>Assign owners, organise pipelines, schedule activity, and maintain a clear next action for every deal.</p>
+                <ul><li>Deals</li><li>Kanban Pipelines</li><li>Appointments</li><li>Round-robin Assignment</li></ul>
+              </article>
+              <article id="panel-automate" role="tabpanel" aria-labelledby="tab-automate" data-panel="automate" hidden>
+                <h3>Automate the repetitive work.</h3>
+                <p>Use AI and configurable workflows to qualify leads, answer approved questions, trigger follow-ups, and route work.</p>
+                <ul><li>AI Assistant</li><li>Lead Scoring</li><li>Automated Follow-ups</li><li>Workflow Automation</li></ul>
+              </article>
+              <article id="panel-understand" role="tabpanel" aria-labelledby="tab-understand" data-panel="understand" hidden>
+                <h3>Understand what drives revenue.</h3>
+                <p>Use AI Charts, attribution, forecasting, response tracking, and team insights to decide where to focus.</p>
+                <ul><li>AI Charts</li><li>Sales Analytics</li><li>Forecasting</li><li>Campaign Attribution</li></ul>
+              </article>
+              <article id="panel-extend" role="tabpanel" aria-labelledby="tab-extend" data-panel="extend" hidden>
+                <h3>Extend the system as you grow.</h3>
+                <p>Connect customer channels and let the main system administrator add optional capabilities through Marketplace.</p>
+                <ul><li>Channel Integrations</li><li>Marketplace Add-ons</li><li>Admin Management</li><li>API Access</li></ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="section workflow-section">
+        <div class="container">
+          <div class="section-heading">
+            <h2>From new lead to next best action, nothing gets lost.</h2>
+            <p>This connected workflow is the homepage's main product demonstration.</p>
+          </div>
+          <ol class="workflow-list">
+            <li><strong>Find or capture</strong><span>A prospect enters through Lead Finder or a connected source.</span></li>
+            <li><strong>Organise</strong><span>RakanSales creates or updates the contact and checks for duplicates.</span></li>
+            <li><strong>Assign</strong><span>The conversation arrives with context, priority, and clear ownership.</span></li>
+            <li><strong>Assist</strong><span>AI qualifies intent, answers approved questions, and recommends the next action.</span></li>
+            <li><strong>Advance</strong><span>The opportunity moves through the pipeline with tasks and follow-ups.</span></li>
+            <li><strong>Learn</strong><span>AI Charts show performance, conversion patterns, and where to focus.</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section ai-section">
+        <div class="container split-section">
+          <div>
+            <h2>AI that works across the operation, not beside it.</h2>
+            <p>RakanSales uses approved business knowledge and connected sales context to support conversations, qualification, prioritisation, follow-up, analysis, and decision-making.</p>
+          </div>
+          <ul class="feature-list">
+            <li>Respond with approved product knowledge</li>
+            <li>Identify intent and prioritise opportunities</li>
+            <li>Trigger timely follow-ups and handovers</li>
+            <li>Surface patterns through AI Charts</li>
+            <li>Keep people in control of important decisions</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section evidence-section">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Designed for the way sales teams work every day.</h2>
+            <p>The final website should use real product screens and clearly labelled concepts for interfaces still being completed.</p>
+          </div>
+          <div class="evidence-grid">
+            <figure><img src="assets/conversations.png" alt="RakanSales conversations interface." /><figcaption>Conversations and contact context</figcaption></figure>
+            <figure><img src="assets/pipeline.png" alt="RakanSales deal pipeline interface." /><figcaption>Deal pipeline and ownership</figcaption></figure>
+            <figure><img src="assets/web-forms.png" alt="RakanSales Web Forms interface." /><figcaption>Web Forms and lead capture</figcaption></figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section outcomes-section">
+        <div class="container split-section">
+          <div>
+            <h2>Less admin. Clearer ownership. More time to sell.</h2>
+            <p>Outcome language stays qualitative until approved performance evidence is available.</p>
+          </div>
+          <ul class="outcome-list">
+            <li>Respond from one shared view</li>
+            <li>Know who owns every opportunity</li>
+            <li>Keep follow-ups moving without manual reminders</li>
+            <li>Connect channels and campaigns to sales activity</li>
+            <li>Give managers a reliable operational view</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section marketplace-section">
+        <div class="container marketplace-grid">
+          <div>
+            <h2>Connect every channel. Add more when your operation needs it.</h2>
+            <p>Bring customer conversations into RakanSales, then let the main system administrator activate advanced capabilities through Marketplace.</p>
+            <h3>Core channel integrations</h3>
+            <p>Website Live Chat, Facebook Messenger, WhatsApp, SMS, email, Telegram, LINE, Instagram, TikTok, LinkedIn, and custom channels through the API.</p>
+          </div>
+          <div id="content-needed" class="content-needed">
+            <h3>Marketplace add-on categories</h3>
+            <ul>
+              <li><strong>Lead Generation and Enrichment</strong><span>AI Lead Finder, LinkedIn Enrichment</span></li>
+              <li><strong>AI Agents and Automation</strong><span>AI Voice Agent, AI Sales Advisor</span></li>
+              <li><strong>Communications and Channels</strong><span>Optional premium connectors and communication tools</span></li>
+              <li><strong>Data and Intelligence</strong><span>Future analysis and decision-support add-ons</span></li>
+              <li><strong>Usage and Capacity</strong><span>AI Tokens and future capacity packs</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="trust" class="section local-trust-section">
+        <div class="container split-section">
+          <div>
+            <h2>Built locally. Ready for serious sales operations.</h2>
+            <p>RakanSales is developed by the team behind VeecoTech, combining local product support with the technical foundations and security practices required by growing organisations.</p>
+          </div>
+          <div class="proof-placeholder">
+            <h3>Proof to verify and approve</h3>
+            <ul>
+              <li>VeecoTech history and locations</li>
+              <li>Security certification wording</li>
+              <li>Local onboarding and support model</li>
+              <li>Customer logos and testimonials</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="final-cta" class="section final-cta">
+        <div class="container final-cta-inner">
+          <h2>See how your sales operation works better as one system.</h2>
+          <p>Bring your lead sources, conversations, pipeline, automation, and reporting into one connected RakanSales workspace.</p>
+          <div class="button-row">
+            <a class="button button-primary" href="mailto:hello@rakansales.com">Book a Demo</a>
+            <a class="button button-secondary" href="https://app.rakansales.com/">Start Free Trial</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="container review-anchors" aria-label="Deferred sitemap destinations">
+        <p id="pricing-note"><strong>Pricing:</strong> retained in the sitemap, inner-page content deferred.</p>
+        <p id="resources-note"><strong>Resources:</strong> blog, guides, customer stories, FAQ, and help content retained in the sitemap.</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div><strong>RakanSales</strong><p>The AI-powered sales operating system built for how modern Malaysian businesses sell.</p></div>
+        <div><strong>Planning artifact</strong><p>Homepage wireframe only. Visual design and inner pages are intentionally deferred.</p></div>
+        <a href="../homepage-content-draft.md">Content draft</a>
+        <a href="../sitemap.md">Sitemap</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

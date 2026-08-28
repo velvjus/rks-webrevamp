@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-21T02:41:22.0472535Z",
+  "title": "Design System: RakanSales Marketing Website",
+  "extensions": {
+    "colorMeta": {
+      "rakan-green": {
+        "role": "primary",
+        "displayName": "Rakan Green",
+        "canonical": "#23b750",
+        "tonalRamp": [
+          "oklch(15% 0.05 145)",
+          "oklch(26% 0.09 145)",
+          "oklch(38% 0.13 145)",
+          "oklch(50% 0.17 145)",
+          "oklch(62% 0.18 145)",
+          "oklch(74% 0.14 145)",
+          "oklch(86% 0.08 145)",
+          "oklch(95% 0.03 145)"
+        ]
+      },
+      "rakan-green-hover": {
+        "role": "primary",
+        "displayName": "Rakan Green Hover",
+        "canonical": "#2fc762",
+        "tonalRamp": [
+          "oklch(15% 0.05 145)",
+          "oklch(26% 0.10 145)",
+          "oklch(38% 0.14 145)",
+          "oklch(50% 0.18 145)",
+          "oklch(64% 0.19 145)",
+          "oklch(76% 0.14 145)",
+          "oklch(87% 0.08 145)",
+          "oklch(95% 0.03 145)"
+        ]
+      },
+      "focus-lime": {
+        "role": "primary",
+        "displayName": "Focus Lime",
+        "canonical": "#62d816",
+        "tonalRamp": [
+          "oklch(15% 0.05 130)",
+          "oklch(26% 0.10 130)",
+          "oklch(38% 0.15 130)",
+          "oklch(50% 0.20 130)",
+          "oklch(64% 0.22 130)",
+          "oklch(76% 0.17 130)",
+          "oklch(87% 0.10 130)",
+          "oklch(95% 0.04 130)"
+        ]
+      },
+      "mineral-canvas": {
+        "role": "neutral",
+        "displayName": "Mineral Canvas",
+        "canonical": "#f1f2ee",
+        "tonalRamp": [
+          "oklch(15% 0.008 110)",
+          "oklch(26% 0.008 110)",
+          "oklch(38% 0.008 110)",
+          "oklch(50% 0.008 110)",
+          "oklch(62% 0.008 110)",
+          "oklch(74% 0.008 110)",
+          "oklch(86% 0.008 110)",
+          "oklch(95% 0.008 110)"
+        ]
+      },
+      "warm-surface": {
+        "role": "neutral",
+        "displayName": "Warm Surface",
+        "canonical": "#f7f8f5",
+        "tonalRamp": [
+          "oklch(15% 0.006 110)",
+          "oklch(26% 0.006 110)",
+          "oklch(38% 0.006 110)",
+          "oklch(50% 0.006 110)",
+          "oklch(62% 0.006 110)",
+          "oklch(74% 0.006 110)",
+          "oklch(86% 0.006 110)",
+          "oklch(95% 0.006 110)"
+        ]
+      },
+      "white-surface": {
+        "role": "neutral",
+        "displayName": "White Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(74% 0 0)",
+          "oklch(86% 0 0)",
+          "oklch(100% 0 0)"
+        ]
+      },
+      "primary-ink": {
+        "role": "neutral",
+        "displayName": "Primary Ink",
+        "canonical": "#0b0b0c",
+        "tonalRamp": [
+          "oklch(15% 0.003 280)",
+          "oklch(26% 0.003 280)",
+          "oklch(38% 0.003 280)",
+          "oklch(50% 0.003 280)",
+          "oklch(62% 0.003 280)",
+          "oklch(74% 0.003 280)",
+          "oklch(86% 0.003 280)",
+          "oklch(95% 0.003 280)"
+        ]
+      },
+      "charcoal-surface": {
+        "role": "neutral",
+        "displayName": "Charcoal Surface",
+        "canonical": "#171719",
+        "tonalRamp": [
+          "oklch(15% 0.004 280)",
+          "oklch(26% 0.004 280)",
+          "oklch(38% 0.004 280)",
+          "oklch(50% 0.004 280)",
+          "oklch(62% 0.004 280)",
+          "oklch(74% 0.004 280)",
+          "oklch(86% 0.004 280)",
+          "oklch(95% 0.004 280)"
+        ]
+      },
+      "interface-ink": {
+        "role": "neutral",
+        "displayName": "Interface Ink",
+        "canonical": "#202420",
+        "tonalRamp": [
+          "oklch(15% 0.01 145)",
+          "oklch(26% 0.01 145)",
+          "oklch(38% 0.01 145)",
+          "oklch(50% 0.01 145)",
+          "oklch(62% 0.01 145)",
+          "oklch(74% 0.01 145)",
+          "oklch(86% 0.01 145)",
+          "oklch(95% 0.01 145)"
+        ]
+      },
+      "muted-copy": {
+        "role": "neutral",
+        "displayName": "Muted Copy",
+        "canonical": "#565b56",
+        "tonalRamp": [
+          "oklch(15% 0.012 145)",
+          "oklch(26% 0.012 145)",
+          "oklch(38% 0.012 145)",
+          "oklch(50% 0.012 145)",
+          "oklch(62% 0.012 145)",
+          "oklch(74% 0.012 145)",
+          "oklch(86% 0.012 145)",
+          "oklch(95% 0.012 145)"
+        ]
+      },
+      "frame-border": {
+        "role": "neutral",
+        "displayName": "Frame Border",
+        "canonical": "#d2d5cf",
+        "tonalRamp": [
+          "oklch(15% 0.01 110)",
+          "oklch(26% 0.01 110)",
+          "oklch(38% 0.01 110)",
+          "oklch(50% 0.01 110)",
+          "oklch(62% 0.01 110)",
+          "oklch(74% 0.01 110)",
+          "oklch(86% 0.01 110)",
+          "oklch(95% 0.01 110)"
+        ]
+      },
+      "interface-border": {
+        "role": "neutral",
+        "displayName": "Interface Border",
+        "canonical": "#dfe3de",
+        "tonalRamp": [
+          "oklch(15% 0.009 145)",
+          "oklch(26% 0.009 145)",
+          "oklch(38% 0.009 145)",
+          "oklch(50% 0.009 145)",
+          "oklch(62% 0.009 145)",
+          "oklch(74% 0.009 145)",
+          "oklch(86% 0.009 145)",
+          "oklch(95% 0.009 145)"
+        ]
+      },
+      "signal-green-soft": {
+        "role": "primary",
+        "displayName": "Signal Green Soft",
+        "canonical": "#e1f6e6",
+        "tonalRamp": [
+          "oklch(15% 0.025 145)",
+          "oklch(26% 0.035 145)",
+          "oklch(38% 0.045 145)",
+          "oklch(50% 0.055 145)",
+          "oklch(62% 0.06 145)",
+          "oklch(74% 0.05 145)",
+          "oklch(86% 0.035 145)",
+          "oklch(95% 0.02 145)"
+        ]
+      },
+      "signal-green-ink": {
+        "role": "primary",
+        "displayName": "Signal Green Ink",
+        "canonical": "#126f32",
+        "tonalRamp": [
+          "oklch(15% 0.045 145)",
+          "oklch(26% 0.075 145)",
+          "oklch(38% 0.10 145)",
+          "oklch(50% 0.12 145)",
+          "oklch(62% 0.11 145)",
+          "oklch(74% 0.085 145)",
+          "oklch(86% 0.05 145)",
+          "oklch(95% 0.025 145)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Major marketing theses in one or two decisive lines."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Strong feature statements inside large editorial surfaces."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product-story and card headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Approachable explanatory marketing copy at a readable measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Sparse category labels and eyebrows; compact scene copy remains sentence case."
+      }
+    },
+    "shadows": [
+      {
+        "name": "navigation-float",
+        "value": "0 10px 30px rgba(0,0,0,.12)",
+        "purpose": "Subtle separation for the fixed charcoal header after it leaves the hero surface."
+      },
+      {
+        "name": "overlay-lift",
+        "value": "0 24px 70px rgba(0,0,0,.35)",
+        "purpose": "Dropdown menus and temporary dark overlays."
+      },
+      {
+        "name": "product-window-depth",
+        "value": "0 38px 100px rgba(0,0,0,.45)",
+        "purpose": "A single major product window against the dark hero."
+      },
+      {
+        "name": "evidence-hover-lift",
+        "value": "0 18px 36px rgba(34,45,36,.1)",
+        "purpose": "Fine-pointer feedback for a product-scene preview; pair with a five-pixel lift."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.23,1,.32,1)",
+        "purpose": "Primary reveal, overlay, and state-transition easing."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(.65,0,.35,1)",
+        "purpose": "Slow ambient hero movement where motion is explicitly justified."
+      },
+      {
+        "name": "control-state",
+        "value": "140ms-220ms",
+        "purpose": "Hover, expansion, focus-adjacent, and navigation surface changes."
+      },
+      {
+        "name": "section-reveal",
+        "value": "700ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "One-time opacity, blur, and vertical reveal with 110ms item staggering."
+      },
+      {
+        "name": "product-state-story",
+        "value": "520ms-1100ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "One-time product-state transitions whose duration follows the demonstrated action."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "560px"
+      },
+      {
+        "name": "scene-stack",
+        "value": "760px"
+      },
+      {
+        "name": "navigation-collapse",
+        "value": "860px"
+      },
+      {
+        "name": "evidence-grid",
+        "value": "980px"
+      },
+      {
+        "name": "wide-adjustment",
+        "value": "1080px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The decisive marketing action on dark or light surfaces.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Book a Demo</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border: 1px solid var(--green); border-radius: 8px; background: var(--green); color: #fff; font-family: Altone, Arial, sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease; } .ds-btn-primary:hover { background: #2fc762; border-color: #2fc762; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(0); }"
+    },
+    {
+      "name": "Dark Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary-dark",
+      "description": "A quiet secondary action designed for the charcoal hero and navigation surfaces.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">Explore the Platform</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: #171719; color: #fff; font-family: Altone, Arial, sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease; } .ds-btn-secondary:hover { background: #252529; border-color: rgba(255,255,255,.28); transform: translateY(-1px); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; } .ds-btn-secondary:active { transform: translateY(0); }"
+    },
+    {
+      "name": "Compact Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-bar",
+      "description": "The fixed charcoal navigation treatment and its compact item states, shown without replacing the approved logo asset.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Example navigation\"><span class=\"ds-nav__brand\">RakanSales</span><a class=\"ds-nav__item\" href=\"#\">Product</a><a class=\"ds-nav__item\" href=\"#\">Solutions</a><a class=\"ds-nav__login\" href=\"#\">Log In</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 4px; min-height: 50px; padding: 0 12px; border: 1px solid rgba(255,255,255,.08); border-radius: 10px; background: rgba(23,23,25,.97); color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.12); font-family: Altone, Arial, sans-serif; } .ds-nav__brand { margin-right: 12px; color: var(--green); font-size: 16px; font-weight: 600; } .ds-nav__item, .ds-nav__login { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 8px; color: #f7f7f8; font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 140ms ease; } .ds-nav__item:hover { background: #2a2a2e; } .ds-nav__login { margin-left: auto; background: var(--green); color: #fff; } .ds-nav__login:hover { background: #2fc762; } .ds-nav a:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }"
+    },
+    {
+      "name": "Announcement Pill",
+      "kind": "chip",
+      "refersTo": "announcement-pill",
+      "description": "A compact hero update that layers a short status label with one credible product message.",
+      "html": "<a class=\"ds-announcement\" href=\"#\"><span>New</span><strong>AI Lead Finder is now in RakanSales</strong></a>",
+      "css": ".ds-announcement { display: inline-flex; align-items: center; gap: 9px; min-height: 34px; padding: 3px 12px 3px 4px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(18,18,20,.72); color: #f1f1f3; font-family: Altone, Arial, sans-serif; font-size: 13px; line-height: 1; text-decoration: none; transition: border-color 150ms ease, background-color 150ms ease; } .ds-announcement span { display: grid; place-items: center; min-height: 26px; padding: 0 9px; border-radius: 999px; background: #343438; color: #fff; font-weight: 600; } .ds-announcement strong { font-weight: 500; } .ds-announcement:hover { border-color: rgba(255,255,255,.28); background: #202023; } .ds-announcement:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }"
+    },
+    {
+      "name": "Product Story Panel",
+      "kind": "card",
+      "refersTo": "product-frame",
+      "description": "A flat story panel intended to sit inside a shared evidence frame when several workflows form one connected system.",
+      "html": "<article class=\"ds-story\"><h3>Discover opportunities.</h3><p>Find and capture leads from every connected source.</p><div class=\"ds-story__preview\" aria-hidden=\"true\"><span></span><span></span><span></span></div></article>",
+      "css": ".ds-story { width: min(100%, 360px); padding: 20px; background: #f7f8f5; color: #111312; font-family: Altone, Arial, sans-serif; text-align: center; } .ds-story h3 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -.025em; } .ds-story p { max-width: 36ch; margin: 12px auto 0; color: #5d625d; font-size: 14px; line-height: 1.5; } .ds-story__preview { display: grid; gap: 8px; min-height: 150px; margin-top: 28px; padding: 14px; border: 1px solid #dfe3de; border-radius: 10px; background: #fff; transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out); } .ds-story__preview span { display: block; height: 34px; border: 1px solid #e2e5e1; border-radius: 7px; background: #fafbf9; } .ds-story:hover .ds-story__preview { transform: translateY(-5px); box-shadow: 0 18px 36px rgba(34,45,36,.1); } .ds-story:focus-within .ds-story__preview { outline: 2px solid var(--lime); outline-offset: 2px; }"
+    },
+    {
+      "name": "Code-Native Product Scene",
+      "kind": "custom",
+      "refersTo": "product-scene",
+      "description": "An example of the authored product-evidence method; content and internal composition must be rebuilt around the supported workflow being explained.",
+      "html": "<figure class=\"ds-scene\" role=\"img\" aria-label=\"Illustrative qualified lead moving into RakanSales\"><div class=\"ds-scene__toolbar\" aria-hidden=\"true\">Search leads or companies</div><div class=\"ds-scene__row\" aria-hidden=\"true\"><span class=\"ds-scene__check\">✓</span><strong>Kilang Maju Sdn Bhd</strong><em>Qualified</em></div><div class=\"ds-scene__route\" aria-hidden=\"true\"><span>Qualified lead</span><i></i><b>R</b><span>RakanSales</span></div></figure>",
+      "css": ".ds-scene { width: min(100%, 420px); margin: 0; overflow: hidden; border-radius: 10px; background: #fff; color: #202420; box-shadow: inset 0 0 0 1px #dde1dc; font-family: Altone, Arial, sans-serif; font-size: 11px; line-height: 1.35; } .ds-scene__toolbar { margin: 14px; min-height: 34px; display: flex; align-items: center; padding: 0 12px; border: 1px solid #dfe3de; border-radius: 7px; color: #606860; } .ds-scene__row { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 10px; min-height: 58px; padding: 7px 9px; border: 1px solid #2cc160; border-radius: 8px; background: #f1fbf4; box-shadow: 0 0 0 3px rgba(35,183,80,.07); } .ds-scene__check { display: grid; width: 15px; height: 15px; place-items: center; border-radius: 3px; background: #20ae4c; color: #fff; font-size: 9px; } .ds-scene__row em { padding: 4px 7px; border-radius: 999px; background: #e1f6e6; color: #126f32; font-style: normal; font-weight: 600; } .ds-scene__route { display: grid; grid-template-columns: auto minmax(34px,1fr) 32px auto; align-items: center; gap: 9px; margin: 8px 12px 12px; padding: 12px; border: 1px solid #e2e5e1; border-radius: 8px; background: #fbfcfa; } .ds-scene__route i { height: 1px; background: #20b74d; } .ds-scene__route b { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 7px; background: #15943b; color: #fff; font-size: 16px; } .ds-scene:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }"
+    },
+    {
+      "name": "Trust Evidence Item",
+      "kind": "custom",
+      "refersTo": "evidence-item",
+      "description": "A compact text-first proof point separated by a mineral hairline rather than a floating card.",
+      "html": "<div class=\"ds-evidence\"><p>Built by <strong>VeecoTech</strong></p></div>",
+      "css": ".ds-evidence { min-height: 62px; display: flex; flex-direction: column; justify-content: center; padding: 0 32px; border-left: 1px solid #bfc3bd; background: #f1f2ee; color: #171917; font-family: Altone, Arial, sans-serif; } .ds-evidence p { margin: 0; color: #666a66; font-size: 18px; line-height: 1.3; } .ds-evidence strong { color: #171917; font-weight: 600; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Connected Sales Desk",
+    "overview": "RakanSales should feel like the calm, capable workspace of a trusted Malaysian sales partner: operationally credible, immediately understandable to an SME owner, and composed enough for enterprise review. The system pairs a pale mineral canvas with compact charcoal framing and uses RakanSales green as a deliberate signal rather than ambient decoration.\n\nThe visual voice is premium B2B SaaS without generic dashboard gloss. Large editorial statements establish the promise, while compact, code-native product scenes provide concrete proof. Those scenes are a reusable evidence pattern, not a mandate to repeat any particular section copy, three-column composition, or workflow on every page.",
+    "keyCharacteristics": [
+      "Calm mineral fields with crisp charcoal contrast.",
+      "One restrained Rakan green accent system.",
+      "Altone typography with wide, decisive display lines and compact interface text.",
+      "Low-radius containers, fine dividers, and tightly controlled depth.",
+      "Credible HTML/CSS product scenes that explain a product state at a glance.",
+      "Purposeful motion that resolves once and respects reduced-motion preferences."
+    ],
+    "rules": [
+      {
+        "name": "The Green Signal Rule",
+        "body": "Green must communicate identity, action, focus, selection, or progress. Its restraint is what makes it authoritative.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mineral Field Rule",
+        "body": "Use tonal separation and hairlines to organise light sections; do not fill every container with a different neutral.",
+        "section": "colors"
+      },
+      {
+        "name": "The Wide Thesis Rule",
+        "body": "Give display copy enough measure to land in intentional, balanced lines; do not force a strong statement into a narrow multi-line stack by default.",
+        "section": "typography"
+      },
+      {
+        "name": "The Interface Legibility Rule",
+        "body": "Compact product scenes may be dense, but visible mobile scene copy must not fall below the established 10px floor.",
+        "section": "typography"
+      },
+      {
+        "name": "The Shared Frame Rule",
+        "body": "When several product stories belong to one system, prefer one shared container with internal hairlines over a row of unrelated floating cards.",
+        "section": "layout"
+      },
+      {
+        "name": "The Density Handoff Rule",
+        "body": "Keep marketing copy spacious, then let the product evidence become compact; do not use dashboard density for the entire page.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Resting light surfaces are organised by tone and hairlines. Add shadow only when it explains layering, state, or a hero focal object.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Radius Hierarchy Rule",
+        "body": "Increase radius with container scale, but keep the silhouette taut; do not turn major B2B surfaces into oversized capsules.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Credible Scene Rule",
+        "body": "A product scene must make one supported workflow legible at a glance. Do not add generic dashboard chrome, fake controls, or unsupported metrics to make it look busier.",
+        "section": "components"
+      },
+      {
+        "name": "The One-Time Motion Rule",
+        "body": "Product-state motion demonstrates causality once, then gets out of the way; it never loops as decoration.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do preserve the approved RakanSales logo, Altone typography, Malaysian relevance, and recognisable green identity.",
+      "Do use generous mineral space around compact, information-rich evidence.",
+      "Do keep primary actions, focus, selection, and progress visually distinct and accessible.",
+      "Do use real product screenshots when available and code-native scenes when a focused workflow explanation is clearer.",
+      "Do keep product-scene figures non-interactive unless the surrounding experience explicitly introduces real controls.",
+      "Do verify desktop and mobile layouts, keyboard focus, contrast, zoom, and reduced-motion behavior."
+    ],
+    "donts": [
+      "Don't turn the product into a loose grid of equal feature cards; connected workflows should read as one operating system.",
+      "Don't use green as a broad decorative wash or introduce competing accent colors without product meaning.",
+      "Don't add excessive glass, oversized radii, heavy card shadows, or ornamental depth to mineral sections.",
+      "Don't fabricate performance figures, customer outcomes, integrations, or product behavior inside visual evidence.",
+      "Don't generalise the current three-scene composition, its copy, or its section-specific dimensions into a site-wide template.",
+      "Don't loop product-state animations or hide final content from reduced-motion users."
+    ]
+  }
+}
