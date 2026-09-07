@@ -36,12 +36,12 @@ typography:
     lineHeight: 1.2
     letterSpacing: "-0.025em"
   body:
-    fontFamily: "Altone, Arial, sans-serif"
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
     fontSize: "18px"
     fontWeight: 400
     lineHeight: 1.55
   label:
-    fontFamily: "Altone, Arial, sans-serif"
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
     fontSize: "11px"
     fontWeight: 600
     lineHeight: 1.35

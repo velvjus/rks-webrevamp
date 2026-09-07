@@ -4,5 +4,8 @@
   "description": "RakanSales website redesign comps and planning artifacts.",
   "dependencies": {
     "lucide-static": "^1.33.0"
+  },
+  "devDependencies": {
+    "simple-icons": "^16.29.0"
   }
 }

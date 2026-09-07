@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="RakanSales header and navigation design comp." />
     <title>RakanSales Navigation Comp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -151,6 +154,11 @@
           <div class="stage-backdrop-card backdrop-card-left" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="stage-backdrop-card backdrop-card-top" aria-hidden="true"><i></i><i></i></div>
           <div class="stage-backdrop-card backdrop-card-right" aria-hidden="true"><i></i><i></i><i></i></div>
+
+          <div class="hero-mascot-wrap" aria-hidden="true">
+            <div class="hero-mascot-glow"></div>
+            <img src="assets/rakansales-mascot.png" alt="RakanSales AI Mascot" class="hero-mascot" />
+          </div>
 
           <div class="floating-slot deal-slot" data-float-slot="deal">
             <aside class="floating-panel floating-deal" aria-label="Deal moving from new to qualifying">
@@ -537,29 +545,34 @@
 
           <div class="video-stage">
             <div class="video-ambient-glow" aria-hidden="true"></div>
-            <div class="video-frame" data-video-trigger role="button" tabindex="0" aria-label="Play 2-minute product overview video">
-              <img src="assets/conversations.png" alt="RakanSales platform overview video preview" class="video-poster" />
+            <div class="video-frame" id="videoFrame" data-video-trigger role="button" tabindex="0" aria-label="Play 2-minute product overview video">
+              <img src="assets/video-thumbnail.jpg" alt="RakanSales System Overview video preview" class="video-poster" width="1280" height="720" loading="lazy" />
               <div class="video-overlay">
                 <button class="video-play-btn" type="button" aria-label="Play 2-minute product overview video" tabindex="-1">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                 </button>
                 <div class="video-meta">
-                  <span>Platform Overview (2:15)</span>
+                  <span>Platform Overview (2:23)</span>
                   <small>Click to play interactive walkthrough</small>
                 </div>
               </div>
+              <div class="video-player-container" id="videoPlayerContainer"></div>
+              <button class="video-frame__reset-btn" id="videoResetBtn" type="button" aria-label="Close video player" title="Close video player">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
             </div>
 
-            <!-- Video Chapter Markers / Timestamps -->
+            <!-- Video Chapter Markers / Timestamps (Exact sync with RakanSales Overview Video) -->
             <div class="video-chapters" aria-label="Video chapter timestamps">
-              <button class="chapter-chip is-active" type="button" data-video-start="0" aria-label="Jump to 0:00 WhatsApp & Inbound Chat"><i>0:00</i> WhatsApp & Inbound</button>
-              <button class="chapter-chip" type="button" data-video-start="25" aria-label="Jump to 0:25 Omnichannel Inbox"><i>0:25</i> Omnichannel Inbox</button>
-              <button class="chapter-chip" type="button" data-video-start="50" aria-label="Jump to 0:50 AI Lead Qualification"><i>0:50</i> AI Lead Qualification</button>
-              <button class="chapter-chip" type="button" data-video-start="75" aria-label="Jump to 1:15 Automated Lead Routing"><i>1:15</i> Automated Routing</button>
-              <button class="chapter-chip" type="button" data-video-start="98" aria-label="Jump to 1:38 Deals & Kanban Pipeline"><i>1:38</i> Deals Pipeline</button>
-              <button class="chapter-chip" type="button" data-video-start="122" aria-label="Jump to 2:02 AI Charts & Analytics"><i>2:02</i> AI Charts & Analytics</button>
-              <button class="chapter-chip" type="button" data-video-start="144" aria-label="Jump to 2:24 Marketplace Add-ons"><i>2:24</i> LHDN & CTOS Add-ons</button>
-              <button class="chapter-chip" type="button" data-video-start="165" aria-label="Jump to 2:45 Mobile App"><i>2:45</i> Mobile App</button>
+              <button class="chapter-chip is-active" type="button" data-video-start="0" aria-label="Jump to 0:00 Omnichannel Inbox"><i>0:00</i> Omnichannel Inbox</button>
+              <button class="chapter-chip" type="button" data-video-start="23" aria-label="Jump to 0:23 AI Autopilot"><i>0:23</i> AI Autopilot</button>
+              <button class="chapter-chip" type="button" data-video-start="35" aria-label="Jump to 0:35 1-Click Deals Pipeline"><i>0:35</i> 1-Click Deals</button>
+              <button class="chapter-chip" type="button" data-video-start="51" aria-label="Jump to 0:51 Revenue Forecasting"><i>0:51</i> Revenue Forecasting</button>
+              <button class="chapter-chip" type="button" data-video-start="67" aria-label="Jump to 1:07 AI Training Hub"><i>1:07</i> AI Training Hub</button>
+              <button class="chapter-chip" type="button" data-video-start="78" aria-label="Jump to 1:18 Custom Automations"><i>1:18</i> Automations</button>
+              <button class="chapter-chip" type="button" data-video-start="89" aria-label="Jump to 1:29 Real-Time Analytics"><i>1:29</i> Analytics & SLA</button>
+              <button class="chapter-chip" type="button" data-video-start="98" aria-label="Jump to 1:38 Name Card Scanner"><i>1:38</i> Name Card Scanner</button>
+              <button class="chapter-chip" type="button" data-video-start="112" aria-label="Jump to 1:52 Bookings & Web Forms"><i>1:52</i> Bookings & Forms</button>
             </div>
           </div>
         </div>
@@ -842,52 +855,90 @@
                 </div>
               </article>
 
-              <!-- Pod 02 (Top-Right): Autonomous AI Routing -->
+              <!-- Pod 02 (Top-Right): Autonomous AI Routing (12s Dynamic Loop) -->
               <article class="workspace-pod pod-routing">
                 <div class="pod-text-block">
                   <h3 class="pod-title">Autonomous AI Routing</h3>
                   <p class="pod-desc">Intelligently qualify buyer intent and distribute leads directly to active sales reps.</p>
                 </div>
                 <div class="routing-clean-widget">
-                  <!-- Inbound Qualified Lead Trigger -->
-                  <div class="routing-inbound-card">
-                    <div class="inbound-lead-head">
-                      <span class="inbound-source-badge wa">WhatsApp Inbound</span>
-                      <span class="inbound-value-badge">RM 90,000</span>
-                    </div>
-                    <p class="inbound-lead-msg">"Looking to deploy for our 25-person sales team next month."</p>
-                  </div>
-
-                  <!-- AI Dispatch Connector Banner -->
-                  <div class="routing-dispatch-step">
-                    <div class="dispatch-line"></div>
-                    <div class="dispatch-badge">
-                      <span class="dispatch-sparkle">✨</span>
-                      <span>Rakan AI Auto-Routed · 0.4s</span>
-                    </div>
-                    <div class="dispatch-line"></div>
-                  </div>
-
-                  <!-- Assigned Rep Card -->
-                  <div class="routing-assigned-card">
-                    <div class="assigned-rep-left">
-                      <div class="rep-avatar-wrapper">
-                        <img src="assets/mel-wong.png" alt="Mel Wong" class="assigned-avatar-img" />
-                        <span class="avatar-live-indicator"></span>
+                  <div class="routing-deck">
+                    <!-- State A: WhatsApp Inbound (0s - 6s) -->
+                    <div class="routing-state routing-state--wa">
+                      <div class="routing-inbound-card">
+                        <div class="inbound-lead-head">
+                          <span class="inbound-source-badge wa">WhatsApp Inbound</span>
+                          <span class="inbound-value-badge">RM 90,000</span>
+                        </div>
+                        <p class="inbound-lead-msg">"Looking to deploy for our 25-person sales team next month."</p>
                       </div>
-                      <div class="assigned-rep-meta">
-                        <strong>Mel Wong</strong>
-                        <small>Senior Enterprise Rep</small>
+
+                      <div class="routing-dispatch-step">
+                        <div class="dispatch-line"></div>
+                        <div class="dispatch-badge">
+                          <span class="dispatch-sparkle">✨</span>
+                          <span>Rakan AI Auto-Routed · 0.4s</span>
+                        </div>
+                        <div class="dispatch-line"></div>
+                      </div>
+
+                      <div class="routing-assigned-card">
+                        <div class="assigned-rep-left">
+                          <div class="rep-avatar-wrapper">
+                            <img src="assets/mel-wong.png" alt="Mel Wong" class="assigned-avatar-img" />
+                            <span class="avatar-live-indicator"></span>
+                          </div>
+                          <div class="assigned-rep-meta">
+                            <strong>Mel Wong</strong>
+                            <small>Senior Enterprise Rep</small>
+                          </div>
+                        </div>
+                        <div class="assigned-rep-status">
+                          <span class="assigned-badge-success">✓ Assigned</span>
+                        </div>
                       </div>
                     </div>
-                    <div class="assigned-rep-status">
-                      <span class="assigned-badge-success">✓ Assigned</span>
+
+                    <!-- State B: Email Inbound (6s - 12s) -->
+                    <div class="routing-state routing-state--email">
+                      <div class="routing-inbound-card">
+                        <div class="inbound-lead-head">
+                          <span class="inbound-source-badge email">Email Inbound</span>
+                          <span class="inbound-value-badge">RM 48,000</span>
+                        </div>
+                        <p class="inbound-lead-msg">"Requesting custom quote for multi-store POS & inventory sync."</p>
+                      </div>
+
+                      <div class="routing-dispatch-step">
+                        <div class="dispatch-line"></div>
+                        <div class="dispatch-badge dispatch-badge--email">
+                          <span class="dispatch-sparkle">✨</span>
+                          <span>Rakan AI Auto-Routed · 0.3s</span>
+                        </div>
+                        <div class="dispatch-line"></div>
+                      </div>
+
+                      <div class="routing-assigned-card">
+                        <div class="assigned-rep-left">
+                          <div class="rep-avatar-wrapper">
+                            <img src="assets/mei-ting.png" alt="Mei Ting" class="assigned-avatar-img" />
+                            <span class="avatar-live-indicator"></span>
+                          </div>
+                          <div class="assigned-rep-meta">
+                            <strong>Mei Ting</strong>
+                            <small>Retail Solutions Lead</small>
+                          </div>
+                        </div>
+                        <div class="assigned-rep-status">
+                          <span class="assigned-badge-success">✓ Assigned</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </article>
 
-              <!-- Pod 03 (Bottom-Left): Unified Customer Search -->
+              <!-- Pod 03 (Bottom-Left): Unified Customer Search (9s Switch, 18s Loop) -->
               <article class="workspace-pod pod-context">
                 <div class="pod-text-block">
                   <h3 class="pod-title">Unified Customer Search</h3>
@@ -896,98 +947,209 @@
                 <div class="search-clean-widget">
                   <div class="search-clean-input">
                     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l3.5 3.5"/></svg>
-                    <span class="search-typed-query">Kilang Maju</span>
+                    <div class="search-query-switcher">
+                      <span class="search-typed-query search-query--1">Kilang Maju</span>
+                      <span class="search-typed-query search-query--2">Apex Logistics</span>
+                    </div>
                     <span class="search-cursor" aria-hidden="true"></span>
                     <button class="search-clear-btn" type="button" aria-label="Clear search">×</button>
                   </div>
-                  <div class="search-results-clean">
-                    <!-- Result 1: Matched Company Profile -->
-                    <div class="search-result-item">
-                      <div class="result-badge-square company" title="Company Profile">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 11h2M6 15h2M16 11h2M16 15h2M10 21V3h4v18"/></svg>
+                  <div class="search-results-deck">
+                    <!-- Result Set 1: Matched to "Kilang Maju" (0s - 9s) -->
+                    <div class="search-results-group results--1">
+                      <div class="search-result-item">
+                        <div class="result-badge-square company" title="Company Profile">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 11h2M6 15h2M16 11h2M16 15h2M10 21V3h4v18"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>Kilang Maju Sdn Bhd</strong>
+                        </div>
+                        <span class="result-tag-deal">RM 90k</span>
                       </div>
-                      <div class="result-body">
-                        <strong>Kilang Maju Sdn Bhd</strong>
+
+                      <div class="search-result-item">
+                        <div class="result-badge-square wa" title="WhatsApp Chat">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.979-.275-.1-.475-.15-.675.15-.2.301-.775.979-.95 1.18-.175.2-.35.226-.65.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.085-.175-.3-.019-.462.131-.611.136-.134.301-.35.451-.526.15-.175.2-.3.301-.5.1-.2.05-.375-.025-.525-.075-.15-.675-1.628-.925-2.228-.243-.585-.49-.506-.675-.515-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.027-1.05 2.505s1.075 2.904 1.225 3.104c.15.2 2.116 3.23 5.126 4.53.716.31 1.275.495 1.71.634.719.229 1.373.197 1.89.12.577-.087 1.78-.728 2.03-1.431.25-.702.25-1.303.175-1.43-.075-.128-.275-.203-.575-.353z"/><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm0 18.067c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.4 0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25z"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>WhatsApp · Tan Sri Lim</strong>
+                        </div>
+                        <span class="result-meta-time">10:03 AM</span>
                       </div>
-                      <span class="result-tag-deal">RM 90k</span>
+
+                      <div class="search-result-item">
+                        <div class="result-badge-square doc" title="PDF Document">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>Proposal_Kilang_Maju.pdf</strong>
+                        </div>
+                        <span class="result-meta-time">1.4 MB</span>
+                      </div>
                     </div>
 
-                    <!-- Result 2: Matched WhatsApp Chat -->
-                    <div class="search-result-item">
-                      <div class="result-badge-square wa" title="WhatsApp Chat">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.979-.275-.1-.475-.15-.675.15-.2.301-.775.979-.95 1.18-.175.2-.35.226-.65.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.085-.175-.3-.019-.462.131-.611.136-.134.301-.35.451-.526.15-.175.2-.3.301-.5.1-.2.05-.375-.025-.525-.075-.15-.675-1.628-.925-2.228-.243-.585-.49-.506-.675-.515-.175-.008-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.027-1.05 2.505s1.075 2.904 1.225 3.104c.15.2 2.116 3.23 5.126 4.53.716.31 1.275.495 1.71.634.719.229 1.373.197 1.89.12.577-.087 1.78-.728 2.03-1.431.25-.702.25-1.303.175-1.43-.075-.128-.275-.203-.575-.353z"/><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm0 18.067c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.4 0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25z"/></svg>
+                    <!-- Result Set 2: Matched to "Apex Logistics" (9s - 18s) -->
+                    <div class="search-results-group results--2">
+                      <div class="search-result-item">
+                        <div class="result-badge-square company" title="Company Profile">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 11h2M6 15h2M16 11h2M16 15h2M10 21V3h4v18"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>Apex Logistics Bhd</strong>
+                        </div>
+                        <span class="result-tag-deal">RM 145k</span>
                       </div>
-                      <div class="result-body">
-                        <strong>WhatsApp · Tan Sri Lim</strong>
-                      </div>
-                      <span class="result-meta-time">10:03 AM</span>
-                    </div>
 
-                    <!-- Result 3: Matched PDF Quote Document -->
-                    <div class="search-result-item">
-                      <div class="result-badge-square doc" title="PDF Document">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                      <div class="search-result-item">
+                        <div class="result-badge-square email" title="Email Inbound">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>Email · Sarah Tan</strong>
+                        </div>
+                        <span class="result-meta-time">11:42 AM</span>
                       </div>
-                      <div class="result-body">
-                        <strong>Proposal_Kilang_Maju.pdf</strong>
+
+                      <div class="search-result-item">
+                        <div class="result-badge-square doc" title="PDF Document">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div class="result-body">
+                          <strong>Contract_Apex_2026.pdf</strong>
+                        </div>
+                        <span class="result-meta-time">2.1 MB</span>
                       </div>
-                      <span class="result-meta-time">1.4 MB</span>
                     </div>
                   </div>
                 </div>
               </article>
 
-              <!-- Pod 04 (Bottom-Right): Connected Pipelines -->
+              <!-- Pod 04 (Bottom-Right): Connected Pipelines (Same Deal Progress Across 4 Stages) -->
               <article class="workspace-pod pod-pipeline">
                 <div class="pod-text-block">
                   <h3 class="pod-title">Connected Pipelines</h3>
                   <p class="pod-desc">Move conversations seamlessly into Kanban stages with real-time deal values.</p>
                 </div>
                 <div class="pipeline-clean-widget">
-                  <!-- Horizontal Pipeline Stepper -->
+                  <!-- Horizontal Pipeline Stepper (Animates across 4 stages every 5s) -->
                   <div class="pipeline-stepper" aria-label="Pipeline Stage Progress">
-                    <div class="step-item is-done">
-                      <span class="step-dot">✓</span>
+                    <div class="step-item step-item--1">
+                      <span class="step-dot step-dot--1">✓</span>
                       <span class="step-name">Qualified</span>
                     </div>
-                    <div class="step-connector is-done"></div>
-                    <div class="step-item is-active">
-                      <span class="step-dot pulse-dot-green"></span>
+                    <div class="step-connector step-connector--1"></div>
+                    <div class="step-item step-item--2">
+                      <span class="step-dot step-dot--2"></span>
                       <span class="step-name">Proposal</span>
                     </div>
-                    <div class="step-connector"></div>
-                    <div class="step-item">
-                      <span class="step-dot"></span>
+                    <div class="step-connector step-connector--2"></div>
+                    <div class="step-item step-item--3">
+                      <span class="step-dot step-dot--3"></span>
                       <span class="step-name">Negotiation</span>
                     </div>
-                    <div class="step-connector"></div>
-                    <div class="step-item">
-                      <span class="step-dot"></span>
+                    <div class="step-connector step-connector--3"></div>
+                    <div class="step-item step-item--4">
+                      <span class="step-dot step-dot--4"></span>
                       <span class="step-name">Won</span>
                     </div>
                   </div>
 
-                  <!-- Compact Floating Deal Card -->
-                  <div class="pipeline-deal-card">
-                    <div class="deal-card-topline">
-                      <div class="deal-card-title">
-                        <strong>Kilang Maju Sdn Bhd</strong>
-                        <small>Industrial Machinery · WhatsApp Deal</small>
+                  <!-- Multi-Stage Animated Floating Deal Deck (Tracking Progress of "Kilang Maju Sdn Bhd") -->
+                  <div class="pipeline-deal-deck">
+                    <!-- Stage 1 (0s - 5s): Qualified Lead -->
+                    <div class="pipeline-deal-card deal-card--stage1">
+                      <div class="deal-card-topline">
+                        <div class="deal-card-title">
+                          <strong>Kilang Maju Sdn Bhd</strong>
+                          <small>Industrial Machinery · WhatsApp Inbound</small>
+                        </div>
+                        <span class="deal-card-amount">RM 90,000</span>
                       </div>
-                      <span class="deal-card-amount">RM 18,500</span>
+                      <div class="deal-card-meter">
+                        <div class="meter-bar">
+                          <span class="meter-fill fill--stage1"></span>
+                        </div>
+                        <div class="meter-labels">
+                          <span>Stage 1: Lead Qualified</span>
+                          <span class="prob-pill">25% Win Prob</span>
+                        </div>
+                      </div>
+                      <div class="deal-card-integrations">
+                        <span class="deal-chip">💬 WhatsApp Synced</span>
+                        <span class="deal-chip">⚡ Deal Created</span>
+                      </div>
                     </div>
-                    <div class="deal-card-meter">
-                      <div class="meter-bar">
-                        <span class="meter-fill" style="width: 80%;"></span>
+
+                    <!-- Stage 2 (5s - 10s): Proposal Sent -->
+                    <div class="pipeline-deal-card deal-card--stage2">
+                      <div class="deal-card-topline">
+                        <div class="deal-card-title">
+                          <strong>Kilang Maju Sdn Bhd</strong>
+                          <small>Industrial Machinery · WhatsApp Deal</small>
+                        </div>
+                        <span class="deal-card-amount">RM 90,000</span>
                       </div>
-                      <div class="meter-labels">
-                        <span>Proposal Sent</span>
-                        <span class="prob-pill">80% Win Prob</span>
+                      <div class="deal-card-meter">
+                        <div class="meter-bar">
+                          <span class="meter-fill fill--stage2"></span>
+                        </div>
+                        <div class="meter-labels">
+                          <span>Stage 2: Quotation Sent</span>
+                          <span class="prob-pill">50% Win Prob</span>
+                        </div>
+                      </div>
+                      <div class="deal-card-integrations">
+                        <span class="deal-chip">💬 WhatsApp Synced</span>
+                        <span class="deal-chip">📄 Proposal_v2.pdf</span>
                       </div>
                     </div>
-                    <div class="deal-card-integrations">
-                      <span class="deal-chip">💬 WhatsApp Synced</span>
-                      <span class="deal-chip">⚡ LHDN E-Invoice</span>
+
+                    <!-- Stage 3 (10s - 15s): Negotiation -->
+                    <div class="pipeline-deal-card deal-card--stage3">
+                      <div class="deal-card-topline">
+                        <div class="deal-card-title">
+                          <strong>Kilang Maju Sdn Bhd</strong>
+                          <small>Industrial Machinery · WhatsApp Deal</small>
+                        </div>
+                        <span class="deal-card-amount">RM 90,000</span>
+                      </div>
+                      <div class="deal-card-meter">
+                        <div class="meter-bar">
+                          <span class="meter-fill fill--stage3"></span>
+                        </div>
+                        <div class="meter-labels">
+                          <span>Stage 3: Terms Review</span>
+                          <span class="prob-pill">80% Win Prob</span>
+                        </div>
+                      </div>
+                      <div class="deal-card-integrations">
+                        <span class="deal-chip">💬 WhatsApp Synced</span>
+                        <span class="deal-chip">📝 Contract Approved</span>
+                      </div>
+                    </div>
+
+                    <!-- Stage 4 (15s - 20s): Closed Won -->
+                    <div class="pipeline-deal-card deal-card--stage4">
+                      <div class="deal-card-topline">
+                        <div class="deal-card-title">
+                          <strong>Kilang Maju Sdn Bhd</strong>
+                          <small>Industrial Machinery · WhatsApp Deal</small>
+                        </div>
+                        <span class="deal-card-amount deal-amount--won">RM 90,000</span>
+                      </div>
+                      <div class="deal-card-meter">
+                        <div class="meter-bar">
+                          <span class="meter-fill fill--stage4"></span>
+                        </div>
+                        <div class="meter-labels">
+                          <span class="stage-won-label">Stage 4: Deal Won!</span>
+                          <span class="prob-pill prob-pill--won">100% Won</span>
+                        </div>
+                      </div>
+                      <div class="deal-card-integrations">
+                        <span class="deal-chip chip--won">🎉 Closed Won</span>
+                        <span class="deal-chip">⚡ LHDN E-Invoice</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1232,12 +1394,6 @@
             <span class="community-eyebrow">COMMUNITY & UPDATES</span>
             <h2 id="community-title">Follow the journey on Instagram.</h2>
             <p>Join Malaysian sales leaders getting weekly sales playbooks, automation breakdowns, and product updates.</p>
-            <div class="social-proof-bar">
-              <a href="https://www.instagram.com/rakansales" target="_blank" rel="noopener noreferrer" class="instagram-pill">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                <span>Follow @rakansales on Instagram →</span>
-              </a>
-            </div>
           </header>
 
           <!-- 4-Column Instagram Post Cards Grid -->
@@ -1294,6 +1450,13 @@
               </div>
             </a>
           </div>
+
+          <div class="community-footer">
+            <a href="https://www.instagram.com/rakansales" target="_blank" rel="noopener noreferrer" class="instagram-pill">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>Follow @rakansales on Instagram →</span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1330,28 +1493,34 @@
             <div class="cta-platform-stage" role="region" aria-label="Supported platform integrations">
               <!-- Left Flank Icons -->
               <div class="platform-icon-cluster platform-icon-cluster--left">
-                <div class="platform-bubble platform-bubble--whatsapp" title="WhatsApp Business" data-float="1">
-                  <svg viewBox="0 0 32 32" fill="currentColor" width="22" height="22" aria-hidden="true">
-                    <path fill="#25D366" d="M16 2C8.28 2 2 8.28 2 16c0 2.72.78 5.27 2.13 7.43L2.5 29.5l6.3-1.61C10.84 29.13 13.34 30 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2z"/>
-                    <path fill="#fff" d="M23.1 19.95c-.35-.18-2.07-1.02-2.39-1.14-.32-.12-.55-.18-.78.18-.23.35-.9 1.14-1.1 1.38-.2.23-.4.26-.75.09-.35-.18-1.48-.55-2.82-1.74-1.04-.93-1.74-2.08-1.95-2.43-.2-.35-.02-.54.15-.71.16-.16.35-.4.52-.6.18-.2.23-.35.35-.58.12-.23.06-.43-.03-.6-.09-.18-.78-1.88-1.07-2.58-.28-.68-.57-.59-.78-.6h-.67c-.23 0-.6.09-.92.43-.32.35-1.22 1.19-1.22 2.9 0 1.71 1.25 3.36 1.42 3.6.18.23 2.45 3.75 5.94 5.25.83.36 1.48.57 1.98.73.83.27 1.59.23 2.19.14.67-.1 2.07-.85 2.36-1.66.29-.82.29-1.52.2-1.66-.08-.15-.31-.24-.66-.42z"/>
+                <!-- WhatsApp -->
+                <div class="platform-bubble platform-bubble--whatsapp" title="WhatsApp Business">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                    <path fill="#25D366" d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    <path fill="#FFFFFF" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--messenger" title="Facebook Messenger" data-float="2">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+
+                <!-- Facebook Messenger -->
+                <div class="platform-bubble platform-bubble--messenger" title="Facebook Messenger">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                     <defs>
-                      <linearGradient id="msg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00B2FE"/>
-                        <stop offset="50%" stop-color="#006AFF"/>
-                        <stop offset="100%" stop-color="#A033FF"/>
+                      <linearGradient id="msg-bubble-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#0078FF"/>
+                        <stop offset="45%" stop-color="#00C6FF"/>
+                        <stop offset="85%" stop-color="#A033FF"/>
+                        <stop offset="100%" stop-color="#FF5280"/>
                       </linearGradient>
                     </defs>
-                    <path fill="url(#msg-grad)" d="M16 2.5C8.54 2.5 2.5 8.16 2.5 15.13c0 3.96 1.96 7.5 5.03 9.8v4.82l4.63-2.55c1.22.34 2.51.53 3.84.53 7.46 0 13.5-5.66 13.5-12.63S23.46 2.5 16 2.5zm1.38 16.97l-3.48-3.71-6.79 3.71 7.47-7.93 3.56 3.71 6.7-3.71-7.46 7.93z"/>
+                    <path fill="url(#msg-bubble-grad)" d="M12 0C5.24 0 0 4.952 0 11.64c0 3.499 1.434 6.521 3.769 8.61a.96.96 0 0 1 .323.683l.065 2.135a.96.96 0 0 0 1.347.85l2.381-1.053a.96.96 0 0 1 .641-.046A13 13 0 0 0 12 23.28c6.76 0 12-4.952 12-11.64S18.76 0 12 0m6.806 7.44c.522-.03.971.567.63 1.094l-4.178 6.457a.707.707 0 0 1-.977.208l-3.87-2.504a.44.44 0 0 0-.49.007l-4.363 3.01c-.637.438-1.415-.317-.995-.966l4.179-6.457a.706.706 0 0 1 .977-.21l3.87 2.505c.15.097.344.094.491-.007l4.362-3.008a.7.7 0 0 1 .364-.13"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--instagram" title="Instagram Direct" data-float="3">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+
+                <!-- Instagram Direct -->
+                <div class="platform-bubble platform-bubble--instagram" title="Instagram Direct">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                     <defs>
-                      <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <linearGradient id="ig-bubble-grad" x1="0%" y1="100%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#FFDC80"/>
                         <stop offset="25%" stop-color="#F56040"/>
                         <stop offset="50%" stop-color="#E1306C"/>
@@ -1359,15 +1528,17 @@
                         <stop offset="100%" stop-color="#833AB4"/>
                       </linearGradient>
                     </defs>
-                    <rect width="28" height="28" x="2" y="2" rx="8" fill="url(#ig-grad)"/>
-                    <circle cx="16" cy="16" r="6" fill="none" stroke="#fff" stroke-width="2.2"/>
-                    <circle cx="22.5" cy="9.5" r="1.5" fill="#fff"/>
+                    <rect width="24" height="24" rx="6" fill="url(#ig-bubble-grad)"/>
+                    <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8"/>
+                    <circle cx="12" cy="12" r="4.2" fill="none" stroke="#FFFFFF" stroke-width="1.8"/>
+                    <circle cx="17.4" cy="6.6" r="1.1" fill="#FFFFFF"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--telegram" title="Telegram" data-float="4">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                    <circle cx="16" cy="16" r="14" fill="#29B6F6"/>
-                    <path fill="#fff" d="M22.8 9.2l-14 5.4c-.95.38-.94.92-.18 1.15l3.6 1.12 8.33-5.26c.39-.24.76-.11.46.15l-6.75 6.09-.25 3.65c.36 0 .52-.16.72-.36l1.73-1.68 3.6 2.66c.66.37 1.14.18 1.3-.61l2.36-11.13c.24-.97-.37-1.41-.92-1.18z"/>
+
+                <!-- Telegram -->
+                <div class="platform-bubble platform-bubble--telegram" title="Telegram">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                    <path fill="#26A5E4" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
                   </svg>
                 </div>
               </div>
@@ -1386,32 +1557,38 @@
 
               <!-- Right Flank Icons -->
               <div class="platform-icon-cluster platform-icon-cluster--right">
-                <div class="platform-bubble platform-bubble--gmail" title="Gmail & Outlook" data-float="5">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                    <path fill="#4285F4" d="M5.5 24V11.2L16 19.1l10.5-7.9V24c0 1.1-.9 2-2 2h-17c-1.1 0-2-.9-2-2z"/>
-                    <path fill="#34A853" d="M24.5 6h-17c-1.1 0-2 .9-2 2v3.2l10.5 7.9 10.5-7.9V8c0-1.1-.9-2-2-2z"/>
-                    <path fill="#EA4335" d="M16 19.1L5.5 11.2 4 12.3V24c0 1.1.9 2 2 2h2.5V13.8L16 19.1z"/>
-                    <path fill="#FBBC05" d="M16 19.1l7.5-5.3V26h2.5c1.1 0 2-.9 2-2V12.3l-1.5-1.1L16 19.1z"/>
+                <!-- Gmail & Email -->
+                <div class="platform-bubble platform-bubble--gmail" title="Gmail &amp; Outlook">
+                  <svg viewBox="0 0 512 512" width="28" height="28" aria-hidden="true">
+                    <path fill="#4285F4" d="M34.9 448h81.5V250.2L0 163v250.2C0 432.5 15.7 448 34.9 448"/>
+                    <path fill="#34A853" d="M395.6 448h81.5c19.3 0 34.9-15.7 34.9-34.9V163l-116.4 87.3"/>
+                    <path fill="#FBBC04" d="M395.6 99v151.3L512 163v-46.5c0-43.2-49.3-67.8-83.8-41.9"/>
+                    <path fill="#EA4335" d="M116.4 250.2V99L256 203.7 395.6 99v151.3L256 355"/>
+                    <path fill="#C5221F" d="M0 116.4V163l116.4 87.3V99L83.8 74.5C49.2 48.6 0 73.2 0 116.4"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--tiktok" title="TikTok" data-float="6">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                    <circle cx="16" cy="16" r="14" fill="#000000"/>
-                    <path fill="#25F4EE" d="M21 9.5a5 5 0 0 1-3.5-1.5v8.5a4.5 4.5 0 1 1-4.5-4.5c.3 0 .7.03 1 .1v2.5a2 2 0 1 0 1 1.9V5h2.5c.3 1.8 1.7 3.2 3.5 3.5v1z"/>
-                    <path fill="#FE2C55" d="M20.5 9a5 5 0 0 1-3.5-1.5v8.5a4.5 4.5 0 1 1-4.5-4.5c.3 0 .7.03 1 .1v2.5a2 2 0 1 0 1 1.9V5h2.5c.3 1.8 1.7 3.2 3.5 3.5V9z" opacity=".85"/>
-                    <path fill="#fff" d="M20 9a5 5 0 0 1-3.5-1.5v8.5a4.5 4.5 0 1 1-4.5-4.5c.3 0 .7.03 1 .1v2.5a2 2 0 1 0 1 1.9V5h2.5c.3 1.8 1.7 3.2 3.5 3.5V9z"/>
+
+                <!-- TikTok -->
+                <div class="platform-bubble platform-bubble--tiktok" title="TikTok">
+                  <svg viewBox="30.39 0 451.21 512.03" width="26" height="28" aria-hidden="true">
+                    <path fill="#26F4EE" d="M345.2 0c8.2 70.4 50.4 120.1 118.7 124.5v66.8h-.4v-56.7C395.2 130.2 356 88.2 347.7 17.8h-72.3V314c10.4 133.3-93.4 137.3-133.2 86.7 46.6 29.1 122.3 10.2 113.3-104.5V0zM151 491c-40.8-8.4-78-32.8-99.8-68.5-53-86.7-5.2-228 148.5-242.5v83.5h-.3v-62.6C56.9 223.6 42.6 376.6 82.1 440.3c15.2 24.5 40.2 41.8 68.9 50.7"/>
+                    <path fill="#FB2C53" d="M365.9 17.8c5.4 46 24 85.1 55.2 107.9-42.3-16.3-67-53.7-73.4-107.9zm97.5 126.7c5.8 1.2 11.9 2.1 18.2 2.5v79.2C442 230 407.4 217 367 192.7l6.2 135.6c0 43.7.2 63.7-23.3 103.9-52.6 90.2-147.3 97.3-211.4 54.4 83.8 34.6 210.6-7.4 210.3-158.3v-148c40.4 24.3 75 37.3 114.6 33.4zm-264 57.2q12.45-2.55 26.1-3.9v83.5c-33.3 5.5-54.4 15.7-64.3 34.6-31.1 59.5 9 106.7 53.8 113.8-52.1 8.7-113.2-44.2-76.8-113.8 9.9-18.9 27.9-29.1 61.2-34.6zm99-183.9h2.8z"/>
+                    <path fill="#000000" d="M347.7 17.8c8.2 70.4 47.5 112.4 115.7 116.8v79.1c-39.6 3.9-74.2-9.1-114.6-33.4v148c.3 193.1-207.4 207.8-266.8 112-39.5-63.7-25.2-216.7 117.3-239.4v80.4c-33.3 5.5-51.3 15.7-61.2 34.6-61.1 116.8 152 186.3 137.2-1.9V17.8z"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--line" title="LINE" data-float="7">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                    <circle cx="16" cy="16" r="14" fill="#06C755"/>
-                    <path fill="#fff" d="M24 14.5c0-4.14-3.58-7.5-8-7.5s-8 3.36-8 7.5c0 3.71 2.89 6.8 6.88 7.37.27.06.63.18.72.41.08.21.05.53.03.74l-.12.72c-.04.23-.17.9-.07 1 .09.09.81-.48 2.22-1.32l.33-.2c1.38-.83 2.87-1.25 3.99-1.22 1.25-.04 2.02-.3 2.02-.3 4.42 0 8-3.36 8-7.5z"/>
+
+                <!-- LINE -->
+                <div class="platform-bubble platform-bubble--line" title="LINE">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                    <path fill="#06C755" d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
                   </svg>
                 </div>
-                <div class="platform-bubble platform-bubble--api" title="Custom API &amp; Webhooks" data-float="8">
-                  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                    <circle cx="16" cy="16" r="14" fill="#12251B" stroke="#23b750" stroke-width="1.5"/>
-                    <path fill="none" stroke="#23b750" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 11l-4 5 4 5M20 11l4 5-4 5M17 9l-2 14"/>
+
+                <!-- LinkedIn -->
+                <div class="platform-bubble platform-bubble--linkedin" title="LinkedIn">
+                  <svg viewBox="0 0 512 512" width="28" height="28" aria-hidden="true">
+                    <path fill="#0A66C2" d="M56.9 512h398.2c31.4 0 56.9-25.5 56.9-56.9V56.9C512 25.5 486.5 0 455.1 0H56.9C25.5 0 0 25.5 0 56.9v398.2C0 486.5 25.5 512 56.9 512"/>
+                    <path fill="#FFFFFF" d="M440.9 440.9h-76V311.5c0-35.5-13.5-55.3-41.6-55.3-30.5 0-46.5 20.6-46.5 55.3v129.4h-73.2V194.4h73.2v33.2s22-40.7 74.3-40.7 89.7 31.9 89.7 98v156zM116.3 162.1c-24.9 0-45.2-20.4-45.2-45.5s20.2-45.5 45.2-45.5 45.1 20.4 45.1 45.5-20.2 45.5-45.1 45.5M78.5 440.9h76.4V194.4H78.5z"/>
                   </svg>
                 </div>
               </div>

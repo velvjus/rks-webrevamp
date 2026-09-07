@@ -143,6 +143,37 @@ if (salesEngines && 'IntersectionObserver' in window && !window.matchMedia('(pre
   revealItems.forEach((item) => revealObserver.observe(item));
 }
 
+// Stripe-Style Interactive Spotlight & Parallax Tracking for Engine Cards
+const engineCards = [...document.querySelectorAll('[data-engine-card]')];
+if (engineCards.length > 0 && window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  engineCards.forEach((card) => {
+    let rAF = 0;
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const px = Number((((x / rect.width) - 0.5) * 2).toFixed(3));
+      const py = Number((((y / rect.height) - 0.5) * 2).toFixed(3));
+
+      if (rAF) cancelAnimationFrame(rAF);
+      rAF = requestAnimationFrame(() => {
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+        card.style.setProperty('--px', px);
+        card.style.setProperty('--py', py);
+      });
+    });
+
+    card.addEventListener('pointerleave', () => {
+      if (rAF) cancelAnimationFrame(rAF);
+      card.style.setProperty('--mouse-x', '50%');
+      card.style.setProperty('--mouse-y', '0%');
+      card.style.setProperty('--px', '0');
+      card.style.setProperty('--py', '0');
+    });
+  });
+}
+
 document.addEventListener('visibilitychange', () => {
   document.body.dataset.pageHidden = String(document.hidden);
 });
@@ -216,74 +247,230 @@ window.addEventListener('resize', () => {
 // Run on initial load
 updateThemesOnScroll();
 
-// Video Modal Trigger and Controls
-const videoTriggers = document.querySelectorAll('[data-video-trigger]');
-const chapterChips = document.querySelectorAll('.chapter-chip[data-video-start]');
-const videoModal = document.getElementById('videoModal');
-const videoIframe = document.getElementById('videoIframe');
-const videoCloseButtons = document.querySelectorAll('[data-video-close]');
-const YOUTUBE_VIDEO_BASE = 'https://www.youtube.com/embed/ukIm5NKqZ9E?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1';
-let lastFocusedElement = null;
+// Section 05: Platform Video Showcase & Synchronized Interactive Chapter Sync
+const videoFrame = document.getElementById('videoFrame');
+const videoPlayerContainer = document.getElementById('videoPlayerContainer');
+const videoResetBtn = document.getElementById('videoResetBtn');
+const chapterChips = [...document.querySelectorAll('.chapter-chip[data-video-start]')];
+const YOUTUBE_VIDEO_ID = 'ukIm5NKqZ9E';
+let ytPlayer = null;
+let ytProgressTimer = null;
+let isYtApiLoading = false;
+let currentActiveChapterIndex = 0;
 
-function openVideoModal(startTime = 0) {
-  if (!videoModal || !videoIframe) return;
-  lastFocusedElement = document.activeElement;
-  const startSec = parseInt(startTime, 10) || 0;
-  videoIframe.src = startSec > 0 ? `${YOUTUBE_VIDEO_BASE}&start=${startSec}` : YOUTUBE_VIDEO_BASE;
-  videoModal.classList.add('is-active');
-  videoModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+// Sorted list of chapter start times in seconds
+const chapterTimestamps = chapterChips.map((chip, index) => ({
+  index,
+  chip,
+  start: parseInt(chip.dataset.videoStart || '0', 10)
+})).sort((a, b) => a.start - b.start);
 
-  // Highlight active chapter
-  chapterChips.forEach((chip) => {
-    const chipTime = parseInt(chip.dataset.videoStart || '0', 10);
-    chip.classList.toggle('is-active', chipTime === startSec);
-  });
+function updateActiveChapterByTime(currentTime) {
+  if (typeof currentTime !== 'number' || isNaN(currentTime)) return;
+  // Find the last chapter whose start time is <= currentTime
+  let matchedIndex = 0;
+  for (let i = chapterTimestamps.length - 1; i >= 0; i--) {
+    if (currentTime >= chapterTimestamps[i].start - 0.5) {
+      matchedIndex = chapterTimestamps[i].index;
+      break;
+    }
+  }
 
-  // Focus modal close button for keyboard accessibility
-  const closeBtn = videoModal.querySelector('.video-modal__close');
-  if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
-}
-
-function closeVideoModal() {
-  if (!videoModal || !videoIframe) return;
-  videoModal.classList.remove('is-active');
-  videoModal.setAttribute('aria-hidden', 'true');
-  videoIframe.src = '';
-  document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-    lastFocusedElement.focus();
+  if (matchedIndex !== currentActiveChapterIndex) {
+    currentActiveChapterIndex = matchedIndex;
+    chapterChips.forEach((chip, idx) => {
+      chip.classList.toggle('is-active', idx === matchedIndex);
+    });
   }
 }
 
-videoTriggers.forEach((trigger) => {
-  trigger.addEventListener('click', (event) => {
-    event.preventDefault();
-    openVideoModal(0);
-  });
-  trigger.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openVideoModal(0);
+function startProgressPolling() {
+  stopProgressPolling();
+  ytProgressTimer = setInterval(() => {
+    if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && typeof ytPlayer.getPlayerState === 'function') {
+      const state = ytPlayer.getPlayerState();
+      // 1 = playing, 3 = buffering
+      if (state === 1 || state === 3) {
+        const time = ytPlayer.getCurrentTime();
+        updateActiveChapterByTime(time);
+      }
     }
-  });
+  }, 250);
+}
+
+function stopProgressPolling() {
+  if (ytProgressTimer) {
+    clearInterval(ytProgressTimer);
+    ytProgressTimer = null;
+  }
+}
+
+function playVideo(startTime = 0) {
+  if (!videoFrame || !videoPlayerContainer) return;
+
+  const startSec = parseInt(startTime, 10) || 0;
+
+  // Set visual playing state
+  videoFrame.classList.add('is-playing');
+  videoFrame.setAttribute('aria-expanded', 'true');
+
+  // Immediately update active chip
+  updateActiveChapterByTime(startSec);
+
+  // If YT.Player is already initialized:
+  if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+    ytPlayer.seekTo(startSec, true);
+    ytPlayer.playVideo();
+    startProgressPolling();
+    return;
+  }
+
+  // Load YouTube IFrame API if not present
+  if (!window.YT) {
+    if (!isYtApiLoading) {
+      isYtApiLoading = true;
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+  }
+
+  // If player container doesn't have iframe, initialize
+  if (window.YT && window.YT.Player) {
+    initYtPlayer(startSec);
+  } else {
+    // Direct embed fallback while API loads or if offline
+    videoPlayerContainer.innerHTML = `<iframe id="videoIframe" src="https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?enablejsapi=1&autoplay=1&rel=0&playsinline=1&modestbranding=1&start=${startSec}" title="RakanSales in 2 Mins - AI Sales CRM Overview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+
+    // Polling until window.YT is ready to bind
+    const checkYt = setInterval(() => {
+      if (window.YT && window.YT.Player) {
+        clearInterval(checkYt);
+        initYtPlayer(startSec);
+      }
+    }, 200);
+
+    setTimeout(() => clearInterval(checkYt), 3000);
+  }
+}
+
+function initYtPlayer(startSec = 0) {
+  try {
+    videoPlayerContainer.innerHTML = '<div id="ytPlayerMount"></div>';
+    ytPlayer = new window.YT.Player('ytPlayerMount', {
+      videoId: YOUTUBE_VIDEO_ID,
+      playerVars: {
+        autoplay: 1,
+        start: startSec,
+        rel: 0,
+        playsinline: 1,
+        modestbranding: 1
+      },
+      events: {
+        onReady: (event) => {
+          if (startSec > 0) {
+            event.target.seekTo(startSec, true);
+          }
+          event.target.playVideo();
+          startProgressPolling();
+        },
+        onStateChange: (event) => {
+          if (event.data === window.YT.PlayerState.PLAYING) {
+            startProgressPolling();
+          } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
+            stopProgressPolling();
+            if (event.data === window.YT.PlayerState.ENDED) {
+              updateActiveChapterByTime(0);
+            }
+          }
+        }
+      }
+    });
+  } catch (err) {
+    // Fallback: direct iframe
+    videoPlayerContainer.innerHTML = `<iframe id="videoIframe" src="https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?enablejsapi=1&autoplay=1&rel=0&playsinline=1&modestbranding=1&start=${startSec}" title="RakanSales in 2 Mins - AI Sales CRM Overview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+  }
+}
+
+// Global hook for YouTube IFrame API
+window.onYouTubeIframeAPIReady = function() {
+  if (videoFrame && videoFrame.classList.contains('is-playing') && !ytPlayer) {
+    const activeChip = document.querySelector('.chapter-chip.is-active');
+    const start = activeChip ? parseInt(activeChip.dataset.videoStart || '0', 10) : 0;
+    initYtPlayer(start);
+  }
+};
+
+// Also listen to postMessage from YouTube iframe as secondary fallback
+window.addEventListener('message', (event) => {
+  try {
+    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+    if (data && data.event === 'infoDelivery' && data.info && typeof data.info.currentTime === 'number') {
+      updateActiveChapterByTime(data.info.currentTime);
+    }
+  } catch (e) {}
 });
 
+function stopVideo() {
+  stopProgressPolling();
+  if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+    try { ytPlayer.stopVideo(); } catch (e) {}
+  }
+  if (videoPlayerContainer) {
+    videoPlayerContainer.innerHTML = '';
+  }
+  ytPlayer = null;
+  if (videoFrame) {
+    videoFrame.classList.remove('is-playing');
+    videoFrame.setAttribute('aria-expanded', 'false');
+  }
+  updateActiveChapterByTime(0);
+}
+
+// Click on Video Frame to play
+if (videoFrame) {
+  videoFrame.addEventListener('click', (event) => {
+    if (event.target.closest('#videoResetBtn')) return;
+    if (!videoFrame.classList.contains('is-playing')) {
+      event.preventDefault();
+      const activeChip = document.querySelector('.chapter-chip.is-active');
+      const start = activeChip ? parseInt(activeChip.dataset.videoStart || '0', 10) : 0;
+      playVideo(start);
+    }
+  });
+
+  videoFrame.addEventListener('keydown', (event) => {
+    if (!videoFrame.classList.contains('is-playing') && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      const activeChip = document.querySelector('.chapter-chip.is-active');
+      const start = activeChip ? parseInt(activeChip.dataset.videoStart || '0', 10) : 0;
+      playVideo(start);
+    }
+  });
+}
+
+// Chapter Chips Clicks
 chapterChips.forEach((chip) => {
   chip.addEventListener('click', (event) => {
     event.preventDefault();
-    const start = chip.dataset.videoStart || 0;
-    openVideoModal(start);
+    const start = parseInt(chip.dataset.videoStart || '0', 10);
+    playVideo(start);
   });
 });
 
-videoCloseButtons.forEach((btn) => {
-  btn.addEventListener('click', closeVideoModal);
-});
+// Reset / Stop button
+if (videoResetBtn) {
+  videoResetBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    stopVideo();
+  });
+}
 
+// Escape key to stop video playback
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && videoModal && videoModal.classList.contains('is-active')) {
-    closeVideoModal();
+  if (event.key === 'Escape' && videoFrame && videoFrame.classList.contains('is-playing')) {
+    stopVideo();
   }
 });
 
