@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RakanSales Brand Logos Gallery</title>
+  <style>
+    :root {
+      --bg: #0c0e0d;
+      --card-bg: #141715;
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #23b750;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      padding: 48px 24px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      font-size: 13px;
+      background: rgba(35, 183, 80, 0.15);
+      color: #62d816;
+      border: 1px solid rgba(98, 216, 22, 0.3);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 36px 0 20px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .logo-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+    .logo-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(35, 183, 80, 0.4);
+    }
+    .logo-preview-stage {
+      padding: 36px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 140px;
+      position: relative;
+    }
+    .preview-dark {
+      background: #090b0a;
+    }
+    .preview-light {
+      background: #f8fafc;
+    }
+    .preview-white-bubble {
+      background: #090b0a;
+    }
+    .bubble-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+    .logo-preview-stage img, .logo-preview-stage svg {
+      max-width: 100%;
+      max-height: 56px;
+      display: block;
+      object-fit: contain;
+    }
+    .bubble-wrapper img, .bubble-wrapper svg {
+      width: 32px;
+      height: 32px;
+      max-height: 32px;
+    }
+    .logo-info {
+      padding: 16px;
+      border-top: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.2);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .logo-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .logo-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-family: monospace;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 150ms ease;
+    }
+    .btn-download {
+      background: rgba(35, 183, 80, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(35, 183, 80, 0.3);
+      flex: 1;
+    }
+    .btn-download:hover {
+      background: #23b750;
+      color: #06090c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Brand Logos Gallery <span class="badge">15 SVG Assets</span></h1>
+      <p class="lead">Official vector SVG logos for RakanSales, platform integrations, and partner credentials.</p>
+    </header>
+
+    <!-- Platform Integration Logos -->
+    <h2 class="section-title">Platform Integration Logos (CTA Section)</h2>
+    <div class="grid">
+      <!-- WhatsApp -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="whatsapp.svg" alt="WhatsApp" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">WhatsApp</div>
+            <div class="logo-meta">whatsapp.svg</div>
+          </div>
+          <div class="actions">
+            <a href="whatsapp.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messenger -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="facebook-messenger.svg" alt="Facebook Messenger" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">Facebook Messenger</div>
+            <div class="logo-meta">facebook-messenger.svg</div>
+          </div>
+          <div class="actions">
+            <a href="facebook-messenger.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instagram -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="instagram.svg" alt="Instagram" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">Instagram Direct</div>
+            <div class="logo-meta">instagram.svg</div>
+          </div>
+          <div class="actions">
+            <a href="instagram.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telegram -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="telegram.svg" alt="Telegram" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">Telegram</div>
+            <div class="logo-meta">telegram.svg</div>
+          </div>
+          <div class="actions">
+            <a href="telegram.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gmail -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="gmail.svg" alt="Gmail" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">Gmail &amp; Email</div>
+            <div class="logo-meta">gmail.svg</div>
+          </div>
+          <div class="actions">
+            <a href="gmail.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TikTok -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="tiktok.svg" alt="TikTok" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">TikTok</div>
+            <div class="logo-meta">tiktok.svg</div>
+          </div>
+          <div class="actions">
+            <a href="tiktok.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- LINE -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="line.svg" alt="LINE" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">LINE</div>
+            <div class="logo-meta">line.svg</div>
+          </div>
+          <div class="actions">
+            <a href="line.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- LinkedIn -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-white-bubble">
+          <div class="bubble-wrapper">
+            <img src="linkedin.svg" alt="LinkedIn" />
+          </div>
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">LinkedIn</div>
+            <div class="logo-meta">linkedin.svg</div>
+          </div>
+          <div class="actions">
+            <a href="linkedin.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RakanSales Brand Identity -->
+    <h2 class="section-title">RakanSales Brand Identity</h2>
+    <div class="grid">
+      <!-- Symbol -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-dark">
+          <img src="rakansales-symbol.svg" alt="RakanSales Symbol" style="height: 52px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">RakanSales Symbol</div>
+            <div class="logo-meta">rakansales-symbol.svg</div>
+          </div>
+          <div class="actions">
+            <a href="rakansales-symbol.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logo Green -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-light">
+          <img src="rakansales-logo-green.svg" alt="RakanSales Green Logo" style="height: 40px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">RakanSales Logo (Green / Light Bg)</div>
+            <div class="logo-meta">rakansales-logo-green.svg</div>
+          </div>
+          <div class="actions">
+            <a href="rakansales-logo-green.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logo White -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-dark">
+          <img src="rakansales-logo-white.svg" alt="RakanSales White Logo" style="height: 40px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">RakanSales Logo (White / Dark Bg)</div>
+            <div class="logo-meta">rakansales-logo-white.svg</div>
+          </div>
+          <div class="actions">
+            <a href="rakansales-logo-white.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partner & Trust Credentials -->
+    <h2 class="section-title">Partner &amp; Trust Credentials</h2>
+    <div class="grid">
+      <!-- VeecoTech -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-dark">
+          <img src="veecotech-logo.svg" alt="VeecoTech" style="color: #fff; height: 32px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">VeecoTech Wordmark</div>
+            <div class="logo-meta">veecotech-logo.svg</div>
+          </div>
+          <div class="actions">
+            <a href="veecotech-logo.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Malaysia Digital -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-dark">
+          <img src="malaysia-digital-logo.svg" alt="Malaysia Digital" style="color: #fff; height: 34px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">Malaysia Digital Status</div>
+            <div class="logo-meta">malaysia-digital-logo.svg</div>
+          </div>
+          <div class="actions">
+            <a href="malaysia-digital-logo.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ISO 27001 -->
+      <div class="logo-card">
+        <div class="logo-preview-stage preview-dark">
+          <img src="iso-27001-logo.svg" alt="ISO/IEC 27001:2022" style="color: #fff; height: 34px;" />
+        </div>
+        <div class="logo-info">
+          <div>
+            <div class="logo-name">ISO/IEC 27001:2022</div>
+            <div class="logo-meta">iso-27001-logo.svg</div>
+          </div>
+          <div class="actions">
+            <a href="iso-27001-logo.svg" download class="btn btn-download">Download SVG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

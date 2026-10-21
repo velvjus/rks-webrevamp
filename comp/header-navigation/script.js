@@ -474,132 +474,48 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Section 07: 5-Step Continuous Workflow Tabs with Progress Bars and Auto-Switching
-const workflowSection = document.querySelector('.workflow-section');
-const workflowTabs = [...document.querySelectorAll('.workflow-tab')];
-const workflowSlides = [...document.querySelectorAll('.workflow-slide')];
+// Section 07: Powder-Style Sticky Stacking Cards Scroll Controller
+const workflowCards = [...document.querySelectorAll('.workflow-stack-card')];
+if (workflowCards.length) {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-if (workflowSection && workflowTabs.length && workflowSlides.length) {
-  const STEP_DURATION = 5000; // 5 seconds per lifecycle step
-  let currentWorkflowIndex = 0;
-  let workflowTimer = null;
-  let isSectionHovered = false;
-  let isSectionInView = true;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  const resetProgressBarAnimation = (tab) => {
-    const bar = tab.querySelector('.workflow-tab__progress-bar') || tab.querySelector('.step-progress-bar');
-    if (bar) {
-      bar.style.animation = 'none';
-      void bar.offsetHeight; // trigger reflow
-      bar.style.animation = '';
-    }
-  };
-
-  const switchWorkflowStep = (index, userInitiated = false) => {
-    currentWorkflowIndex = (index + workflowTabs.length) % workflowTabs.length;
-
-    workflowTabs.forEach((tab, i) => {
-      const isActive = i === currentWorkflowIndex;
-      const isPassed = i < currentWorkflowIndex;
-      tab.classList.toggle('is-active', isActive);
-      tab.classList.toggle('is-passed', isPassed);
-      tab.setAttribute('aria-selected', String(isActive));
-      tab.setAttribute('tabindex', isActive ? '0' : '-1');
-      if (isActive) {
-        resetProgressBarAnimation(tab);
-      }
-    });
-
-    workflowSlides.forEach((slide) => {
-      const isActive = Number(slide.dataset.stepSlide) === currentWorkflowIndex;
-      slide.classList.toggle('is-active', isActive);
-      slide.hidden = !isActive;
-    });
-
-    if (userInitiated) {
-      workflowTabs[currentWorkflowIndex].focus();
-    }
-
-    startWorkflowTimer();
-  };
-
-  const clearWorkflowTimer = () => {
-    if (workflowTimer) {
-      clearTimeout(workflowTimer);
-      workflowTimer = null;
-    }
-  };
-
-  const startWorkflowTimer = () => {
-    clearWorkflowTimer();
-    if (prefersReducedMotion.matches || !isSectionInView) {
+  const updateCardStacking = () => {
+    if (prefersReduced.matches) {
+      workflowCards.forEach((c) => c.classList.remove('is-stacked'));
       return;
     }
-    workflowTimer = setTimeout(() => {
-      switchWorkflowStep(currentWorkflowIndex + 1);
-    }, STEP_DURATION);
+
+    // Check overlapping of each card by the subsequent card
+    for (let i = 0; i < workflowCards.length - 1; i++) {
+      const currentCard = workflowCards[i];
+      const nextCard = workflowCards[i + 1];
+
+      const currentRect = currentCard.getBoundingClientRect();
+      const nextRect = nextCard.getBoundingClientRect();
+
+      // When the next card reaches and overlaps the current card
+      const isUnderneath = nextRect.top <= currentRect.top + 45;
+      currentCard.classList.toggle('is-stacked', isUnderneath);
+    }
   };
 
-  // Tab click and keyboard navigation
-  workflowTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => {
-      switchWorkflowStep(index);
-    });
-
-    tab.addEventListener('keydown', (event) => {
-      let nextIndex = null;
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault();
-        nextIndex = (currentWorkflowIndex + 1) % workflowTabs.length;
-      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        nextIndex = (currentWorkflowIndex - 1 + workflowTabs.length) % workflowTabs.length;
-      } else if (event.key === 'Home') {
-        event.preventDefault();
-        nextIndex = 0;
-      } else if (event.key === 'End') {
-        event.preventDefault();
-        nextIndex = workflowTabs.length - 1;
-      }
-
-      if (nextIndex !== null) {
-        switchWorkflowStep(nextIndex, true);
-      }
-    });
-  });
-
-  // IntersectionObserver to auto-play only when in view
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          isSectionInView = entry.isIntersecting;
-          if (entry.isIntersecting) {
-            startWorkflowTimer();
-          } else {
-            clearWorkflowTimer();
-          }
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateCardStacking();
+          ticking = false;
         });
-      },
-      { threshold: 0.2 }
-    );
-    observer.observe(workflowSection);
-  } else {
-    startWorkflowTimer();
-  }
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 
-  // Handle prefers-reduced-motion changes
-  prefersReducedMotion.addEventListener('change', () => {
-    if (prefersReducedMotion.matches) {
-      clearWorkflowTimer();
-    } else {
-      startWorkflowTimer();
-    }
-  });
-
-  // Initialize initial state
-  switchWorkflowStep(0);
+  window.addEventListener('resize', updateCardStacking, { passive: true });
+  updateCardStacking();
 }
 
 // Section 09: RAKAN AI Modules Accordion & Dynamic Viewport Switcher
