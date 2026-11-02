@@ -474,48 +474,91 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Section 07: Powder-Style Sticky Stacking Cards Scroll Controller
-const workflowCards = [...document.querySelectorAll('.workflow-stack-card')];
-if (workflowCards.length) {
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+// Section 07: Scroll-Triggered Lifecycle Stages
+// The section pins on desktop; each scroll step swaps to the next card.
+// Below 981px wide (or on short viewports) the cards render as a plain vertical list.
+const workflowScroll = document.querySelector('[data-workflow-scroll]');
+if (workflowScroll) {
+  const stageCards = [...workflowScroll.querySelectorAll('.workflow-stack-card')];
+  const stageSteps = [...workflowScroll.querySelectorAll('.workflow-progress__step')];
+  const pinQuery = window.matchMedia('(min-width: 981px) and (min-height: 640px)');
+  const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let activeStage = -1;
+  let stageTicking = false;
 
-  const updateCardStacking = () => {
-    if (prefersReduced.matches) {
-      workflowCards.forEach((c) => c.classList.remove('is-stacked'));
-      return;
-    }
+  const setActiveStage = (index) => {
+    if (index === activeStage) return;
+    activeStage = index;
+    stageCards.forEach((card, i) => {
+      card.classList.toggle('is-active', i === index);
+      card.classList.toggle('is-past', i < index);
+      card.inert = i !== index;
+    });
+    stageSteps.forEach((step, i) => {
+      step.classList.toggle('is-active', i === index);
+      step.classList.toggle('is-complete', i < index);
+      if (i === index) step.setAttribute('aria-current', 'step');
+      else step.removeAttribute('aria-current');
+    });
+  };
 
-    // Check overlapping of each card by the subsequent card
-    for (let i = 0; i < workflowCards.length - 1; i++) {
-      const currentCard = workflowCards[i];
-      const nextCard = workflowCards[i + 1];
+  const getScrollable = () => workflowScroll.offsetHeight - window.innerHeight;
+  const stageBars = stageSteps.map((step) => step.querySelector('.workflow-progress__bar'));
 
-      const currentRect = currentCard.getBoundingClientRect();
-      const nextRect = nextCard.getBoundingClientRect();
+  // Each bar fills in proportion to how far the reader has scrolled through its stage
+  const setStageFill = (progress) => {
+    const scaled = progress * stageCards.length;
+    stageBars.forEach((bar, i) => {
+      if (bar) bar.style.setProperty('--fill', Math.min(Math.max(scaled - i, 0), 1).toFixed(4));
+    });
+  };
 
-      // When the next card reaches and overlaps the current card
-      const isUnderneath = nextRect.top <= currentRect.top + 45;
-      currentCard.classList.toggle('is-stacked', isUnderneath);
+  const updateStage = () => {
+    stageTicking = false;
+    if (!pinQuery.matches) return;
+    const scrollable = getScrollable();
+    if (scrollable <= 0) return setActiveStage(0);
+    const rawProgress = Math.min(Math.max(-workflowScroll.getBoundingClientRect().top / scrollable, 0), 1);
+    setStageFill(rawProgress);
+    setActiveStage(Math.floor(Math.min(rawProgress, 0.9999) * stageCards.length));
+  };
+
+  const applyStageMode = () => {
+    const pinned = pinQuery.matches;
+    workflowScroll.classList.toggle('is-scroll-driven', pinned);
+    activeStage = -1;
+    if (pinned) {
+      updateStage();
+    } else {
+      stageCards.forEach((card) => {
+        card.classList.remove('is-active', 'is-past');
+        card.inert = false;
+      });
     }
   };
 
-  let ticking = false;
+  // Progress rail: jump to the middle of a stage's scroll window
+  stageSteps.forEach((step, i) => {
+    step.addEventListener('click', () => {
+      const trackTop = window.scrollY + workflowScroll.getBoundingClientRect().top;
+      const target = trackTop + getScrollable() * ((i + 0.5) / stageCards.length);
+      window.scrollTo({ top: target, behavior: reduceQuery.matches ? 'auto' : 'smooth' });
+    });
+  });
+
   window.addEventListener(
     'scroll',
     () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          updateCardStacking();
-          ticking = false;
-        });
-        ticking = true;
+      if (!stageTicking) {
+        stageTicking = true;
+        window.requestAnimationFrame(updateStage);
       }
     },
     { passive: true }
   );
-
-  window.addEventListener('resize', updateCardStacking, { passive: true });
-  updateCardStacking();
+  window.addEventListener('resize', updateStage, { passive: true });
+  pinQuery.addEventListener('change', applyStageMode);
+  applyStageMode();
 }
 
 // Section 09: RAKAN AI Modules Accordion & Dynamic Viewport Switcher

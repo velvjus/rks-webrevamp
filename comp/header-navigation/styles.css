@@ -1015,17 +1015,43 @@ body[data-dark-active="true"] .integrations-header p{color:#94a3b8}
 
 .powder-header__desc{margin:0;font-size:clamp(15px,1.15vw,17px);color:#94a3b8;line-height:1.6;text-wrap:pretty}
 
-/* Sticky Stacking Cards Container */
-.workflow-cards-stack{position:relative;display:flex;flex-direction:column;gap:clamp(40px,6vh,64px);width:100%}
+/* Scroll Track + Pinned Stage (enhanced by JS via .is-scroll-driven; static list otherwise) */
+.workflow-scroll{position:relative}
+.workflow-pin{position:relative}
 
-/* Individual Sticky Card */
-.workflow-stack-card{position:sticky;top:calc(clamp(84px,10vh,108px) + var(--card-index,0) * 12px);z-index:calc(10 + var(--card-index,0));width:100%;border-radius:24px;background:rgba(14,18,23,.96);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);overflow:hidden;transition:transform 320ms cubic-bezier(.2,.9,.3,1),opacity 320ms ease,box-shadow 320ms ease;will-change:transform,opacity}
-.workflow-stack-card.is-stacked{transform:scale(.97) translateY(-8px);opacity:.55;filter:brightness(.85)}
+/* Stage Progress Rail */
+.workflow-progress{display:none}
+.workflow-progress__step{position:relative;display:flex;align-items:baseline;gap:8px;flex:1 1 0;min-width:0;padding:0 0 14px;border:0;background:none;color:#64748b;font:inherit;font-size:13.5px;font-weight:500;text-align:left;cursor:pointer;transition:color 200ms ease}
+.workflow-progress__num{font-size:11.5px;font-weight:600;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.workflow-progress__bar{position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden}
+.workflow-progress__bar::after{content:"";position:absolute;inset:0;background:var(--green);transform:scaleX(var(--fill,0));transform-origin:left}
+.workflow-progress__step.is-complete,.workflow-progress__step.is-active{color:#e2e8f0}
+.workflow-progress__step.is-active .workflow-progress__num,.workflow-progress__step.is-complete .workflow-progress__num{color:#34d399}
+.workflow-progress__step:focus-visible{outline:2px solid var(--green);outline-offset:4px;border-radius:4px}
+@media (hover:hover) and (pointer:fine){.workflow-progress__step:hover{color:#fff}}
 
-.workflow-stack-card__inner{display:grid;grid-template-columns:1fr 1.18fr;align-items:center;gap:clamp(32px,4.5vw,64px);padding:clamp(32px,4vw,52px);min-height:520px;box-sizing:border-box}
+/* Cards Container (static fallback: vertical list) */
+.workflow-cards-stack{position:relative;display:flex;flex-direction:column;gap:clamp(28px,4vh,48px);width:100%}
+
+/* Individual Card */
+.workflow-stack-card{position:relative;width:100%;border-radius:24px;background:rgba(14,18,23,.96);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+
+.workflow-stack-card__inner{display:grid;grid-template-columns:1fr 1.32fr;align-items:center;gap:clamp(36px,5vw,80px);padding:clamp(36px,4.5vw,68px);min-height:620px;box-sizing:border-box}
+
+/* Scroll-driven mode: section pins, each scroll step swaps to the next card */
+.workflow-scroll.is-scroll-driven{height:calc(100vh + (var(--stage-count) - 1) * 75.6vh);width:min(1400px,calc(100vw - 64px));margin-left:calc((100% - min(1400px,calc(100vw - 64px))) / 2)}
+.workflow-scroll.is-scroll-driven .workflow-stack-card__inner,.workflow-scroll.is-scroll-driven .workflow-stack-card--reverse .workflow-stack-card__inner{grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:clamp(40px,4.5vw,72px);padding:clamp(40px,4vw,64px) clamp(40px,4vw,60px)}
+.workflow-scroll.is-scroll-driven .workflow-stack-card--reverse .workflow-stack-card__inner{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
+.workflow-scroll.is-scroll-driven .workflow-pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;gap:24px;padding:96px 0 28px;box-sizing:border-box}
+.workflow-scroll.is-scroll-driven .workflow-progress{display:flex;gap:clamp(12px,2vw,28px)}
+.workflow-scroll.is-scroll-driven .workflow-cards-stack{display:grid;flex:0 1 auto;height:clamp(540px,calc(100vh - 190px),820px)}
+.workflow-scroll.is-scroll-driven .workflow-stack-card{grid-area:1/1;height:100%;opacity:0;visibility:hidden;transform:translateY(40px) scale(.98);transition:opacity 560ms var(--ease-out),transform 560ms var(--ease-out),visibility 0s linear 560ms}
+.workflow-scroll.is-scroll-driven .workflow-stack-card.is-past{transform:translateY(-40px) scale(.98)}
+.workflow-scroll.is-scroll-driven .workflow-stack-card.is-active{opacity:1;visibility:visible;transform:none;transition:opacity 560ms var(--ease-out),transform 560ms var(--ease-out),visibility 0s}
+.workflow-scroll.is-scroll-driven .workflow-stack-card__inner{height:100%;min-height:0}
 
 /* Alternating Layout */
-.workflow-stack-card--reverse .workflow-stack-card__inner{grid-template-columns:1.18fr 1fr}
+.workflow-stack-card--reverse .workflow-stack-card__inner{grid-template-columns:1.32fr 1fr}
 .workflow-stack-card--reverse .workflow-stack-card__copy{order:2}
 .workflow-stack-card--reverse .workflow-stack-card__visual{order:1}
 
@@ -1142,7 +1168,6 @@ body[data-dark-active="true"] .integrations-header p{color:#94a3b8}
   .workflow-stack-card--reverse .workflow-stack-card__inner{grid-template-columns:1fr}
   .workflow-stack-card--reverse .workflow-stack-card__copy{order:1}
   .workflow-stack-card--reverse .workflow-stack-card__visual{order:2}
-  .workflow-stack-card{top:80px}
   .whatsapp-os-stage{grid-template-columns:1fr;gap:32px}
   .wa-grid-layout{grid-template-columns:1fr}
   .wa-context-sidebar{display:none}
@@ -1156,8 +1181,7 @@ body[data-dark-active="true"] .integrations-header p{color:#94a3b8}
   .whatsapp-section__header h2{font-size:30px}
 }
 @media (prefers-reduced-motion:reduce){
-  .workflow-stack-card{transition:none !important;transform:none !important}
-  .workflow-stack-card.is-stacked{transform:none !important;opacity:1 !important;filter:none !important}
+  .workflow-scroll.is-scroll-driven .workflow-stack-card,.workflow-scroll.is-scroll-driven .workflow-stack-card.is-past{transform:none}
 }
 
 /* ==========================================================================

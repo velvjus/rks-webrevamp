@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20261102-4" />
   </head>
   <body>
     <!--
@@ -612,7 +612,16 @@
             </div>
           </header>
 
-          <!-- Powder-Style Sticky Stacking Cards -->
+          <!-- Scroll-Triggered Lifecycle Stage: pinned viewport, one card per scroll step -->
+          <div class="workflow-scroll" data-workflow-scroll style="--stage-count:5">
+          <div class="workflow-pin">
+          <nav class="workflow-progress" aria-label="Lifecycle stages">
+            <button class="workflow-progress__step" type="button" data-stage-target="0"><span class="workflow-progress__num">01</span><span class="workflow-progress__label">Capture</span><span class="workflow-progress__bar" aria-hidden="true"></span></button>
+            <button class="workflow-progress__step" type="button" data-stage-target="1"><span class="workflow-progress__num">02</span><span class="workflow-progress__label">Engage</span><span class="workflow-progress__bar" aria-hidden="true"></span></button>
+            <button class="workflow-progress__step" type="button" data-stage-target="2"><span class="workflow-progress__num">03</span><span class="workflow-progress__label">Automate</span><span class="workflow-progress__bar" aria-hidden="true"></span></button>
+            <button class="workflow-progress__step" type="button" data-stage-target="3"><span class="workflow-progress__num">04</span><span class="workflow-progress__label">Close</span><span class="workflow-progress__bar" aria-hidden="true"></span></button>
+            <button class="workflow-progress__step" type="button" data-stage-target="4"><span class="workflow-progress__num">05</span><span class="workflow-progress__label">Grow</span><span class="workflow-progress__bar" aria-hidden="true"></span></button>
+          </nav>
           <div class="workflow-cards-stack" id="workflow-cards" aria-label="Sales lifecycle stages">
             <!-- Card 01: Capture (Copy Left / Visual Right) -->
             <article class="workflow-stack-card" data-stack-index="0" id="lifecycle-stage-1" style="--card-index:0">
@@ -763,6 +772,8 @@
                 </div>
               </div>
             </article>
+          </div>
+          </div>
           </div>
         </div>
       </section>
@@ -1716,6 +1727,6 @@
       </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20261102-3"></script>
   </body>
 </html>
