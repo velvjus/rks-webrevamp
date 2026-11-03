@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifecycle – Engage</title>
+<!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rke { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rke ---------- */
+  .rke {
+    --green: #23b750;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 7 / 4;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0e1115;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rke * { box-sizing: border-box; margin: 0; }
+  .rke img { display: block; max-width: none; }
+  .rke-stage { position: absolute; left: 0; top: 0; width: 700px; height: 400px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rke-abs { position: absolute; }
+  .rke-abs > img { width: 100%; height: 100%; }
+
+  /* ---------- Background ---------- */
+  .rke-glow-big { left: -111.78px; top: 136.66px; width: 923.57px; height: 590.68px; opacity: 0; transition: opacity 1200ms var(--ease-out); }
+  .rke-glow-ai { left: 128.53px; top: 56.53px; width: 464.44px; height: 160.95px; opacity: 0; transition: opacity 600ms var(--ease-out); }
+  .rke-glow-ai > img { position: absolute; inset: -46.74% -16.2%; width: auto; height: auto; }
+  .rke-ring { left: 20.63px; top: 126.11px; width: 165.51px; height: 165.51px; opacity: 0; transition: opacity 1000ms var(--ease-out); }
+  .rke.is-live .rke-ring { animation: rke-breathe 5s ease-in-out infinite alternate; }
+  @keyframes rke-breathe { from { transform: scale(0.94); } to { transform: scale(1.08); } }
+  .rke.is-in .rke-glow-big, .rke.is-in .rke-ring { opacity: 1; }
+  .rke.is-in .rke-glow-ai { opacity: 0.55; }
+  .rke.thinking .rke-glow-ai { opacity: 1; animation: rke-glow 1.2s ease-in-out infinite alternate; }
+  @keyframes rke-glow { from { opacity: 0.7; } to { opacity: 1; } }
+
+  /* ---------- Chat bubbles ---------- */
+  .rke-msg { position: absolute; display: flex; align-items: flex-end; gap: 10.81px; opacity: 0; z-index: 3; }
+  .rke-q { left: 107.03px; top: 46.23px; }
+  .rke-a { left: 190.24px; top: 109.31px; width: 397.24px; }
+  .rke-av { position: relative; flex: none; width: 45.4px; height: 45.4px; border-radius: 999px; overflow: hidden; border: 0.71px solid rgba(0, 0, 0, 0.16); }
+  .rke-av.customer img { position: absolute; left: -17.45%; top: -5.78%; width: 134.91%; height: 134.91%; }
+  .rke-av.ai { background: linear-gradient(to bottom, #49c5f2, #0e2b6c); overflow: visible; }
+  .rke-av.ai::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; }
+  .rke-av.ai img { position: absolute; left: 50%; top: 50%; width: 28.82px; height: 28.82px; transform: translate(-50%, -50%); }
+  .rke-av.ai .ping { position: absolute; inset: -2px; border-radius: 999px; border: 2px solid #49c5f2; opacity: 0; }
+  .rke.thinking .rke-av.ai .ping { animation: rke-ping 1.2s cubic-bezier(0.23, 1, 0.32, 1) infinite; }
+  @keyframes rke-ping { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(1.7); } }
+
+  .rke-qb { background: #404040; border: 1.08px solid #404040; border-radius: 8.65px; padding: 8.65px 12.97px; color: #f5f5f5; font-size: 14.76px; line-height: 25.94px; white-space: nowrap; }
+  .rke-qb span { display: inline-block; }
+
+  .rke-ab { position: relative; flex: 1; min-width: 0; overflow: hidden; background: #eaf7ef; border: 1.34px solid #54fac9; border-radius: 8.65px; padding: 8.65px 12.97px; box-shadow: 0 0 0 0 rgba(84, 250, 201, 0); }
+  .rke-state { display: flex; align-items: center; gap: 7.6px; }
+  .rke-badge { display: flex; align-items: center; gap: 2.37px; padding: 2.37px 9.5px 2.37px 7.12px; border-radius: 18.99px; border: 1.19px solid #e9fff8; background: radial-gradient(120% 220% at 20% 0%, #19d452, #1fa557); color: #fff; font-size: 14.24px; font-weight: 500; line-height: 21.37px; white-space: nowrap; }
+  .rke-badge img { width: 14.24px; height: 14.24px; }
+  .rke.thinking .rke-badge img { animation: rke-spin 1s linear infinite; }
+  @keyframes rke-spin { to { transform: rotate(360deg); } }
+  .rke-searching { color: var(--green); font-size: 13.12px; font-weight: 500; line-height: 17.04px; white-space: nowrap; }
+  .rke-searching i { font-style: normal; display: inline-block; animation: rke-dot 1.2s ease-in-out infinite; }
+  .rke-searching i:nth-child(2) { animation-delay: 0.15s; }
+  @keyframes rke-dot { 0%, 60%, 100% { opacity: 0.25; } 30% { opacity: 1; } }
+  .rke-sparkle { position: absolute; right: 12.97px; top: 13.67px; width: 16.93px; height: 16.93px; }
+  .rke.thinking .rke-sparkle { animation: rke-twinkle 0.9s ease-in-out infinite alternate; }
+  @keyframes rke-twinkle { from { transform: scale(0.8) rotate(0deg); opacity: 0.6; } to { transform: scale(1.15) rotate(25deg); opacity: 1; } }
+
+  .rke-answer { display: none; }
+  .rke-answer p { color: #0b3d1e; font-size: 13.12px; font-weight: 500; line-height: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rke-ab.answered .rke-state { display: none; }
+  .rke-ab.answered .rke-answer { display: block; }
+  .rke-ab.answered .rke-sparkle { display: none; }
+
+  /* ---------- Knowledge Base card ---------- */
+  .rke-card {
+    left: 78.5px; top: 178px; width: 543px; height: 576px;
+    background: #fff; border: 0.67px solid #e5e7eb; border-radius: 7.27px;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.25);
+    overflow: hidden; color: #101828;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out);
+    transition-delay: 200ms;
+  }
+  .rke.is-in .rke-card { opacity: 1; transform: none; }
+  .rke-head { display: flex; align-items: center; justify-content: space-between; padding: 16.83px; border-bottom: 0.67px solid #e5e5e5; }
+  .rke-title { display: flex; align-items: center; gap: 8.41px; }
+  .rke-title h3 { font-size: 13px; font-weight: 700; line-height: 16.83px; }
+  .rke-title span { background: #f3f4f6; border-radius: 999px; padding: 1.68px 6.73px; font-size: 9.26px; font-weight: 600; color: #4a5565; line-height: 13.22px; }
+  .rke-head p { padding-top: 1.68px; font-size: 10.1px; color: #6a7282; line-height: 13.46px; white-space: nowrap; }
+  .rke-btns { display: flex; gap: 6.73px; }
+  .rke-btn { display: flex; align-items: center; gap: 5.05px; padding: 5.05px 10.1px; border-radius: 5.65px; font-size: 10.1px; font-weight: 600; line-height: 13.46px; white-space: nowrap; }
+  .rke-btn img { width: 11.78px; height: 11.78px; }
+  .rke-btn.ghost { background: #f9fafb; border: 0.67px solid #e5e7eb; color: #364153; box-shadow: 0 0.84px 0 rgba(0, 0, 0, 0.05); }
+  .rke-btn.primary { background: #008236; color: #fff; padding: 5.05px 11.78px; }
+  .rke.syncing .rke-btn.ghost img { animation: rke-spin 0.9s linear infinite; }
+
+  .rke-filters { display: flex; align-items: center; justify-content: space-between; padding: 10.1px 16.83px; background: rgba(249, 250, 251, 0.6); border-bottom: 0.67px solid #e5e5e5; }
+  .rke-tabs { display: flex; gap: 5.05px; }
+  .rke-tab { display: flex; align-items: baseline; gap: 1px; height: 20.19px; padding: 3.5px 7px; border-radius: 4.04px; font-size: 10.1px; font-weight: 500; color: #6a7282; line-height: 13.46px; white-space: nowrap; }
+  .rke-tab small { font-size: 8.41px; opacity: 0.75; }
+  .rke-tab.on { background: #fff; color: #006045; border: 0.67px solid rgba(229, 231, 235, 0.8); box-shadow: 0 0.84px 0 rgba(0, 0, 0, 0.05); height: 21.88px; }
+  .rke-filter { position: relative; width: 215.41px; height: 25.24px; display: flex; align-items: center; padding-left: 26.93px; background: #fff; border: 0.67px solid #e5e7eb; border-radius: 5.65px; font-size: 10.1px; color: #99a1af; box-shadow: 0 0.84px 0 rgba(0, 0, 0, 0.05); }
+  .rke-filter img { position: absolute; left: 10.1px; top: 6.06px; width: 11.78px; height: 11.78px; }
+
+  .rke-list-clip { position: relative; overflow: hidden; height: 460px; }
+  .rke-scan { position: absolute; left: 0; right: 0; top: 0; height: 70px; z-index: 2; pointer-events: none; opacity: 0;
+              background: linear-gradient(to bottom, rgba(35, 183, 80, 0), rgba(35, 183, 80, 0.16) 50%, rgba(35, 183, 80, 0));
+              border-bottom: 1.5px solid rgba(35, 183, 80, 0.55); }
+  .rke.scanning .rke-scan { opacity: 1; animation: rke-scan 0.75s linear infinite; }
+  @keyframes rke-scan { from { transform: translateY(-70px); } to { transform: translateY(130px); } }
+
+  .rke-row { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 13.46px; border-bottom: 0.67px solid #f3f4f6;
+             opacity: 0; transform: translateY(10px);
+             transition: opacity 500ms var(--ease-out), transform 600ms var(--ease-out), background-color 300ms ease;
+             transition-delay: calc(500ms + var(--r) * 70ms), calc(500ms + var(--r) * 70ms), 0ms; }
+  .rke.is-in .rke-row { opacity: 1; transform: none; }
+  .rke-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px; background: var(--green); transform: scaleY(0); transition: transform 300ms var(--ease-out); }
+  .rke-row.match { background: #eaf7ef; }
+  .rke-row.match::before { transform: scaleY(1); }
+  .rke-row-l { display: flex; align-items: center; gap: 11.78px; min-width: 0; }
+  .rke-ico { flex: none; width: 30.29px; height: 30.29px; border-radius: 5.65px; display: flex; align-items: center; justify-content: center; border: 0.67px solid; }
+  .rke-ico img { width: 13.46px; height: 13.46px; }
+  .rke-ico.pdf { background: #fef2f2; border-color: #ffe2e2; }
+  .rke-ico.csv { background: #ecfdf5; border-color: #d0fae5; }
+  .rke-ico.url { background: #f0f9ff; border-color: #dff2fe; }
+  .rke-ico.docx { background: #eef2ff; border-color: #e0e7ff; }
+  .rke-name { font-size: 10.1px; font-weight: 600; line-height: 13.46px; white-space: nowrap; }
+  .rke-meta { display: flex; align-items: center; gap: 6.73px; padding-top: 1.68px; font-size: 9.26px; color: #6a7282; line-height: 13.22px; white-space: nowrap; }
+  .rke-meta b { font-size: 8.41px; font-weight: 700; color: #4a5565; letter-spacing: 0.42px; text-transform: uppercase; }
+  .rke-meta em { display: flex; align-items: center; gap: 3.37px; font-style: normal; font-weight: 500; color: #007a55; }
+  .rke-meta em::before { content: ""; width: 5.05px; height: 5.05px; border-radius: 999px; background: #00bc7d; }
+  .rke-row-r { display: flex; align-items: center; gap: 8px; flex: none; }
+  .rke-used { display: flex; align-items: center; gap: 3px; padding: 2.5px 7px; border-radius: 999px; background: var(--green); color: #fff; font-size: 8.8px; font-weight: 600; white-space: nowrap; opacity: 0; transform: scale(0.85); }
+  .rke-trash { padding: 5.05px; opacity: 0.7; }
+  .rke-trash img { width: 11.78px; height: 11.78px; }
+
+  /* ---------- Reduced motion: no loops, no movement ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rke-card, .rke-row { transform: none !important; }
+    .rke *, .rke *::before { animation: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== RakanSales Lifecycle · 2.2 Engage ===== -->
+<div class="rke" data-rke aria-label="RakanSales AI answers customer questions using your knowledge base" role="img">
+  <div class="rke-stage">
+    <div class="rke-abs rke-ring"><img src="assets/ring.svg" alt=""></div>
+    <div class="rke-abs rke-glow-big"><img src="assets/glow-mint-big.svg" alt=""></div>
+    <div class="rke-abs rke-glow-ai"><img src="assets/glow-mint-ai.svg" alt=""></div>
+
+    <!-- Customer question -->
+    <div class="rke-msg rke-q" data-q>
+      <div class="rke-av customer"><img src="assets/avatar-customer.png" alt=""></div>
+      <div class="rke-qb"><span data-q-text>Are your animals pasture-fed?</span></div>
+    </div>
+
+    <!-- AI reply -->
+    <div class="rke-msg rke-a" data-a>
+      <div class="rke-ab" data-ab>
+        <div class="rke-state">
+          <div class="rke-badge"><img src="assets/i-loading.svg" alt="">Thinking</div>
+          <div class="rke-searching">Searching knowledge<i>.</i><i>.</i></div>
+        </div>
+        <img class="rke-sparkle" src="assets/i-sparkle.svg" alt="">
+        <div class="rke-answer">
+          <p data-a-text></p>
+        </div>
+      </div>
+      <div class="rke-av ai"><span class="ping"></span><img src="assets/i-message.svg" alt=""></div>
+    </div>
+
+    <!-- Knowledge Base -->
+    <div class="rke-abs rke-card">
+      <div class="rke-head">
+        <div>
+          <div class="rke-title"><h3>Knowledge Base</h3><span>8 sources</span></div>
+          <p>Documents and URLs indexed for AI-grounded sales answers.</p>
+        </div>
+        <div class="rke-btns">
+          <div class="rke-btn ghost"><img src="assets/i-sync.svg" alt="">Sync Index</div>
+          <div class="rke-btn primary"><img src="assets/i-plus.svg" alt="">Add Source</div>
+        </div>
+      </div>
+      <div class="rke-filters">
+        <div class="rke-tabs">
+          <div class="rke-tab on">All <small>(8)</small></div>
+          <div class="rke-tab">PDFs <small>(3)</small></div>
+          <div class="rke-tab">Links <small>(3)</small></div>
+          <div class="rke-tab">CSV <small>(1)</small></div>
+          <div class="rke-tab">DOCX <small>(1)</small></div>
+        </div>
+        <div class="rke-filter"><img src="assets/i-search.svg" alt="">Filter knowledge sources...</div>
+      </div>
+      <div class="rke-list-clip">
+        <div class="rke-scan"></div>
+        <div class="rke-list" data-list></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rke]');
+  if (!root) return;
+  const stage = root.querySelector('.rke-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  const EASE_IN_OUT = 'cubic-bezier(0.77, 0, 0.175, 1)';
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / 700)).observe(root);
+
+  // Knowledge sources, as in Figma.
+  const sources = [
+    { type: 'pdf',  icon: 'f-pdf-1.svg', name: '2026_Foodservice_Dairy_&_Beverages_Wholesale_Catalog.pdf', detail: '• 12.4 MB', when: '2 hours ago' },
+    { type: 'csv',  icon: 'f-csv.svg',   name: 'Daily_Fresh_Seafood_&_Poultry_Spot_Price_Index.csv', detail: '• 860 KB', when: 'Today, 06:30 AM' },
+    { type: 'pdf',  icon: 'f-pdf-2.svg', name: 'JAKIM_Halal_Compliance_&_Meat_Import_Certificates_2026.pdf', detail: '• 4.8 MB', when: '1 day ago' },
+    { type: 'url',  icon: 'f-url-1.svg', name: 'B2B Foodservice Portal & Ordering Terms (MOQ & Delivery)', detail: '• order.goldenharvest.com.my/horeca-terms', when: '3 days ago' },
+    { type: 'url',  icon: 'f-url-2.svg', name: 'Cold-Chain Logistics Routes & Klang Valley Delivery Schedules', detail: '• goldenharvest.com.my/logistics/cold-chain-coverage', when: '5 days ago' },
+    { type: 'pdf',  icon: 'f-pdf-3.svg', name: 'Q1_Australian_Wagyu_&_Chilled_Beef_Wholesale_Price_Matrix.pdf', detail: '• 2.1 MB', when: '1 week ago' },
+    { type: 'docx', icon: 'f-docx.svg',  name: 'Credit_Terms_&_30-Day_Net_Facility_Policy.docx', detail: '• 1.2 MB', when: '2 weeks ago' },
+    { type: 'url',  icon: 'f-url-3.svg', name: 'HoReCa Quality Guarantee & Damaged Goods Return SOP', detail: '• goldenharvest.com.my/policies/return-and-replacement-sop', when: '1 month ago' },
+  ];
+
+  // Question → which source answers it → the grounded reply.
+  const script = [
+    { q: 'Are your animals pasture-fed?',           src: 5, a: 'Yes! Our Wagyu is pasture-raised in Australia.' },
+    { q: 'Is your chicken halal certified?',        src: 2, a: 'Yes, all our meat is JAKIM halal certified.' },
+    { q: 'What’s your minimum order for delivery?', src: 3, a: 'Min. order is RM500, next-day in Klang Valley.' },
+    { q: 'Do you offer credit terms?',              src: 6, a: 'Yes, approved accounts get 30-day net terms.' },
+  ];
+
+  const list = root.querySelector('[data-list]');
+  list.innerHTML = sources.map((s, r) => `
+    <div class="rke-row" style="--r:${r}">
+      <div class="rke-row-l">
+        <div class="rke-ico ${s.type}"><img src="assets/${s.icon}" alt=""></div>
+        <div>
+          <div class="rke-name"></div>
+          <div class="rke-meta"><b>${s.type}</b><span></span><span>•</span><em>Trained</em><span>•</span><span>${s.when}</span></div>
+        </div>
+      </div>
+      <div class="rke-row-r">
+        <span class="rke-used">✓ Used in reply</span>
+        <div class="rke-trash"><img src="assets/i-trash.svg" alt=""></div>
+      </div>
+    </div>`).join('');
+  const rows = [...list.children];
+  rows.forEach((row, r) => {
+    row.querySelector('.rke-name').textContent = sources[r].name;
+    row.querySelector('.rke-meta span').textContent = sources[r].detail;
+  });
+
+  const q = root.querySelector('[data-q]');
+  const qText = root.querySelector('[data-q-text]');
+  const a = root.querySelector('[data-a]');
+  const ab = root.querySelector('[data-ab]');
+  const aText = root.querySelector('[data-a-text]');
+
+  let step = 0, timers = [], running = false, scrollY = 0;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
+
+  const enter = (el, dx) => el.animate(
+    [{ opacity: 0, transform: `translate(${dx}px, 6px) scale(0.96)` }, { opacity: 1, transform: 'none' }],
+    { duration: 550, easing: EASE_OUT, fill: 'both' }
+  );
+  const exit = (el) => el.animate(
+    [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px) scale(0.98)' }],
+    { duration: 300, easing: EASE_OUT, fill: 'both' }
+  );
+
+  // Scroll the source list so a row sits at the top of the visible area.
+  function scrollTo(index, duration) {
+    const target = Math.min(rows[index].offsetTop, list.scrollHeight - 115);
+    list.animate(
+      [{ transform: `translateY(${-scrollY}px)` }, { transform: `translateY(${-target}px)` }],
+      { duration, easing: EASE_IN_OUT, fill: 'forwards' }
+    );
+    scrollY = target;
+  }
+
+  function setAnswer(beat) {
+    aText.textContent = beat.a;
+  }
+
+  // Swap Thinking → answer, animating the bubble's height so it grows instead of snapping.
+  function reveal(beat) {
+    const h0 = ab.offsetHeight;
+    setAnswer(beat);
+    ab.classList.add('answered');
+    const h1 = ab.offsetHeight;
+    ab.animate([{ height: `${h0}px` }, { height: `${h1}px` }], { duration: 380, easing: EASE_OUT });
+    ab.querySelector('.rke-answer').animate(
+      [{ opacity: 0, transform: 'translateY(6px)', filter: 'blur(3px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+      { duration: 420, easing: EASE_OUT }
+    );
+    ab.animate(
+      [{ boxShadow: '0 0 0 6px rgba(84, 250, 201, 0.45)' }, { boxShadow: '0 0 0 0 rgba(84, 250, 201, 0)' }],
+      { duration: 700, easing: EASE_OUT }
+    );
+  }
+
+  function cycle() {
+    const beat = script[step++ % script.length];
+    const row = rows[beat.src];
+    const used = row.querySelector('.rke-used');
+
+    // 1. Customer asks.
+    qText.textContent = beat.q;
+    enter(q, -16);
+
+    // 2. AI starts thinking; the knowledge base is scanned.
+    later(900, () => {
+      ab.classList.remove('answered');
+      root.classList.add('thinking', 'scanning', 'syncing');
+      enter(a, 16);
+      scrollTo(beat.src, 1300);
+    });
+
+    // 3. Source found.
+    later(2400, () => {
+      root.classList.remove('scanning', 'syncing');
+      row.classList.add('match');
+      used.animate([{ opacity: 0, transform: 'scale(0.85)' }, { opacity: 1, transform: 'none' }], { duration: 350, easing: EASE_OUT, fill: 'forwards' });
+      row.querySelector('.rke-ico').animate([{ transform: 'scale(1.25)' }, { transform: 'none' }], { duration: 450, easing: EASE_OUT });
+    });
+
+    // 4. Answer, citing that source.
+    later(3000, () => {
+      root.classList.remove('thinking');
+      reveal(beat);
+    });
+
+    // 5. Clear and go again.
+    later(6600, () => {
+      exit(q); exit(a);
+      row.classList.remove('match');
+      used.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: EASE_OUT, fill: 'forwards' });
+    });
+    later(7200, () => { if (running) cycle(); });
+  }
+
+  // Reduced motion: show one answered exchange, no loop.
+  function showStatic() {
+    const beat = script[0];
+    qText.textContent = beat.q;
+    q.style.opacity = a.style.opacity = 1;
+    setAnswer(beat);
+    ab.classList.add('answered');
+    rows[beat.src].classList.add('match');
+    rows[beat.src].querySelector('.rke-used').style.cssText = 'opacity:1;transform:none';
+    list.style.transform = `translateY(${-rows[beat.src].offsetTop}px)`;
+  }
+
+  function start() {
+    root.classList.add('is-in');
+    if (reduce.matches) { showStatic(); return; }
+    root.classList.add('is-live');
+    if (!running) { running = true; later(1100, cycle); }
+  }
+  function stop() {
+    running = false;
+    clearAll();
+    root.classList.remove('is-live', 'thinking', 'scanning', 'syncing');
+  }
+
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(root);
+})();
+</script>
+</body>
+</html>

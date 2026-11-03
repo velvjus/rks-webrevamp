@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RakanSales Website Animations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d10;
+    --panel: #14171c;
+    --line: #23272e;
+    --text: #e8eaed;
+    --muted: #8a919c;
+    --green: #23b750;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  header { max-width: 1200px; margin: 0 auto; padding: 40px 16px 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: end; justify-content: space-between; }
+  h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; }
+  header p { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  button, .btn {
+    font: inherit; font-size: 13px; font-weight: 500; color: var(--text);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 12px; cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 120ms var(--ease-out);
+  }
+  button:active, .btn:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    button:hover, .btn:hover { border-color: #3a4049; background: #1a1e24; }
+  }
+  button[aria-pressed="true"] { border-color: var(--green); color: #7cf2a0; }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 0 16px 64px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); }
+  main.solo { grid-template-columns: 1fr; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .frame { position: relative; aspect-ratio: 7 / 4; background: #0e1115; }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 13px;
+           background: radial-gradient(60% 70% at 70% 80%, rgba(35,183,80,0.14), transparent 70%), #0e1115; }
+  .empty b { display: block; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+  .meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); }
+  .meta h2 { font-size: 15px; font-weight: 600; }
+  .meta h2 span { color: var(--muted); font-weight: 500; margin-right: 6px; }
+  .meta small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: #1f242b; color: var(--muted); }
+  .status.done { background: rgba(35,183,80,0.15); color: #7cf2a0; }
+  .actions { display: flex; gap: 6px; align-items: center; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>RakanSales website animations</h1>
+    <p>Animated scenes for the RakanSales website · Lifecycle section</p>
+  </div>
+  <div class="tools">
+    <button id="replayAll">Replay all</button>
+    <button id="layout" aria-pressed="false">One per row</button>
+  </div>
+</header>
+<main id="grid"></main>
+
+<script>
+  // Add each new scene here once its folder exists.
+  const scenes = [
+    { n: '2.1', name: 'Capture',  path: 'capture/',  note: 'Leads from every channel land in one inbox' },
+    { n: '2.2', name: 'Engage',   path: 'engage/',   note: 'AI answers customers from your knowledge base' },
+    { n: '2.3', name: 'Automate', path: 'automate/', note: 'Automations switch on and keep running' },
+    { n: '2.4', name: 'Close',    path: 'close/',    note: 'A deal is dragged through the pipeline to Won' },
+    { n: '2.5', name: 'Grow',     path: 'grow/',     note: 'Live dashboard updates as deals close and leads arrive' },
+  ];
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = scenes.map((s) => `
+    <article class="card">
+      <div class="frame">
+        ${s.path
+          ? `<iframe src="${s.path}?embed" title="${s.name} animation" loading="lazy"></iframe>`
+          : `<div class="empty"><div><b>${s.name}</b>Not built yet</div></div>`}
+      </div>
+      <div class="meta">
+        <div>
+          <h2><span>${s.n}</span>${s.name}</h2>
+          <small>${s.note}</small>
+        </div>
+        <div class="actions">
+          ${s.path
+            ? `<button data-replay>Replay</button><a class="btn" href="${s.path}" target="_blank">Open ↗</a>`
+            : `<span class="status">To do</span>`}
+        </div>
+      </div>
+    </article>`).join('');
+
+  const replay = (iframe) => { iframe.src = iframe.src; };
+  grid.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-replay]');
+    if (b) replay(b.closest('.card').querySelector('iframe'));
+  });
+  document.getElementById('replayAll').onclick = () => grid.querySelectorAll('iframe').forEach(replay);
+
+  const layoutBtn = document.getElementById('layout');
+  layoutBtn.onclick = () => {
+    const solo = grid.classList.toggle('solo');
+    layoutBtn.setAttribute('aria-pressed', solo);
+    try { localStorage.setItem('rks-solo', solo ? '1' : ''); } catch {}
+  };
+  try { if (localStorage.getItem('rks-solo')) layoutBtn.click(); } catch {}
+</script>
+</body>
+</html>

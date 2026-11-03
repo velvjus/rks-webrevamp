@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifecycle – Automate</title>
+<!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rka { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rka ---------- */
+  .rka {
+    --on: #009966;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 7 / 4;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0e1115;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rka * { box-sizing: border-box; margin: 0; }
+  .rka img { display: block; max-width: none; }
+  .rka-stage { position: absolute; left: 0; top: 0; width: 700px; height: 400px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rka-abs { position: absolute; }
+  .rka-abs > img { width: 100%; height: 100%; }
+
+  /* ---------- Background ---------- */
+  .rka-bg { opacity: 0; transition: opacity 1200ms var(--ease-out); }
+  .rka.is-in .rka-bg { opacity: 1; }
+  .rka-halo { mix-blend-mode: plus-lighter; }
+  .rka-halo > img { position: absolute; width: auto; height: auto; }
+  .rka.is-live .rka-breathe { animation: rka-breathe var(--d, 5s) ease-in-out var(--dl, 0s) infinite alternate; }
+  @keyframes rka-breathe { from { transform: scale(0.92); opacity: 0.7; } to { transform: scale(1.08); opacity: 1; } }
+
+  /* ---------- Toggle switch ---------- */
+  .rka-tg {
+    position: relative; flex: none; display: block;
+    width: var(--w); height: var(--h);
+    border-radius: 999px; border: var(--b) solid transparent;
+    background: #e2e8f0;
+    transition: background-color 250ms ease, filter 300ms ease;
+  }
+  .rka-tg i {
+    position: absolute; left: 0; top: 50%;
+    width: var(--k); height: var(--k); margin-top: calc(var(--k) / -2);
+    border-radius: 999px; background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    transition: transform 380ms var(--ease-out);
+  }
+  .rka-tg.on { background: var(--on); }
+  .rka-tg.on i { transform: translateX(calc(var(--w) - var(--k) - 2 * var(--b))); }
+  .rka-tg.glow.on { filter: drop-shadow(0 0 4px rgba(113, 255, 31, 0.88)); }
+  .rka-tg.sm { --w: 27.54px; --h: 15.74px; --k: 11.8px; --b: 1.57px; }
+
+  /* ---------- Floating automation pills ---------- */
+  .rka-pos { position: absolute; transform: translateX(-50%); }
+  .rka-pin {
+    opacity: 0; transform: translateY(24px) scale(0.92);
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out);
+    transition-delay: calc(250ms + var(--i) * 110ms);
+  }
+  .rka.is-in .rka-pin { opacity: 1; transform: none; }
+  .rka.is-live .rka-float { animation: rka-float var(--fd, 5s) ease-in-out var(--fdl, 0s) infinite alternate; }
+  @keyframes rka-float { from { transform: translate(-4px, -6px); } to { transform: translate(4px, 6px); } }
+  .rka-pill {
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 999px; color: #000; font-weight: 600; white-space: nowrap;
+  }
+  .rka-pill.front { gap: 10.91px; padding: 10.91px 16.36px; background: linear-gradient(to right, #fff, #b1fe95); font-size: 15.27px; line-height: 21.82px; letter-spacing: -0.38px; }
+  .rka-pill.front .rka-tg { --w: 30.04px; --h: 17.17px; --k: 12.88px; --b: 1.72px; margin-left: 4.29px; }
+  .rka-pill.back { background: #fff; }
+  .rka-pill.p1 { gap: 9.53px; padding: 9.53px 14.3px; font-size: 13.35px; line-height: 19.07px; letter-spacing: -0.33px; filter: blur(2.5px); opacity: 0.8; }
+  .rka-pill.p1 .rka-tg { --w: 26.26px; --h: 15px; --k: 11.26px; --b: 1.5px; margin-left: 3.75px; }
+  .rka-pill.p3 { gap: 8.97px; padding: 8.97px 13.45px; font-size: 12.56px; line-height: 17.94px; letter-spacing: -0.31px; filter: blur(2.35px); opacity: 0.5; }
+  .rka-pill.p3 .rka-tg { --w: 24.7px; --h: 14.12px; --k: 10.59px; --b: 1.41px; margin-left: 3.53px; }
+
+  /* ---------- Automations card ---------- */
+  .rka-card {
+    left: 78.5px; top: 178.67px; width: 543.98px; height: 368.69px;
+    background: #fff; border: 0.79px solid #e2e8f0; border-radius: 6.61px;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.25), 0 0.98px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out);
+    transition-delay: 150ms;
+  }
+  .rka.is-in .rka-card { opacity: 1; transform: none; }
+  .rka-row {
+    position: relative; display: flex; align-items: center; gap: 15.74px;
+    padding: 15.74px; border-bottom: 0.79px solid #f1f5f9;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 500ms var(--ease-out), transform 600ms var(--ease-out);
+    transition-delay: calc(450ms + var(--r) * 80ms);
+  }
+  .rka.is-in .rka-row { opacity: 1; transform: none; }
+  .rka-row .flash { position: absolute; inset: 0; background: rgba(0, 153, 102, 0.09); opacity: 0; pointer-events: none; }
+  .rka-row .sweep { position: absolute; left: 0; bottom: -0.79px; height: 2px; width: 100%; background: linear-gradient(to right, #00bc7d, #b1fe95); transform-origin: left; transform: scaleX(0); opacity: 0; pointer-events: none; }
+  .rka-row-main { flex: 1; min-width: 0; }
+  .rka-title { display: flex; align-items: center; gap: 7.87px; }
+  .rka-title h4 { font-size: 13.77px; font-weight: 600; line-height: 19.67px; letter-spacing: -0.34px; color: #0f172b; white-space: nowrap; }
+  .rka-tag { display: flex; align-items: center; gap: 3.94px; padding: 1.97px 5.9px; border-radius: 3.94px; background: #f1f5f9; opacity: 0.4; font-size: 9.84px; font-weight: 500; line-height: 14.05px; color: #45556c; white-space: nowrap; }
+  .rka-tag::before { content: ""; width: 5.9px; height: 5.9px; border-radius: 999px; background: var(--c); }
+  .rka-tag.macro { opacity: 1; background: #faf5ff; border: 0.79px solid rgba(233, 212, 255, 0.6); color: #8200db; }
+  .rka-tag.macro::before { display: none; }
+  .rka-meta { display: flex; gap: 5.9px; padding-top: 5.9px; font-size: 11.8px; line-height: 15.74px; color: #62748e; white-space: nowrap; }
+  .rka-meta b { font-weight: 400; display: inline-block; font-variant-numeric: tabular-nums; }
+  .rka-meta .last { display: inline-block; }
+  .rka-row-side { display: flex; align-items: center; gap: 5.9px; flex: none; }
+  .rka-row-side::before { content: ""; width: 0.98px; height: 15.74px; margin: 0 1.97px; background: #e2e8f0; }
+  .rka-row-side .rka-tg { margin-left: 3.94px; }
+
+  /* ---------- Trigger event card ---------- */
+  .rka-event {
+    position: absolute; left: 0; top: 0; z-index: 6;
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px 8px 8px;
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.6), 0 0 18px rgba(35, 183, 80, 0.45);
+    opacity: 0; pointer-events: none; white-space: nowrap;
+    transform-origin: 0 50%;
+  }
+  .rka-event .ico { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+  .rka-event .ico svg { width: 18px; height: 18px; }
+  .rka-event small { display: block; font-size: 8.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #00a368; line-height: 11px; }
+  .rka-event b { display: block; font-size: 14px; font-weight: 600; color: #0f172b; line-height: 18px; letter-spacing: -0.3px; }
+
+  /* ---------- Run status chip on a row: Running… → result ---------- */
+  .rka-chip {
+    position: absolute; right: 68px; top: 50%; z-index: 1;
+    display: flex; align-items: center; gap: 4px;
+    margin-top: -10px; height: 20px; padding: 0 8px;
+    border-radius: 999px; border: 0.8px solid #e2e8f0;
+    background: #f8fafc; color: #45556c;
+    font-size: 9.8px; font-weight: 600; white-space: nowrap;
+    opacity: 0; pointer-events: none;
+  }
+  .rka-chip .spin { width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid #cbd5e1; border-top-color: var(--on); animation: rka-spin 0.7s linear infinite; }
+  @keyframes rka-spin { to { transform: rotate(360deg); } }
+  .rka-chip.done { background: #ecfdf5; border-color: #a7f3d0; color: #007a55; }
+  .rka-chip.warn { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+
+  /* ---------- Reduced motion: no loops, no movement ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rka-card, .rka-row, .rka-pin { transform: none !important; }
+    .rka *, .rka *::before { animation: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== RakanSales Lifecycle · 2.3 Automate ===== -->
+<div class="rka" data-rka aria-label="RakanSales automations switching on and running" role="img">
+  <div class="rka-stage">
+    <div class="rka-abs rka-bg rka-breathe" style="left:297.5px;top:27.32px;width:98.96px;height:98.96px;--d:4.6s"><img src="assets/ring-small.svg" alt=""></div>
+    <div class="rka-abs rka-bg rka-breathe" style="left:397.66px;top:48.99px;width:165.51px;height:165.51px;--d:5.4s;--dl:-2s"><img src="assets/ring.svg" alt=""></div>
+    <div class="rka-abs rka-bg rka-halo" style="left:202.59px;top:-65.46px;width:284.52px;height:284.52px"><div class="rka-breathe" style="position:absolute;inset:0;--d:6s"><img src="assets/halo-lg.svg" alt="" style="position:absolute;inset:-19.33%;width:138.66%;height:138.66%"></div></div>
+    <div class="rka-abs rka-bg rka-halo" style="left:245.08px;top:-22.96px;width:199.53px;height:199.53px"><div class="rka-breathe" style="position:absolute;inset:0;--d:4.8s;--dl:-1.5s"><img src="assets/halo-md.svg" alt="" style="position:absolute;inset:-25.06%;width:150.12%;height:150.12%"></div></div>
+    <div class="rka-abs rka-bg rka-halo" style="left:337.96px;top:-8.89px;width:284.52px;height:284.52px"><div class="rka-breathe" style="position:absolute;inset:0;--d:5.6s;--dl:-3s"><img src="assets/halo-lg.svg" alt="" style="position:absolute;inset:-19.33%;width:138.66%;height:138.66%"></div></div>
+    <div class="rka-abs rka-bg rka-halo" style="left:380.46px;top:33.6px;width:199.53px;height:199.53px"><div class="rka-breathe" style="position:absolute;inset:0;--d:4.4s;--dl:-0.7s"><img src="assets/halo-md.svg" alt="" style="position:absolute;inset:-25.06%;width:150.12%;height:150.12%"></div></div>
+    <div class="rka-abs rka-bg" style="left:-111.78px;top:136.66px;width:923.57px;height:590.68px"><img src="assets/glow-mint-big.svg" alt=""></div>
+
+    <!-- Back pill, behind the card -->
+    <div class="rka-pos" style="left:547.92px;top:166.13px">
+      <div class="rka-pin" style="--i:3"><div class="rka-float" style="--fd:6.2s;--fdl:-2s">
+        <div class="rka-pill back p1" data-pill>Alert Team Lead @ SLA Breaches<span class="rka-tg"><i></i></span></div>
+      </div></div>
+    </div>
+
+    <!-- Automations list -->
+    <div class="rka-abs rka-card"><div data-list></div></div>
+
+    <!-- Pills in front of the card -->
+    <div class="rka-pos" style="left:367.41px;top:110.34px">
+      <div class="rka-pin" style="--i:2"><div class="rka-float" style="--fd:5s;--fdl:-1s">
+        <div class="rka-pill front" data-pill data-front>Round robin-Facebook leads<span class="rka-tg glow"><i></i></span></div>
+      </div></div>
+    </div>
+    <div class="rka-pos" style="left:136.1px;top:8.19px">
+      <div class="rka-pin" style="--i:0"><div class="rka-float" style="--fd:6.8s;--fdl:-3.4s">
+        <div class="rka-pill back p3" data-pill>Auto Follow-up Manual Input Leads<span class="rka-tg"><i></i></span></div>
+      </div></div>
+    </div>
+    <div class="rka-pos" style="left:270.65px;top:55.32px">
+      <div class="rka-pin" style="--i:1"><div class="rka-float" style="--fd:5.6s;--fdl:-0.5s">
+        <div class="rka-pill front" data-pill data-front>Instant FAQ Reply<span class="rka-tg glow"><i></i></span></div>
+      </div></div>
+    </div>
+
+    <div class="rka-abs rka-bg rka-halo" style="left:427.41px;top:80.55px;width:105.63px;height:105.63px"><div class="rka-breathe" style="position:absolute;inset:0;--d:3.8s"><img src="assets/halo-a.svg" alt="" style="position:absolute;inset:-11.55%;width:123.1%;height:123.1%"></div></div>
+    <div class="rka-abs rka-bg rka-halo" style="left:292.04px;top:23.99px;width:105.63px;height:105.63px"><div class="rka-breathe" style="position:absolute;inset:0;--d:4.2s;--dl:-2s"><img src="assets/halo-b.svg" alt="" style="position:absolute;inset:-11.55%;width:123.1%;height:123.1%"></div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rka]');
+  if (!root) return;
+  const stage = root.querySelector('.rka-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / 700)).observe(root);
+
+  // Automations, as in Figma. `on: false` stays switched off.
+  const automations = [
+    { name: 'Route hot leads to Sarah', tags: [['Lead Routing', '#3b82f6'], ['Deals', '#10b981']], created: '12 Jan 2026', runs: 58, last: '2 mins ago' },
+    { name: 'Auto-assign inbound WhatsApp chats', tags: [['WhatsApp', '#22c55e'], ['Lead Routing', '#3b82f6']], created: '14 Feb 2026', runs: 210, last: '12 mins ago' },
+    { name: 'Escalate unread conversation after 24h', tags: [['Escalations', '#ef4444'], ['SLA Alert', '#f59e0b']], created: '02 Feb 2026', runs: 89, last: '5 hrs ago' },
+    { name: 'Apply Partner label on domain match', tags: [['VIP Clients', '#a855f7'], ['Deals', '#10b981']], created: '18 Jan 2026', runs: 14, last: '3 days ago', on: false },
+    { name: 'VIP High Urgency Ticket Triage', macro: true, tags: [['VIP Clients', '#a855f7'], ['Escalations', '#ef4444']], created: '19 Feb 2026', runs: 32, last: '1 hr ago' },
+  ];
+  // Each beat: an event happens → the matching automation (row) runs → its result.
+  // Only the first 3 rows fit inside the 400px frame, so only they run.
+  const beats = [
+    { row: 0, icon: 'flame', fg: '#f97316', bg: '#fff1e6', label: 'Lead score hit 90', who: 'Jason Lim',     result: '✓ Routed to Sarah' },
+    { row: 1, icon: 'chat',  fg: '#16a34a', bg: '#dcfce7', label: 'New WhatsApp chat', who: 'Aisyah Rahman', result: '✓ Assigned to Daniel' },
+    { row: 2, icon: 'clock', fg: '#d97706', bg: '#fef3c7', label: 'Unread for 24h',    who: 'Mel Wong',      result: '⚠ Escalated to Team Lead', warn: true },
+  ];
+  // Filled 24×24 icons, coloured with currentColor.
+  const ICONS = {
+    flame: '<path d="M12.6 2.2c.5 3-1.1 4.8-2.6 6.4C8.4 10.3 6.5 12.2 6.5 15.2a5.5 5.5 0 0 0 11 0c0-2.2-.9-4-2.1-5.3-.3 1.3-1 2.2-2 2.6.4-3.4-.6-7.3-.8-10.3z"/>',
+    chat:  '<path d="M12 3C6.5 3 2 6.8 2 11.6c0 2.4 1.1 4.6 3 6.2l-.8 3.3c-.1.4.3.8.7.6l3.9-2c1 .3 2.1.4 3.2.4 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/>',
+    clock: '<path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5a1 1 0 1 0-2 0v5c0 .3.1.6.4.8l3 2.2a1 1 0 1 0 1.2-1.6L13 11.5V7z"/>',
+  };
+  const EVENT_AT = [30, 150]; // where trigger cards appear: above the card's left edge, overlapping it slightly
+
+  const list = root.querySelector('[data-list]');
+  list.innerHTML = automations.map((a, r) => `
+    <div class="rka-row" style="--r:${r}">
+      <div class="flash"></div><div class="sweep"></div>
+      <div class="rka-row-main">
+        <div class="rka-title"><h4></h4>${a.macro ? '<span class="rka-tag macro">Macro</span>' : ''}${a.tags.map(([t, c]) => `<span class="rka-tag" style="--c:${c}">${t}</span>`).join('')}</div>
+        <div class="rka-meta"><span>Created ${a.created}</span><span>•</span><b>${a.runs} runs</b><span class="last">• Last run ${a.last}</span></div>
+      </div>
+      <span class="rka-chip"></span>
+      <div class="rka-row-side"><span class="rka-tg sm"><i></i></span></div>
+    </div>`).join('');
+  const rows = [...list.children].map((el, r) => {
+    el.querySelector('h4').textContent = automations[r].name;
+    return {
+      el, data: automations[r], runs: automations[r].runs,
+      tg: el.querySelector('.rka-tg'),
+      count: el.querySelector('.rka-meta b'),
+      last: el.querySelector('.rka-meta .last'),
+      chip: el.querySelector('.rka-chip'),
+    };
+  });
+  const pills = [...root.querySelectorAll('[data-pill]')];
+
+  let timers = [], running = false, tick = 0;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  // Flip a switch on, with a knob bounce and a glow ring.
+  function switchOn(tg, ring = 'rgba(0, 153, 102, 0.55)') {
+    tg.classList.add('on');
+    tg.querySelector('i').animate(
+      // `scale` is independent of the CSS `transform` that slides the knob, so they don't fight.
+      [{ scale: '1' }, { scale: '1.25', offset: 0.5 }, { scale: '1' }],
+      { duration: 420, easing: EASE_OUT }
+    );
+    tg.animate(
+      [{ boxShadow: `0 0 0 0 ${ring}` }, { boxShadow: '0 0 0 8px rgba(0, 153, 102, 0)' }],
+      { duration: 650, easing: EASE_OUT }
+    );
+  }
+
+  function pulsePill(pill) {
+    pill.animate(
+      [{ boxShadow: '0 0 0 0 rgba(177, 254, 149, 0.9)', transform: 'scale(1)' },
+       { boxShadow: '0 0 0 6px rgba(177, 254, 149, 0.5)', transform: 'scale(1.06)', offset: 0.3 },
+       { boxShadow: '0 0 0 18px rgba(177, 254, 149, 0)', transform: 'scale(1)' }],
+      { duration: 800, easing: EASE_OUT }
+    );
+    pill.querySelector('.rka-tg i').animate(
+      [{ scale: '1' }, { scale: '1.3', offset: 0.35 }, { scale: '1' }],
+      { duration: 500, easing: EASE_OUT }
+    );
+  }
+
+  // Position of an element's left-middle in unscaled stage coordinates.
+  function anchor(el) {
+    const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect();
+    const k = s.width / 700;
+    return [(r.left - s.left) / k, (r.top + r.height / 2 - s.top) / k];
+  }
+
+  // 1. Something happens: a trigger card slides in, then drops into the automation that handles it.
+  function trigger(beat, row, onLand) {
+    const ev = document.createElement('div');
+    ev.className = 'rka-event';
+    ev.innerHTML = `<span class="ico" style="--bg:${beat.bg};color:${beat.fg}"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${ICONS[beat.icon]}</svg></span><span><small></small><b></b></span>`;
+    ev.querySelector('small').textContent = beat.label;
+    ev.querySelector('b').textContent = beat.who;
+    stage.appendChild(ev);
+
+    const [x0, y0] = EVENT_AT;
+    const [rx, ry] = anchor(row.el);
+    const x1 = rx + 18, y1 = ry - ev.offsetHeight / 2;
+    // fill: 'both' keeps it invisible at its start point before it begins, so it never flashes at the origin.
+    ev.animate(
+      [{ transform: `translate(${x0 - 30}px, ${y0}px) scale(0.92)`, opacity: 0 },
+       { transform: `translate(${x0}px, ${y0}px) scale(1)`, opacity: 1 }],
+      { duration: 500, easing: EASE_OUT, fill: 'both' }
+    );
+    later(1100, () => {
+      ev.animate(
+        [{ transform: `translate(${x0}px, ${y0}px) scale(1)`, opacity: 1 },
+         { transform: `translate(${x1}px, ${y1}px) scale(0.75)`, opacity: 1, offset: 0.8 },
+         { transform: `translate(${x1}px, ${y1}px) scale(0.6)`, opacity: 0 }],
+        { duration: 650, easing: 'cubic-bezier(0.77, 0, 0.175, 1)', fill: 'both' }
+      ).onfinish = () => { ev.remove(); onLand(); };
+    });
+  }
+
+  // 2. The automation runs: row lights up, progress sweep, "Running…".
+  function run(row) {
+    row.el.querySelector('.flash').animate([{ opacity: 1 }, { opacity: 1, offset: 0.6 }, { opacity: 0 }], { duration: 2000, easing: 'ease-out' });
+    row.el.querySelector('.sweep').animate(
+      [{ transform: 'scaleX(0)', opacity: 1 }, { transform: 'scaleX(1)', opacity: 1, offset: 0.85 }, { transform: 'scaleX(1)', opacity: 0 }],
+      { duration: 800, easing: 'cubic-bezier(0.77, 0, 0.175, 1)' }
+    );
+    row.tg.animate(
+      [{ boxShadow: '0 0 0 0 rgba(0, 153, 102, 0.6)' }, { boxShadow: '0 0 0 7px rgba(0, 153, 102, 0)' }],
+      { duration: 700, easing: EASE_OUT }
+    );
+    row.chip.className = 'rka-chip';
+    row.chip.innerHTML = '<span class="spin"></span>Running…';
+    row.chip.animate(
+      [{ opacity: 0, transform: 'scale(0.85)' }, { opacity: 1, transform: 'none' }],
+      { duration: 300, easing: EASE_OUT, fill: 'forwards' }
+    );
+  }
+
+  // 3. The result: chip turns into the outcome, run count ticks up.
+  function finish(beat, row) {
+    row.chip.className = `rka-chip done${beat.warn ? ' warn' : ''}`;
+    row.chip.textContent = beat.result;
+    row.chip.animate([{ transform: 'scale(1.15)' }, { transform: 'none' }], { duration: 400, easing: EASE_OUT });
+    row.count.textContent = `${++row.runs} runs`;
+    row.count.animate([{ transform: 'translateY(-6px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 350, easing: EASE_OUT });
+    row.count.animate([{ color: '#009966' }, { color: '#009966', offset: 0.6 }, { color: '#62748e' }], { duration: 1800 });
+    row.last.textContent = '• Last run just now';
+    later(1500, () => row.chip.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: EASE_OUT, fill: 'forwards' }));
+  }
+
+  function loop() {
+    if (!running) return;
+    const beat = beats[tick++ % beats.length];
+    const row = rows[beat.row];
+    trigger(beat, row, () => {
+      run(row);
+      later(800, () => finish(beat, row));
+    });
+    later(4600, loop);
+  }
+
+  function intro() {
+    // Pills switch on, back to front, then the list switches on top to bottom.
+    [pills[2], pills[3], pills[1], pills[0]].forEach((p, k) => later(1100 + k * 260, () => {
+      switchOn(p.querySelector('.rka-tg'));
+      pulsePill(p);
+    }));
+    rows.forEach((row, k) => {
+      if (row.data.on === false) return;
+      later(2200 + k * 150, () => switchOn(row.tg));
+    });
+    later(3300, loop);
+  }
+
+  function showStatic() {
+    pills.forEach((p) => p.querySelector('.rka-tg').classList.add('on'));
+    rows.forEach((row) => row.data.on !== false && row.tg.classList.add('on'));
+  }
+
+  let introduced = false;
+  function start() {
+    root.classList.add('is-in');
+    if (reduce.matches) { showStatic(); return; }
+    root.classList.add('is-live');
+    if (running) return;
+    running = true;
+    if (!introduced) { introduced = true; intro(); } else later(400, loop);
+  }
+  function stop() {
+    running = false;
+    timers.forEach(clearTimeout); timers = [];
+    root.classList.remove('is-live');
+    // Drop any beat that was mid-flight so nothing is left frozen on screen.
+    stage.querySelectorAll('.rka-event').forEach((ev) => ev.remove());
+    rows.forEach((row) => { row.chip.getAnimations().forEach((a) => a.cancel()); row.chip.style.opacity = 0; });
+  }
+
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(root);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="71.8578" height="71.8578" viewBox="0 0 71.8578 71.8578" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="linkedin" style="mix-blend-mode:plus-lighter" opacity="0.5" filter="url(#filter0_f_0_84)">
+<rect id="bg" x="16.5826" y="16.5826" width="38.6927" height="38.6927" rx="19.3463" fill="#1275B1"/>
+<g id="linked_in">
+<path d="M31.2563 27.2122C31.2563 28.5036 30.1369 29.5505 28.7561 29.5505C27.3753 29.5505 26.2559 28.5036 26.2559 27.2122C26.2559 25.9207 27.3753 24.8738 28.7561 24.8738C30.1369 24.8738 31.2563 25.9207 31.2563 27.2122Z" fill="white"/>
+<path d="M26.5978 31.2693H30.8716V44.2202H26.5978V31.2693Z" fill="white"/>
+<path d="M37.7526 31.2693H33.4787V44.2202H37.7526C37.7526 44.2202 37.7526 40.1431 37.7526 37.5939C37.7526 36.0638 38.275 34.527 40.3596 34.527C42.7155 34.527 42.7013 36.5294 42.6903 38.0806C42.676 40.1083 42.7102 42.1776 42.7102 44.2202H46.9841V37.385C46.9479 33.0205 45.8106 31.0095 42.0692 31.0095C39.8472 31.0095 38.4699 32.0182 37.7526 32.9309V31.2693Z" fill="white"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_84" x="-2.76375" y="-2.76375" width="77.3854" height="77.3854" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="8.29129" result="effect1_foregroundBlur_0_84"/>
+</filter>
+</defs>
+</svg>

@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifecycle – Grow</title>
+<!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rkg { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkg ---------- */
+  .rkg {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --green: #23b750;
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 7 / 4;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0e1115;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rkg * { box-sizing: border-box; margin: 0; }
+  .rkg img { display: block; max-width: none; }
+  .rkg-stage { position: absolute; left: 0; top: 0; width: 700px; height: 400px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkg-abs { position: absolute; }
+  .rkg-abs > img { width: 100%; height: 100%; }
+  .rkg-num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- Background ---------- */
+  .rkg-bg { opacity: 0; transition: opacity 1200ms var(--ease-out); }
+  .rkg.is-in .rkg-bg { opacity: 1; }
+  .rkg-ring { opacity: 0; transform: scale(0.9); transition: opacity 1000ms var(--ease-out), transform 1600ms var(--ease-out); }
+  .rkg.is-in .rkg-ring { opacity: 1; transform: none; }
+  .rkg.is-in .rkg-ring:nth-of-type(2) { transition-delay: 120ms; }
+  .rkg.is-in .rkg-ring:nth-of-type(3) { transition-delay: 240ms; }
+  /* Ripple from the rings' centre (same look as Capture), fired once per chart update from JS */
+  .rkg-ripple {
+    left: -339.17px; top: -328.18px; width: 678.65px; height: 678.65px;
+    border-radius: 50%;
+    border: 2px solid rgba(35, 183, 80, 0.75);
+    box-shadow: 0 0 24px rgba(35, 183, 80, 0.35), inset 0 0 24px rgba(35, 183, 80, 0.25);
+    opacity: 0; transform: scale(0.15);
+    pointer-events: none;
+  }
+  .rkg.is-live .rkg-breathe { animation: rkg-breathe 6s ease-in-out infinite alternate; }
+  @keyframes rkg-breathe { from { opacity: 0.55; } to { opacity: 1; } }
+
+  /* ---------- Floating top cards (Figma px) ---------- */
+  .rkg-top { opacity: 0; transform: translateY(-22px); transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
+  .rkg.is-in .rkg-top { opacity: 1; transform: none; }
+  .rkg.is-in .rkg-top.win { transition-delay: 160ms; }
+  .rkg-sla {
+    left: 65px; top: 34px; width: 290px; height: 93px; display: flex; align-items: center; gap: 14.79px; padding: 12.94px;
+    border: 0.74px solid #e5e5e5; border-radius: 11px;
+    background: linear-gradient(167.87deg, #fff 2.67%, #b1fe95 144.24%);
+  }
+  .rkg-gauge { position: relative; width: 59.17px; height: 59.17px; flex: none; }
+  .rkg-gauge svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .rkg-gauge b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13.27px; font-weight: 700; color: #373d3f; }
+  .rkg-sla h4 { font-size: 13px; font-weight: 700; line-height: 14.79px; color: #101828; white-space: nowrap; }
+  .rkg-sla p { font-size: 10.17px; line-height: 15.26px; color: #6a7282; white-space: nowrap; }
+  .rkg-sla .status { margin-top: 4.62px; font-size: 9.25px; font-weight: 600; line-height: 13.87px; color: var(--green); white-space: nowrap; }
+  .rkg-sla .status span { display: inline-block; }
+
+  .rkg-win {
+    left: 373px; top: 34px; width: 275px; height: 93px; display: flex; flex-direction: column; padding: 12.94px;
+    background: #f9fafb; border: 0.74px solid #e5e5e5; border-radius: 11px;
+  }
+  /* Progressive blur: stacked backdrop blurs, each masked to start further right */
+  .rkg-pblur { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; }
+  .rkg-pblur i { position: absolute; inset: 0; backdrop-filter: blur(var(--b)); -webkit-backdrop-filter: blur(var(--b)); mask-image: linear-gradient(to right, transparent var(--a), #000 var(--z)); -webkit-mask-image: linear-gradient(to right, transparent var(--a), #000 var(--z)); }
+  .rkg-win .row { display: flex; align-items: center; justify-content: space-between; white-space: nowrap; }
+  .rkg-win h4 { font-size: 13px; font-weight: 700; line-height: 14.79px; color: #101828; }
+  .rkg-win .gain { font-size: 11.1px; font-weight: 700; line-height: 14.79px; color: var(--green); }
+  .rkg-win .chart { height: 37px; padding: 3.7px 0; }
+  .rkg-win .foot { font-size: 9.25px; line-height: 13.87px; color: #99a1af; }
+  .rkg-win .foot b { color: #364153; }
+
+  /* ---------- Dashboard window: authored at app size, scaled like Figma ---------- */
+  .rkg-dash {
+    left: 65px; top: 159px; width: 724.41px; height: 432.24px;
+    background: #fff; border: 0.79px solid #e2e8f0; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.25), 0 1px 0 rgba(0, 0, 0, 0.05);
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 700ms var(--ease-out), transform 1000ms var(--ease-out);
+  }
+  .rkg.is-in .rkg-dash { opacity: 1; transform: none; }
+  .rkg-app { width: 1326px; transform: scale(0.5463); transform-origin: 0 0; background: rgba(250, 245, 255, 0.3); }
+  .rkg-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(255, 255, 255, 0.95); border-bottom: 0.8px solid rgba(229, 231, 235, 0.9); }
+  .rkg-tabs { display: flex; padding: 4px; background: #f3f4f6; border: 0.8px solid rgba(229, 231, 235, 0.7); border-radius: 6.7px; }
+  .rkg-tabs span { padding: 6px 16px; border-radius: 4.8px; font-size: 12px; font-weight: 600; line-height: 16px; letter-spacing: -0.3px; color: #4a5565; white-space: nowrap; }
+  .rkg-tabs span:first-child { background: #fff; color: var(--green); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); }
+  .rkg-head .right { display: flex; align-items: center; gap: 8px; }
+  .rkg-date { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: #fff; border: 0.8px solid #e5e7eb; border-radius: 4.8px; font-size: 11px; font-weight: 600; line-height: 14.67px; color: #364153; white-space: nowrap; margin-right: 49px; }
+  .rkg-date img { width: 14px; height: 14px; }
+  .rkg-export { display: flex; align-items: center; gap: 6px; padding: 6px 16px; background: var(--green); border-radius: 4.8px; color: #fff; font-size: 12px; font-weight: 700; line-height: 16px; white-space: nowrap; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.06); }
+  .rkg-export img { width: 14px; height: 14px; }
+  .rkg-bell { position: relative; display: grid; place-items: center; width: 32px; height: 32px; background: #fff; border: 0.8px solid #e5e7eb; border-radius: 4.8px; }
+  .rkg-bell img { width: 16px; height: 16px; }
+  .rkg-bell i { position: absolute; left: 24.4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #fb2c36; box-shadow: 0 0 0 2px #fff; }
+
+  .rkg-main { padding: 24px; }
+  .rkg-title { display: flex; align-items: center; justify-content: space-between; }
+  .rkg-title h2 { font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -0.6px; color: #101828; }
+  .rkg-title p { padding-top: 2px; font-size: 12px; line-height: 16px; color: #6a7282; white-space: nowrap; }
+  .rkg-live { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: #ecfdf5; border: 0.8px solid rgba(164, 244, 207, 0.8); border-radius: 999px; font-size: 11px; font-weight: 600; line-height: 16.5px; color: #1a943e; white-space: nowrap; }
+  .rkg-live i { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .rkg.is-live .rkg-live i::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--green); animation: rkg-ping 1.8s var(--ease-out) infinite; }
+  @keyframes rkg-ping { from { transform: scale(1); opacity: 0.7; } to { transform: scale(2.8); opacity: 0; } }
+
+  .rkg-kpis { display: grid; grid-template-columns: repeat(4, 307.5px); gap: 16px; padding-top: 24px; }
+  .rkg-kpi {
+    position: relative; height: 154px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+    background: #fff; border: 0.8px solid #e5e7eb; border-radius: 8.64px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    opacity: 0; transform: translateY(18px) scale(0.97);
+    transition: opacity 600ms var(--ease-out), transform 800ms var(--ease-out);
+  }
+  .rkg.is-in .rkg-kpi { opacity: 1; transform: none; }
+  .rkg.is-in .rkg-kpi:nth-child(1) { transition-delay: 350ms; }
+  .rkg.is-in .rkg-kpi:nth-child(2) { transition-delay: 420ms; }
+  .rkg.is-in .rkg-kpi:nth-child(3) { transition-delay: 490ms; }
+  .rkg.is-in .rkg-kpi:nth-child(4) { transition-delay: 560ms; }
+  .rkg-kpi .top { display: flex; align-items: center; justify-content: space-between; }
+  .rkg-kpi label { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; line-height: 16.5px; letter-spacing: 0.55px; text-transform: uppercase; color: #6a7282; white-space: nowrap; }
+  .rkg-kpi label img { width: 12px; height: 12px; }
+  .rkg-kpi .badge { padding: 2px 8px; border: 0.8px solid #e5e5e5; border-radius: 999px; font-size: 10px; font-weight: 700; line-height: 15px; white-space: nowrap; }
+  .rkg-kpi .val { padding-top: 4px; font-size: 24px; font-weight: 700; line-height: 32px; color: #101828; white-space: nowrap; display: inline-block; transform-origin: 0 50%; }
+  .rkg-kpi .spark { position: relative; width: 263px; height: 36px; overflow: hidden; }
+  .rkg-kpi .spark svg { position: absolute; left: 0; top: 0; overflow: visible; }
+
+  .rkg-kpi.rev { color: #fff; border: 0; background: linear-gradient(153.4deg, #23b750 0%, #1a943e 70%, #15803d 100%); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06); overflow: hidden; }
+  .rkg-kpi.rev label { color: #fff; opacity: 0.95; }
+  .rkg-kpi.rev .coin { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+  .rkg-kpi.rev .coin img { width: 14px; height: 14px; }
+  .rkg-kpi.rev .val { font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.75px; color: #fff; padding: 0; }
+  .rkg-kpi.rev .foot { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 0.8px solid rgba(255, 255, 255, 0.2); font-size: 11px; font-weight: 600; line-height: 16.5px; opacity: 0.95; }
+  .rkg-kpi.rev .foot span { display: inline-block; }
+  .rkg-shine { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-110%); pointer-events: none; }
+
+  .rkg-plus { position: absolute; left: 20px; top: 38px; padding: 3px 10px; border-radius: 999px; background: #fff; color: #1a943e; font-size: 13px; font-weight: 800; line-height: 18px; white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16); opacity: 0; pointer-events: none; z-index: 2; }
+  .rkg-kpi:not(.rev) .rkg-plus { background: #101828; color: #fff; }
+
+  .rkg-charts { display: grid; grid-template-columns: 627px 627px; gap: 24px; padding-top: 24px; }
+  .rkg-chart { height: 424px; padding: 24px; background: #fff; border: 0.8px solid #e5e7eb; border-radius: 8.64px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); opacity: 0; transition: opacity 800ms var(--ease-out); transition-delay: 700ms; }
+  .rkg.is-in .rkg-chart { opacity: 1; }
+  .rkg-chart .top { display: flex; align-items: center; justify-content: space-between; }
+  .rkg-chart h3 { font-size: 14px; font-weight: 700; line-height: 20px; color: #101828; }
+  .rkg-chart p { font-size: 12px; line-height: 16px; color: #6a7282; white-space: nowrap; }
+  .rkg-seg { display: flex; padding: 2px; background: #f3f4f6; border-radius: 5px; }
+  .rkg-seg span { padding: 4px 10px; border-radius: 3.8px; font-size: 11px; font-weight: 700; line-height: 16.5px; color: #6a7282; }
+  .rkg-seg span:first-child { background: #fff; color: var(--green); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); }
+  .rkg-quota { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+  .rkg-quota b { font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.5px; color: #101828; }
+  .rkg-quota span { font-size: 12px; font-weight: 600; color: var(--green); }
+  .rkg-funnel { margin-top: 16px; display: grid; gap: 13px; }
+  .rkg-funnel div { height: 23px; border-radius: 4px; color: #fff; font-size: 10px; font-weight: 700; line-height: 23px; padding-left: 10px; }
+
+  /* ---------- Activity toast + flying value ---------- */
+  .rkg-toast {
+    position: absolute; left: 398px; top: 138px; z-index: 6; display: flex; align-items: center; gap: 9px; width: 282px;
+    padding: 7px 12px 7px 7px; background: #fff; border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(16, 24, 40, 0.06);
+    opacity: 0; pointer-events: none;
+  }
+  .rkg-toast .ico { display: grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 9px; }
+  .rkg-toast .ico svg { width: 17px; height: 17px; }
+  .rkg-toast .txt { flex: 1; min-width: 0; }
+  .rkg-toast small { display: block; font-size: 8px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; line-height: 11px; }
+  .rkg-toast b { display: block; font-size: 11.5px; font-weight: 700; line-height: 15px; color: #101828; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rkg-toast em { font-style: normal; font-size: 12px; font-weight: 800; color: #1a943e; white-space: nowrap; }
+  .rkg-fly { position: absolute; left: 0; top: 0; z-index: 7; padding: 3px 9px; border-radius: 999px; background: var(--green); color: #fff; font-size: 10px; font-weight: 800; line-height: 14px; white-space: nowrap; box-shadow: 0 0 0 4px rgba(35, 183, 80, 0.25), 0 8px 18px rgba(0, 0, 0, 0.3); pointer-events: none; }
+  .rkg-fly.blue { background: #2e91e5; box-shadow: 0 0 0 4px rgba(46, 145, 229, 0.25), 0 8px 18px rgba(0, 0, 0, 0.3); }
+  .rkg-burst { position: absolute; z-index: 5; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 2px solid var(--c, #23b750); pointer-events: none; }
+
+  /* ---------- Reduced motion: no loops, no movement ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rkg-top, .rkg-dash, .rkg-kpi, .rkg-ring { transform: none !important; transition: opacity 400ms ease !important; }
+    .rkg *, .rkg *::after { animation: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== RakanSales Lifecycle · 2.5 Grow ===== -->
+<div class="rkg" data-rkg aria-label="RakanSales dashboard: revenue, pipeline and response metrics update live as deals are won and leads arrive" role="img">
+  <div class="rkg-stage">
+    <div class="rkg-abs rkg-bg" style="left:59.45px;top:0;width:687.11px;height:581.63px"><img src="assets/glow-mint-a.svg" alt=""></div>
+    <div class="rkg-abs rkg-bg" style="left:-417.48px;top:142.02px;width:1038.66px;height:879.21px"><img src="assets/glow-mint-b.svg" alt=""></div>
+    <div class="rkg-abs rkg-ring" style="left:-152.34px;top:-141.35px;width:304.99px;height:304.99px"><img src="assets/ring-3.svg" alt=""></div>
+    <div class="rkg-abs rkg-ring" style="left:-241.92px;top:-230.92px;width:484.14px;height:484.14px"><img src="assets/ring-4.svg" alt=""></div>
+    <div class="rkg-abs rkg-ring" style="left:-339.17px;top:-328.18px;width:678.65px;height:678.65px"><img src="assets/ring-5.svg" alt=""></div>
+    <div class="rkg-abs rkg-ripple" data-ripple></div>
+
+    <!-- 15-minute SLA -->
+    <div class="rkg-abs rkg-top rkg-sla">
+      <div class="rkg-gauge">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="none" stroke="#e3f5e6" stroke-width="7"/><circle data-arc cx="30" cy="30" r="22" fill="none" stroke="#23b750" stroke-width="7" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/></svg>
+        <b class="rkg-num" data-sla>0%</b>
+      </div>
+      <div>
+        <h4>15-Minute SLA Compliance</h4>
+        <p><span data-sla2>92%</span> of new leads contacted &lt; 15 min</p>
+        <div class="status">Target: 80%+ • Status: <span data-status>On Track</span></div>
+      </div>
+    </div>
+
+    <!-- Win rate trend -->
+    <div class="rkg-abs rkg-top win rkg-win">
+      <div class="row"><h4>Win Rate Trend (6-Week)</h4><span class="gain rkg-num" data-gain>+12.2 pts gain</span></div>
+      <div class="chart" data-chart-win></div>
+      <div class="row foot"><span>6 weeks ago (6.3%)</span><b class="rkg-num" data-win>Current: 18.5%</b></div>
+      <div class="rkg-pblur"><i style="--b:0.2px;--a:15%;--z:40%"></i><i style="--b:0.4px;--a:35%;--z:60%"></i><i style="--b:0.7px;--a:55%;--z:80%"></i><i style="--b:1.05px;--a:75%;--z:100%"></i></div>
+    </div>
+
+    <div class="rkg-abs rkg-bg" style="left:-19.6px;top:-26.2px;width:285.71px;height:246.14px;mix-blend-mode:plus-lighter"><img src="assets/glow-corner.svg" alt=""></div>
+    <div class="rkg-abs rkg-bg rkg-breathe" style="left:423.62px;top:-247.11px;width:461.29px;height:673.83px"><img src="assets/glow-mint-c.svg" alt=""></div>
+
+    <!-- Dashboard -->
+    <div class="rkg-abs rkg-dash">
+      <div class="rkg-app">
+        <div class="rkg-head">
+          <div class="rkg-tabs"><span>Commercial Overview</span><span>Pipeline Velocity</span><span>Marketing &amp; Attribution</span></div>
+          <div class="right">
+            <div class="rkg-date"><img src="assets/i-calendar.svg" alt="">22 Jul 2026 — 20 Aug 2026<img src="assets/i-chevron.svg" alt=""></div>
+            <div class="rkg-export"><img src="assets/i-download.svg" alt="">Export CSV</div>
+            <div class="rkg-bell" data-bell><img src="assets/i-bell.svg" alt=""><i></i></div>
+          </div>
+        </div>
+        <div class="rkg-main">
+          <div class="rkg-title">
+            <div><h2>Commercial Overview</h2><p>Real-time revenue, conversion velocity, and team pipeline health for 22 Jul 2026 — 20 Aug 2026.</p></div>
+            <div class="rkg-live"><i></i>Connected to WhatsApp &amp; Inbound Telemetry</div>
+          </div>
+          <div class="rkg-kpis">
+            <div class="rkg-kpi rev" data-kpi="rev">
+              <div class="top"><label>Total Revenue Won <img src="assets/i-info-white.svg" alt=""></label><span class="coin"><img src="assets/i-currency.svg" alt=""></span></div>
+              <div>
+                <div><span class="val rkg-num" data-val>RM 0.0K</span></div>
+                <div class="foot"><span class="rkg-num" data-vs>+27.4% vs prior period</span><span class="rkg-num" data-closed>5 closed deals</span></div>
+              </div>
+              <div class="rkg-shine"></div>
+            </div>
+            <div class="rkg-kpi" data-kpi="pipe">
+              <div class="top"><label>Active Pipeline <img src="assets/i-info-1.svg" alt=""></label><span class="badge rkg-num" style="background:#ecfdf5;color:#23b750" data-badge>+7.1%</span></div>
+              <div><span class="val rkg-num" data-val>RM 0.00M</span></div>
+              <div class="spark" data-spark></div>
+            </div>
+            <div class="rkg-kpi" data-kpi="conv">
+              <div class="top"><label>Conversion to Won <img src="assets/i-info-2.svg" alt=""></label><span class="badge rkg-num" style="background:#faf5ff;color:#7c3aed" data-badge>+6.2 pts</span></div>
+              <div><span class="val rkg-num" data-val>0.0%</span></div>
+              <div class="spark" data-spark></div>
+            </div>
+            <div class="rkg-kpi" data-kpi="resp">
+              <div class="top"><label>Avg First Response <img src="assets/i-info-3.svg" alt=""></label><span class="badge rkg-num" style="background:#fff7ed;color:#f97316" data-badge>-18% faster</span></div>
+              <div><span class="val rkg-num" data-val>0m 0s</span></div>
+              <div class="spark" data-spark></div>
+            </div>
+          </div>
+          <div class="rkg-charts">
+            <div class="rkg-chart">
+              <div class="top"><div><h3>Revenue vs Target Quota</h3><p>Cumulative closed revenue compared against team target</p></div><div class="rkg-seg"><span>30D</span><span>90D</span><span>YTD</span></div></div>
+              <div class="rkg-quota"><b class="rkg-num" data-quota>RM310.5K</b><span class="rkg-num" data-attain>of RM 450.0K target (69% attained)</span></div>
+            </div>
+            <div class="rkg-chart">
+              <div class="top"><div><h3>Pipeline Stage Progression</h3><p>Opportunity volume &amp; step-by-step conversion rate</p></div><div class="rkg-seg"><span>Deal Count</span><span>Deal Value</span></div></div>
+              <div class="rkg-funnel"><div style="width:8%;background:#17b26a">10 deals</div><div style="width:18%;background:#7a5af8">48 deals</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rkg-abs" style="left:243.21px;top:144.73px;width:766.68px;height:487.3px;pointer-events:none"><img src="assets/glow-lower.svg" alt=""></div>
+
+    <div class="rkg-toast" data-toast>
+      <span class="ico"></span>
+      <span class="txt"><small></small><b></b></span>
+      <em></em>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkg]');
+  if (!root) return;
+  const stage = root.querySelector('.rkg-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  const EASE_IN_OUT = 'cubic-bezier(0.77, 0, 0.175, 1)';
+  const $ = (s, el = root) => el.querySelector(s);
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / 700)).observe(root);
+
+  // ---------- Live activity. Each beat is one real event and the metrics it moves. ----------
+  // won: closes a deal → revenue, closed deals, quota, conversion and win rate go up.
+  // lead: a new lead is answered fast → pipeline goes up, response time drops, SLA improves.
+  const beats = [
+    { kind: 'won',  name: 'Tech Solutions Malaysia',  value: 35500 },
+    { kind: 'lead', name: 'Aras Digital · WhatsApp',  value: 48000, reply: 38 },
+    { kind: 'won',  name: 'Kawan Kreatif Sdn Bhd',    value: 60000 },
+    { kind: 'lead', name: 'Sinar Medik · Instagram',  value: 33500, reply: 52 },
+    { kind: 'won',  name: 'Futuristic Ventures',      value: 55000 },
+    { kind: 'lead', name: 'Teguh Engineering · Web',  value: 29000, reply: 41 },
+  ];
+  const START = { rev: 537500, closed: 5, pipe: 3840000, conv: 14.3, resp: 765, sla: 92, win: 18.5, quota: 310500 };
+  const PRIOR = START.rev / 1.274;   // so "+27.4% vs prior period" stays true as revenue grows
+  const TARGET = 450000;
+
+  const fmt = {
+    rev: (v) => `RM ${(v / 1000).toFixed(1)}K`,
+    pipe: (v) => `RM ${(v / 1e6).toFixed(2)}M`,
+    conv: (v) => `${v.toFixed(1)}%`,
+    resp: (v) => { v = Math.round(v); return `${Math.floor(v / 60)}m ${v % 60}s`; },
+  };
+  const kpi = (k) => $(`[data-kpi="${k}"]`);
+
+  // ---------- Scrolling charts: new points slide in from the right ----------
+  function chart(host, { w, h, color, data, pad = 3, area = 0.18, dot = true }) {
+    const n = data.length, step = w / (n - 1);
+    const ns = 'http://www.w3.org/2000/svg';
+    const id = 'g' + Math.random().toString(36).slice(2, 7);
+    host.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity="${area}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+      <g data-slide><path data-area fill="url(#${id})"/><path data-line fill="none" stroke="${color}" stroke-width="${h > 30 ? 2 : 1.6}" stroke-linecap="round" stroke-linejoin="round"/></g>
+      ${dot ? `<circle data-dot r="${h > 30 ? 3.5 : 2.6}" fill="#fff" stroke="${color}" stroke-width="2"/>` : ''}</svg>`;
+    const svg = host.firstElementChild, slide = svg.querySelector('[data-slide]');
+    const line = svg.querySelector('[data-line]'), fill = svg.querySelector('[data-area]'), dotEl = svg.querySelector('[data-dot]');
+    let pts = data.slice(), lo, hi;
+    const y = (v) => pad + (1 - (v - lo) / (hi - lo || 1)) * (h - pad * 2);
+    function draw(list, offset) {
+      lo = Math.min(...pts); hi = Math.max(...pts);
+      const p = list.map((v, i) => [offset + i * step, y(v)]);
+      let d = `M${p[0][0]},${p[0][1]}`;
+      for (let i = 1; i < p.length; i++) {
+        const [x0, y0] = p[i - 1], [x1, y1] = p[i], cx = (x0 + x1) / 2;
+        d += ` C${cx},${y0} ${cx},${y1} ${x1},${y1}`;
+      }
+      line.setAttribute('d', d);
+      fill.setAttribute('d', `${d} L${p[p.length - 1][0]},${h} L${p[0][0]},${h} Z`);
+      if (dotEl) { dotEl.setAttribute('cx', w); dotEl.setAttribute('cy', p[p.length - 1][1]); }
+    }
+    draw(pts, 0);
+    return {
+      svg,
+      reveal(delay) {
+        svg.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 1300, delay, easing: EASE_IN_OUT, fill: 'both' });
+        if (dotEl) dotEl.animate([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'none' }], { duration: 400, delay: delay + 1200, easing: EASE_OUT, fill: 'both' });
+      },
+      push(v) {
+        const prevY = dotEl ? +dotEl.getAttribute('cy') : 0;
+        const old = pts[0];
+        pts = [...pts.slice(1), v];
+        // Draw old first point + new window, then slide left by one step.
+        lo = Math.min(old, ...pts); hi = Math.max(old, ...pts);
+        draw([old, ...pts], 0);
+        slide.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-step}px)` }], { duration: 900, easing: EASE_IN_OUT });
+        setTimeout(() => draw(pts, 0), 900);
+        if (dotEl) {
+          const ny = +dotEl.getAttribute('cy');
+          dotEl.style.transformBox = 'fill-box'; dotEl.style.transformOrigin = 'center';
+          dotEl.animate([{ transform: `translateY(${prevY - ny}px)` }, { transform: 'translateY(0) scale(1.7)', offset: 0.7 }, { transform: 'none' }], { duration: 900, easing: EASE_OUT });
+        }
+      },
+    };
+  }
+
+  let charts, state, timers = [], running = false, beatIx = 0;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  function build() {
+    charts = {
+      pipe: chart($('[data-spark]', kpi('pipe')), { w: 263, h: 36, color: '#2e91e5', data: [3.31, 3.42, 3.38, 3.55, 3.5, 3.64, 3.71, 3.84] }),
+      conv: chart($('[data-spark]', kpi('conv')), { w: 263, h: 36, color: '#8b5cf6', data: [12.1, 12.6, 12.4, 13.2, 13.0, 13.7, 14.0, 14.3] }),
+      resp: chart($('[data-spark]', kpi('resp')), { w: 263, h: 36, color: '#f97316', data: [17.1, 16.2, 16.6, 15.1, 14.4, 14.8, 13.3, 12.75] }),
+      win: chart($('[data-chart-win]'), { w: 247, h: 30, color: '#23b750', data: [6.3, 7.1, 9.4, 10.2, 12.9, 13.6, 16.1, 18.5], area: 0.28 }),
+    };
+  }
+
+  // ---------- Values ----------
+  function countTo(el, from, to, f, dur = 1400, delay = 0) {
+    const t0 = performance.now() + delay;
+    const step = (t) => {
+      if (!running && !el.isConnected) return;
+      const k = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = f(from + (to - from) * e);
+      if (k < 1) raf.push(requestAnimationFrame(step));
+    };
+    raf.push(requestAnimationFrame(step));
+  }
+  let raf = [];
+  const setArc = (pct) => $('[data-arc]').setAttribute('stroke-dasharray', `${pct} 100`);
+  function setSla(from, to, dur, delay = 0) {
+    const t0 = performance.now() + delay;
+    const step = (t) => {
+      const k = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - k, 3), v = from + (to - from) * e;
+      setArc(v); $('[data-sla]').textContent = `${Math.round(v)}%`;
+      if (k < 1) raf.push(requestAnimationFrame(step));
+      else $('[data-sla2]').textContent = `${Math.round(to)}%`;
+    };
+    raf.push(requestAnimationFrame(step));
+  }
+  function renderStatic(s) {
+    $('[data-val]', kpi('rev')).textContent = fmt.rev(s.rev);
+    $('[data-val]', kpi('pipe')).textContent = fmt.pipe(s.pipe);
+    $('[data-val]', kpi('conv')).textContent = fmt.conv(s.conv);
+    $('[data-val]', kpi('resp')).textContent = fmt.resp(s.resp);
+    $('[data-closed]').textContent = `${s.closed} closed deals`;
+    $('[data-vs]').textContent = `+${((s.rev / PRIOR - 1) * 100).toFixed(1)}% vs prior period`;
+    $('[data-quota]').textContent = `RM${(s.quota / 1000).toFixed(1)}K`;
+    $('[data-attain]').textContent = `of RM 450.0K target (${Math.round(s.quota / TARGET * 100)}% attained)`;
+    $('[data-win]').textContent = `Current: ${s.win.toFixed(1)}%`;
+    $('[data-gain]').textContent = `+${(s.win - 6.3).toFixed(1)} pts gain`;
+    setArc(s.sla); $('[data-sla]').textContent = `${s.sla}%`; $('[data-sla2]').textContent = `${s.sla}%`;
+  }
+
+  // ---------- Beat helpers ----------
+  const ICON = {
+    won: '<svg viewBox="0 0 24 24" fill="#fff"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 7.7a1 1 0 0 0-1.4-1.4L10.5 13l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5a1 1 0 0 0 1.4 0l5.5-5.4z"/></svg>',
+    lead: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm-8 8.2C4 16.8 7.6 14 12 14s8 2.8 8 6.2c0 .5-.4.8-.8.8H4.8c-.4 0-.8-.3-.8-.8z"/></svg>',
+  };
+  const short = (v) => (v >= 1000 ? `RM ${(v / 1000).toFixed(1).replace(/\.0$/, '')}K` : `RM ${v}`);
+
+  function showToast(b) {
+    const t = $('[data-toast]'), won = b.kind === 'won';
+    const ico = $('.ico', t);
+    ico.innerHTML = ICON[b.kind];
+    ico.style.background = won ? '#23b750' : '#2e91e5';
+    $('small', t).textContent = won ? 'Deal won' : 'New lead';
+    $('small', t).style.color = won ? '#1a943e' : '#2e91e5';
+    $('b', t).textContent = b.name;
+    $('em', t).textContent = `+${short(b.value)}`;
+    $('em', t).style.color = won ? '#1a943e' : '#2e91e5';
+    t.animate([{ opacity: 0, transform: 'translateX(40px) scale(0.96)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: EASE_OUT, fill: 'forwards' });
+    const bell = $('[data-bell]');
+    bell.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(14deg)' }, { transform: 'rotate(-12deg)' }, { transform: 'rotate(8deg)' }, { transform: 'rotate(0)' }], { duration: 600, easing: 'ease-in-out' });
+    return t;
+  }
+  function hideToast(t) {
+    t.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px) scale(0.98)' }], { duration: 400, easing: EASE_OUT, fill: 'forwards' });
+  }
+  // Stage coordinates of an element's centre.
+  function at(el, fx = 0.5, fy = 0.5) {
+    const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 700;
+    return [(r.left + r.width * fx - s.left) / k, (r.top + r.height * fy - s.top) / k];
+  }
+  function fly(from, to, text, blue, onLand) {
+    const chip = document.createElement('div');
+    chip.className = 'rkg-fly' + (blue ? ' blue' : '');
+    chip.textContent = text;
+    stage.appendChild(chip);
+    const [x0, y0] = from, [x1, y1] = to, cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 70;
+    const frames = [];
+    for (let i = 0; i <= 12; i++) {
+      const t = i / 12, x = (1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, y = (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1;
+      frames.push({ transform: `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${1 + 0.25 * Math.sin(Math.PI * t)})`, opacity: t > 0.92 ? 0 : 1 });
+    }
+    frames[0].opacity = 0;
+    frames[1].opacity = 1;
+    chip.animate(frames, { duration: 800, easing: EASE_IN_OUT, fill: 'both' }).onfinish = () => chip.remove();
+    later(720, () => {
+      const ring = document.createElement('div');
+      ring.className = 'rkg-burst';
+      ring.style.cssText = `left:${x1}px;top:${y1}px;--c:${blue ? '#2e91e5' : '#23b750'}`;
+      stage.appendChild(ring);
+      ring.animate([{ transform: 'scale(0.5)', opacity: 0.9 }, { transform: 'scale(2.6)', opacity: 0 }], { duration: 700, easing: EASE_OUT }).onfinish = () => ring.remove();
+      onLand();
+    });
+  }
+  function pulse(card) {
+    card.animate([{ transform: 'none' }, { transform: 'scale(1.04)', offset: 0.3 }, { transform: 'none' }], { duration: 600, easing: EASE_OUT });
+  }
+  function plus(card, text) {
+    const p = document.createElement('div');
+    p.className = 'rkg-plus';
+    p.textContent = text;
+    card.appendChild(p);
+    p.style.left = card.classList.contains('rev') ? '170px' : '150px';
+    p.animate([
+      { opacity: 0, transform: 'translateY(10px) scale(0.9)' },
+      { opacity: 1, transform: 'none', offset: 0.2 },
+      { opacity: 1, transform: 'translateY(-6px)', offset: 0.75 },
+      { opacity: 0, transform: 'translateY(-16px)' },
+    ], { duration: 1800, easing: EASE_OUT }).onfinish = () => p.remove();
+  }
+  function ripple() {
+    $('[data-ripple]').animate([
+      { opacity: 0, transform: 'scale(0.15)' },
+      { opacity: 0.9, offset: 0.08 },
+      { opacity: 0, transform: 'scale(1)' },
+    ], { duration: 2600, easing: EASE_OUT });
+  }
+  function bump(el) {
+    el.animate([{ transform: 'scale(1.12)', color: '#23b750' }, { transform: 'none' }], { duration: 700, easing: EASE_OUT });
+  }
+
+  // ---------- One beat ----------
+  function beat() {
+    const b = beats[beatIx++ % beats.length], s = state, won = b.kind === 'won';
+    const t = showToast(b);
+    const target = kpi(won ? 'rev' : 'pipe');
+
+    later(900, () => fly(at($('em', t)), at($('[data-val]', target), 0.5, 0.5), `+${short(b.value)}`, !won, () => {
+      pulse(target);
+      ripple();
+      plus(target, `+${short(b.value)}`);
+      if (won) {
+        const prev = { ...s };
+        s.rev += b.value; s.closed += 1; s.quota += b.value;
+        s.conv = Math.min(19.9, +(s.conv + 0.2).toFixed(1));
+        s.win = Math.min(24.9, +(s.win + 0.4).toFixed(1));
+        s.pipe -= b.value;   // a won deal leaves the open pipeline
+        countTo($('[data-val]', target), prev.rev, s.rev, fmt.rev, 1100);
+        $('.rkg-shine', target).animate([{ transform: 'translateX(-110%)' }, { transform: 'translateX(110%)' }], { duration: 900, easing: EASE_OUT });
+        $('[data-closed]').textContent = `${s.closed} closed deals`; bump($('[data-closed]'));
+        $('[data-vs]').textContent = `+${((s.rev / PRIOR - 1) * 100).toFixed(1)}% vs prior period`;
+        countTo($('[data-quota]'), prev.quota, s.quota, (v) => `RM${(v / 1000).toFixed(1)}K`, 1100);
+        $('[data-attain]').textContent = `of RM 450.0K target (${Math.round(s.quota / TARGET * 100)}% attained)`;
+        later(350, () => {
+          countTo($('[data-val]', kpi('conv')), prev.conv, s.conv, fmt.conv, 900);
+          charts.conv.push(s.conv); pulse(kpi('conv'));
+          countTo($('[data-val]', kpi('pipe')), prev.pipe, s.pipe, fmt.pipe, 900);
+        });
+        later(650, () => {
+          charts.win.push(s.win);
+          $('[data-win]').textContent = `Current: ${s.win.toFixed(1)}%`;
+          $('[data-gain]').textContent = `+${(s.win - 6.3).toFixed(1)} pts gain`;
+        });
+      } else {
+        const prev = { ...s };
+        s.pipe += b.value;
+        s.resp = Math.max(540, s.resp - (s.resp - b.reply * 1) * 0.02);   // a fast reply pulls the average down
+        s.sla = Math.min(97, s.sla + 1);
+        countTo($('[data-val]', target), prev.pipe, s.pipe, fmt.pipe, 1100);
+        charts.pipe.push(s.pipe / 1e6);
+        later(350, () => {
+          countTo($('[data-val]', kpi('resp')), prev.resp, s.resp, fmt.resp, 900);
+          charts.resp.push(s.resp / 60); pulse(kpi('resp'));
+          setSla(prev.sla, s.sla, 800);
+          $('.rkg-gauge').animate([{ transform: 'none' }, { transform: 'scale(1.12)', offset: 0.35 }, { transform: 'none' }], { duration: 650, easing: EASE_OUT });
+        });
+      }
+    }));
+    later(2300, () => hideToast(t));
+  }
+
+  // ---------- Intro + loop ----------
+  function intro() {
+    const s = state;
+    countTo($('[data-val]', kpi('rev')), 0, s.rev, fmt.rev, 1600, 650);
+    countTo($('[data-val]', kpi('pipe')), 0, s.pipe, fmt.pipe, 1600, 720);
+    countTo($('[data-val]', kpi('conv')), 0, s.conv, fmt.conv, 1600, 790);
+    countTo($('[data-val]', kpi('resp')), 30 * 60, s.resp, fmt.resp, 1600, 860);
+    setSla(0, s.sla, 1500, 500);
+    later(1900, () => $('[data-status]').animate([{ transform: 'scale(1.3)', color: '#15803d' }, { transform: 'none' }], { duration: 600, easing: EASE_OUT }));
+    charts.win.reveal(600);
+    charts.pipe.reveal(900); charts.conv.reveal(980); charts.resp.reveal(1060);
+  }
+
+  function loop() {
+    if (!running) return;
+    beat();
+    later(3800, loop);
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    raf.forEach(cancelAnimationFrame); raf = [];
+    stage.querySelectorAll('.rkg-fly, .rkg-burst').forEach((el) => el.remove());
+    root.querySelectorAll('.rkg-plus').forEach((el) => el.remove());
+    $('[data-toast]').getAnimations().forEach((a) => a.cancel());
+    state = { ...START };
+    beatIx = 0;
+    build();
+  }
+
+  function start() {
+    root.classList.add('is-in');
+    if (reduce.matches) { renderStatic(state); return; }
+    if (running) return;
+    running = true;
+    root.classList.add('is-live');
+    intro();
+    later(3200, loop);
+  }
+  function stop() {
+    running = false;
+    root.classList.remove('is-live');
+    reset();
+  }
+
+  reset();
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(root);
+})();
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20261102-4" />
+    <link rel="stylesheet" href="styles.css?v=20261103-2" />
   </head>
   <body>
     <!--
@@ -625,7 +625,20 @@
           <div class="workflow-cards-stack" id="workflow-cards" aria-label="Sales lifecycle stages">
             <!-- Card 01: Capture (Copy Left / Visual Right) -->
             <article class="workflow-stack-card" data-stack-index="0" id="lifecycle-stage-1" style="--card-index:0">
-              <div class="workflow-stack-card__inner">
+              <button class="workflow-card-toggle" type="button" aria-expanded="false" aria-controls="stage-content-1">
+                <div class="workflow-card-toggle__header">
+                  <div class="card-pill card-pill--green">
+                    <span class="card-pill__dot" aria-hidden="true"></span>
+                    <span>STAGE 01</span>
+                  </div>
+                  <span class="workflow-card-toggle__title">Capture</span>
+                </div>
+                <span class="workflow-card-toggle__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="workflow-card-toggle__bar" aria-hidden="true"></span>
+              </button>
+              <div class="workflow-stack-card__inner" id="stage-content-1">
                 <div class="workflow-stack-card__copy">
                   <div class="card-pill card-pill--green">
                     <span class="card-pill__dot" aria-hidden="true"></span>
@@ -647,7 +660,7 @@
                 </div>
                 <div class="workflow-stack-card__visual">
                   <div class="card-visual-frame">
-                    <img src="assets/2.1 Capture.png" alt="RakanSales Stage 01 - Capture Every Inbound &amp; Outbound Opportunity" class="card-visual-img" width="1400" height="800" loading="eager" decoding="async">
+                    <iframe src="assets/lifecycle-animated/capture/index.html?embed" title="RakanSales Stage 01 - Capture animation" class="card-visual-iframe" loading="lazy" scrolling="no"></iframe>
                   </div>
                 </div>
               </div>
@@ -655,7 +668,20 @@
 
             <!-- Card 02: Engage (Visual Left / Copy Right) -->
             <article class="workflow-stack-card workflow-stack-card--reverse" data-stack-index="1" id="lifecycle-stage-2" style="--card-index:1">
-              <div class="workflow-stack-card__inner">
+              <button class="workflow-card-toggle" type="button" aria-expanded="false" aria-controls="stage-content-2">
+                <div class="workflow-card-toggle__header">
+                  <div class="card-pill card-pill--green">
+                    <span class="card-pill__dot" aria-hidden="true"></span>
+                    <span>STAGE 02</span>
+                  </div>
+                  <span class="workflow-card-toggle__title">Engage</span>
+                </div>
+                <span class="workflow-card-toggle__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="workflow-card-toggle__bar" aria-hidden="true"></span>
+              </button>
+              <div class="workflow-stack-card__inner" id="stage-content-2">
                 <div class="workflow-stack-card__copy">
                   <div class="card-pill card-pill--green">
                     <span class="card-pill__dot" aria-hidden="true"></span>
@@ -677,7 +703,7 @@
                 </div>
                 <div class="workflow-stack-card__visual">
                   <div class="card-visual-frame">
-                    <img src="assets/2.2 Engage.png" alt="RakanSales Stage 02 - Engage Across WhatsApp, Social &amp; Email in One Inbox" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async">
+                    <iframe src="assets/lifecycle-animated/engage/index.html?embed" title="RakanSales Stage 02 - Engage animation" class="card-visual-iframe" loading="lazy" scrolling="no"></iframe>
                   </div>
                 </div>
               </div>
@@ -685,7 +711,20 @@
 
             <!-- Card 03: Automate (Copy Left / Visual Right) -->
             <article class="workflow-stack-card" data-stack-index="2" id="lifecycle-stage-3" style="--card-index:2">
-              <div class="workflow-stack-card__inner">
+              <button class="workflow-card-toggle" type="button" aria-expanded="false" aria-controls="stage-content-3">
+                <div class="workflow-card-toggle__header">
+                  <div class="card-pill card-pill--green">
+                    <span class="card-pill__dot" aria-hidden="true"></span>
+                    <span>STAGE 03</span>
+                  </div>
+                  <span class="workflow-card-toggle__title">Automate</span>
+                </div>
+                <span class="workflow-card-toggle__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="workflow-card-toggle__bar" aria-hidden="true"></span>
+              </button>
+              <div class="workflow-stack-card__inner" id="stage-content-3">
                 <div class="workflow-stack-card__copy">
                   <div class="card-pill card-pill--green">
                     <span class="card-pill__dot" aria-hidden="true"></span>
@@ -707,7 +746,7 @@
                 </div>
                 <div class="workflow-stack-card__visual">
                   <div class="card-visual-frame">
-                    <img src="assets/2.3 Automate.png" alt="RakanSales Stage 03 - Automate Lead Scoring, FAQ Replies &amp; Round-Robin" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async">
+                    <iframe src="assets/lifecycle-animated/automate/index.html?embed" title="RakanSales Stage 03 - Automate animation" class="card-visual-iframe" loading="lazy" scrolling="no"></iframe>
                   </div>
                 </div>
               </div>
@@ -715,7 +754,20 @@
 
             <!-- Card 04: Close (Visual Left / Copy Right) -->
             <article class="workflow-stack-card workflow-stack-card--reverse" data-stack-index="3" id="lifecycle-stage-4" style="--card-index:3">
-              <div class="workflow-stack-card__inner">
+              <button class="workflow-card-toggle" type="button" aria-expanded="false" aria-controls="stage-content-4">
+                <div class="workflow-card-toggle__header">
+                  <div class="card-pill card-pill--green">
+                    <span class="card-pill__dot" aria-hidden="true"></span>
+                    <span>STAGE 04</span>
+                  </div>
+                  <span class="workflow-card-toggle__title">Close</span>
+                </div>
+                <span class="workflow-card-toggle__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="workflow-card-toggle__bar" aria-hidden="true"></span>
+              </button>
+              <div class="workflow-stack-card__inner" id="stage-content-4">
                 <div class="workflow-stack-card__copy">
                   <div class="card-pill card-pill--green">
                     <span class="card-pill__dot" aria-hidden="true"></span>
@@ -737,7 +789,7 @@
                 </div>
                 <div class="workflow-stack-card__visual">
                   <div class="card-visual-frame">
-                    <img src="assets/2.4 Close.png" alt="RakanSales Stage 04 - Close Deals with Visual Pipelines &amp; Instant Proposals" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async">
+                    <iframe src="assets/lifecycle-animated/close/index.html?embed" title="RakanSales Stage 04 - Close animation" class="card-visual-iframe" loading="lazy" scrolling="no"></iframe>
                   </div>
                 </div>
               </div>
@@ -745,7 +797,20 @@
 
             <!-- Card 05: Grow (Copy Left / Visual Right) -->
             <article class="workflow-stack-card" data-stack-index="4" id="lifecycle-stage-5" style="--card-index:4">
-              <div class="workflow-stack-card__inner">
+              <button class="workflow-card-toggle" type="button" aria-expanded="false" aria-controls="stage-content-5">
+                <div class="workflow-card-toggle__header">
+                  <div class="card-pill card-pill--green">
+                    <span class="card-pill__dot" aria-hidden="true"></span>
+                    <span>STAGE 05</span>
+                  </div>
+                  <span class="workflow-card-toggle__title">Grow</span>
+                </div>
+                <span class="workflow-card-toggle__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+                <span class="workflow-card-toggle__bar" aria-hidden="true"></span>
+              </button>
+              <div class="workflow-stack-card__inner" id="stage-content-5">
                 <div class="workflow-stack-card__copy">
                   <div class="card-pill card-pill--green">
                     <span class="card-pill__dot" aria-hidden="true"></span>
@@ -767,7 +832,7 @@
                 </div>
                 <div class="workflow-stack-card__visual">
                   <div class="card-visual-frame">
-                    <img src="assets/2.5 Grow.png" alt="RakanSales Stage 05 - Grow with AI Natural-Language Charts &amp; Forecasting" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async">
+                    <iframe src="assets/lifecycle-animated/grow/index.html?embed" title="RakanSales Stage 05 - Grow animation" class="card-visual-iframe" loading="lazy" scrolling="no"></iframe>
                   </div>
                 </div>
               </div>
@@ -1727,6 +1792,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20261102-3"></script>
+    <script src="script.js?v=20261103-3"></script>
   </body>
 </html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RakanSales — Sales Lifecycle Section</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <!-- Section 07: Powder-Style Sticky Stacking Cards (Complete Sales OS Lifecycle) -->
+      <section class="workflow-section dark-zone" id="workflow" aria-labelledby="workflow-title" data-workflow-system data-theme-trigger="dark">
+        <div class="workflow-section__inner">
+          <!-- Powder-Style 2-Column Section Header -->
+          <header class="powder-header">
+            <div class="powder-header__left">
+              <div class="powder-pill" aria-label="Section badge">
+                <span class="powder-pill__dot" aria-hidden="true"></span>
+                <span>Sales OS Lifecycle</span>
+              </div>
+              <h2 id="workflow-title" class="powder-heading">
+                How RakanSales powers your<br />
+                <span class="powder-heading__muted">complete sales lifecycle</span>
+              </h2>
+            </div>
+            <div class="powder-header__right">
+              <p class="powder-header__desc">
+                Every lead flows through an intelligent 5-step pipeline without human bottlenecks.
+              </p>
+            </div>
+          </header>
+
+          <!-- Scroll-Triggered Lifecycle Stage: pinned viewport, one card per scroll step -->
+          <div class="workflow-scroll" data-workflow-scroll style="--stage-count:5">
+            <div class="workflow-pin">
+              <nav class="workflow-progress" aria-label="Lifecycle stages">
+                <button class="workflow-progress__step" type="button" data-stage-target="0">
+                  <span class="workflow-progress__num">01</span>
+                  <span class="workflow-progress__label">Capture</span>
+                  <span class="workflow-progress__bar" aria-hidden="true"></span>
+                </button>
+                <button class="workflow-progress__step" type="button" data-stage-target="1">
+                  <span class="workflow-progress__num">02</span>
+                  <span class="workflow-progress__label">Engage</span>
+                  <span class="workflow-progress__bar" aria-hidden="true"></span>
+                </button>
+                <button class="workflow-progress__step" type="button" data-stage-target="2">
+                  <span class="workflow-progress__num">03</span>
+                  <span class="workflow-progress__label">Automate</span>
+                  <span class="workflow-progress__bar" aria-hidden="true"></span>
+                </button>
+                <button class="workflow-progress__step" type="button" data-stage-target="3">
+                  <span class="workflow-progress__num">04</span>
+                  <span class="workflow-progress__label">Close</span>
+                  <span class="workflow-progress__bar" aria-hidden="true"></span>
+                </button>
+                <button class="workflow-progress__step" type="button" data-stage-target="4">
+                  <span class="workflow-progress__num">05</span>
+                  <span class="workflow-progress__label">Grow</span>
+                  <span class="workflow-progress__bar" aria-hidden="true"></span>
+                </button>
+              </nav>
+
+              <div class="workflow-cards-stack" id="workflow-cards" aria-label="Sales lifecycle stages">
+                <!-- Card 01: Capture (Copy Left / Visual Right) -->
+                <article class="workflow-stack-card" data-stack-index="0" id="lifecycle-stage-1" style="--card-index:0">
+                  <div class="workflow-stack-card__inner">
+                    <div class="workflow-stack-card__copy">
+                      <div class="card-pill card-pill--green">
+                        <span class="card-pill__dot" aria-hidden="true"></span>
+                        <span>STAGE 01</span>
+                      </div>
+                      <h3 class="card-title">Capture Every Inbound &amp; Outbound Opportunity</h3>
+                      <p class="card-desc">
+                        Ingest leads automatically from Web Forms, WhatsApp Click-to-Chat ads, social campaigns, and AI Lead Finder without manual data entry.
+                      </p>
+                      <ul class="stage-bullets">
+                        <li>Instant sync from website forms &amp; landing pages</li>
+                        <li>Direct capture from WhatsApp ad campaigns</li>
+                        <li>AI Lead Finder targeted B2B prospect ingestion</li>
+                      </ul>
+                      <a href="#preview" class="card-action-link">
+                        <span>Explore lead capture workflows</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                    <div class="workflow-stack-card__visual">
+                      <div class="card-visual-frame">
+                        <img src="assets/2.1 Capture.png" alt="RakanSales Stage 01 - Capture Every Inbound &amp; Outbound Opportunity" class="card-visual-img" width="1400" height="800" loading="eager" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 02: Engage (Visual Left / Copy Right) -->
+                <article class="workflow-stack-card workflow-stack-card--reverse" data-stack-index="1" id="lifecycle-stage-2" style="--card-index:1">
+                  <div class="workflow-stack-card__inner">
+                    <div class="workflow-stack-card__copy">
+                      <div class="card-pill card-pill--green">
+                        <span class="card-pill__dot" aria-hidden="true"></span>
+                        <span>STAGE 02</span>
+                      </div>
+                      <h3 class="card-title">Engage Across WhatsApp, Social &amp; Email in One Inbox</h3>
+                      <p class="card-desc">
+                        Respond to customer inquiries from WhatsApp, Instagram, Facebook Messenger, Live Chat, and Email in a single synchronized workspace.
+                      </p>
+                      <ul class="stage-bullets">
+                        <li>Multi-agent WhatsApp team inbox with collision alert</li>
+                        <li>Full conversation history and customer contact context</li>
+                        <li>Internal team notes and direct mentions (@Amir)</li>
+                      </ul>
+                      <a href="#preview" class="card-action-link">
+                        <span>Explore omnichannel team inbox</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                    <div class="workflow-stack-card__visual">
+                      <div class="card-visual-frame">
+                        <img src="assets/2.2 Engage.png" alt="RakanSales Stage 02 - Engage Across WhatsApp, Social &amp; Email in One Inbox" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 03: Automate (Copy Left / Visual Right) -->
+                <article class="workflow-stack-card" data-stack-index="2" id="lifecycle-stage-3" style="--card-index:2">
+                  <div class="workflow-stack-card__inner">
+                    <div class="workflow-stack-card__copy">
+                      <div class="card-pill card-pill--green">
+                        <span class="card-pill__dot" aria-hidden="true"></span>
+                        <span>STAGE 03</span>
+                      </div>
+                      <h3 class="card-title">Automate Lead Scoring, FAQ Replies &amp; Round-Robin</h3>
+                      <p class="card-desc">
+                        Let AI qualify buyer intent, answer recurring questions instantly, and distribute qualified leads directly to available salespeople.
+                      </p>
+                      <ul class="stage-bullets">
+                        <li>AI Lead Intent Scoring (Score: 92/100 · High Intent)</li>
+                        <li>Automated round-robin distribution to on-duty reps</li>
+                        <li>24/7 AI FAQ replies during non-business hours</li>
+                      </ul>
+                      <a href="#capabilities" class="card-action-link">
+                        <span>Explore AI qualification engine</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                    <div class="workflow-stack-card__visual">
+                      <div class="card-visual-frame">
+                        <img src="assets/2.3 Automate.png" alt="RakanSales Stage 03 - Automate Lead Scoring, FAQ Replies &amp; Round-Robin" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 04: Close (Visual Left / Copy Right) -->
+                <article class="workflow-stack-card workflow-stack-card--reverse" data-stack-index="3" id="lifecycle-stage-4" style="--card-index:3">
+                  <div class="workflow-stack-card__inner">
+                    <div class="workflow-stack-card__copy">
+                      <div class="card-pill card-pill--green">
+                        <span class="card-pill__dot" aria-hidden="true"></span>
+                        <span>STAGE 04</span>
+                      </div>
+                      <h3 class="card-title">Close Deals with Visual Pipelines &amp; Instant Proposals</h3>
+                      <p class="card-desc">
+                        Track deal progression through custom Kanban stages. Generate and send professional PDF quotations directly in the chat sidebar.
+                      </p>
+                      <ul class="stage-bullets">
+                        <li>One-click quotation generation (RM 18,500)</li>
+                        <li>Visual Kanban deal stages (Discovery → Proposal → Won)</li>
+                        <li>Automated WhatsApp follow-up reminders</li>
+                      </ul>
+                      <a href="#preview" class="card-action-link">
+                        <span>Explore visual deal pipelines</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                    <div class="workflow-stack-card__visual">
+                      <div class="card-visual-frame">
+                        <img src="assets/2.4 Close.png" alt="RakanSales Stage 04 - Close Deals with Visual Pipelines &amp; Instant Proposals" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 05: Grow (Copy Left / Visual Right) -->
+                <article class="workflow-stack-card" data-stack-index="4" id="lifecycle-stage-5" style="--card-index:4">
+                  <div class="workflow-stack-card__inner">
+                    <div class="workflow-stack-card__copy">
+                      <div class="card-pill card-pill--green">
+                        <span class="card-pill__dot" aria-hidden="true"></span>
+                        <span>STAGE 05</span>
+                      </div>
+                      <h3 class="card-title">Grow with AI Natural-Language Charts &amp; Forecasting</h3>
+                      <p class="card-desc">
+                        Ask questions in plain English or Malay to get instant revenue forecasts, rep win-rate analytics, and pipeline bottleneck reports.
+                      </p>
+                      <ul class="stage-bullets">
+                        <li>Conversational queries ("Show Q3 won deals by channel")</li>
+                        <li>Real-time revenue forecast (RM 1.24M pipeline projection)</li>
+                        <li>Team win-rate and channel ROI analytics</li>
+                      </ul>
+                      <a href="#capabilities" class="card-action-link">
+                        <span>Explore conversational analytics</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
+                    </div>
+                    <div class="workflow-stack-card__visual">
+                      <div class="card-visual-frame">
+                        <img src="assets/2.5 Grow.png" alt="RakanSales Stage 05 - Grow with AI Natural-Language Charts &amp; Forecasting" class="card-visual-img" width="1400" height="800" loading="lazy" decoding="async" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="104.212" height="104.212" viewBox="0 0 104.212 104.212" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="fb_messenger" style="mix-blend-mode:plus-lighter" opacity="0.5" filter="url(#filter0_f_0_90)">
+<path id="bg" d="M52.106 77.4902C67.0702 77.4902 79.201 65.7423 79.201 51.2505C79.201 36.7588 67.0702 25.0109 52.106 25.0109C37.1417 25.0109 25.0109 36.7588 25.0109 51.2505C25.0109 59.1323 28.5993 66.2025 34.2802 71.0124V76.3223C34.2802 78.3976 36.3941 79.7895 38.2789 78.9553L44.1712 76.3471C46.6808 77.0903 49.3451 77.4902 52.106 77.4902Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#paint0_linear_0_90)"/>
+<path id="fb_messenger_2" d="M45.6175 45.6725L37.7604 56.4181C36.918 57.5702 38.433 58.9543 39.5864 58.0863L46.2955 53.0373C46.9784 52.5234 47.9356 52.5165 48.6265 53.0204L54.5933 57.3732C55.7376 58.208 57.373 57.9679 58.2062 56.8429L66.4463 45.7158C67.3009 44.5618 65.7742 43.1665 64.6191 44.0459L57.5261 49.4456C56.843 49.9656 55.8807 49.9751 55.1866 49.4688L49.2392 45.1302C48.0901 44.292 46.4471 44.538 45.6175 45.6725Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_f_0_90" x="-6.25281" y="-6.25279" width="116.717" height="116.717" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="12.5054" result="effect1_foregroundBlur_0_90"/>
+</filter>
+<linearGradient id="paint0_linear_0_90" x1="52.106" y1="25.0109" x2="43.4118" y2="78.9058" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00B1FF"/>
+<stop offset="1" stop-color="#006BFF"/>
+</linearGradient>
+</defs>
+</svg>

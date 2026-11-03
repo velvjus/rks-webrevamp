@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lifecycle – Close</title>
+<!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rkc { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkc ---------- */
+  .rkc {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 7 / 4;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0e1115;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rkc * { box-sizing: border-box; margin: 0; }
+  .rkc img { display: block; max-width: none; }
+  .rkc-stage { position: absolute; left: 0; top: 0; width: 700px; height: 400px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkc-abs { position: absolute; }
+  .rkc-abs > img { width: 100%; height: 100%; }
+
+  /* ---------- Background ---------- */
+  .rkc-bg { opacity: 0; transition: opacity 1200ms var(--ease-out); }
+  .rkc.is-in .rkc-bg { opacity: 1; }
+  .rkc.is-live .rkc-breathe { animation: rkc-breathe 5s ease-in-out infinite alternate; }
+  @keyframes rkc-breathe { from { transform: scale(0.94); } to { transform: scale(1.06); } }
+  .rkc-pie { opacity: 0; transform: rotate(-90deg) scale(0.85); transition: opacity 900ms var(--ease-out), transform 1400ms var(--ease-out); }
+  .rkc.is-in .rkc-pie { opacity: 1; transform: none; }
+  .rkc-pie .spin { position: absolute; inset: 0; }
+  .rkc.is-live .rkc-pie .spin { animation: rkc-spin 40s linear infinite; }
+  @keyframes rkc-spin { to { transform: rotate(360deg); } }
+  .rkc-pie.glow { mix-blend-mode: plus-lighter; }
+  .rkc.is-in .rkc-pie.glow { opacity: 0.3; }
+
+  /* ---------- Floating actions bar (Figma: scaled 0.805) ---------- */
+  .rkc-actions {
+    left: 290.03px; top: 54px; display: flex; align-items: center; gap: 9.66px;
+    opacity: 0; transform: translateY(-14px);
+    transition: opacity 600ms var(--ease-out), transform 800ms var(--ease-out); transition-delay: 300ms;
+  }
+  .rkc.is-in .rkc-actions { opacity: 1; transform: none; }
+  .rkc-ctl { display: flex; align-items: center; gap: 6.44px; background: #fff; border: 0.8px solid #d5d7da; border-radius: 6.44px; box-shadow: 0 0.8px 1.6px rgba(10, 13, 18, 0.05); white-space: nowrap; }
+  .rkc-ctl img { width: 16.09px; height: 16.09px; }
+  .rkc-ctl.select { padding: 8.05px 11.27px; font-size: 9.07px; font-weight: 600; color: #414651; }
+  .rkc-ctl.select span { width: 106px; }
+  .rkc-ctl.filters { gap: 3.22px; padding: 8.05px 11.27px; font-size: 11.27px; font-weight: 600; color: #414651; line-height: 16.09px; }
+  .rkc-ctl.filters b { background: #f04438; color: #fff; border-radius: 12.88px; padding: 0.8px 4.83px; font-size: 9.66px; font-weight: 500; line-height: 14.49px; }
+  .rkc-ctl.user { width: 136px; padding: 6.44px 9.66px; font-size: 12.88px; font-weight: 500; color: #181d27; line-height: 19.31px; }
+  .rkc-ctl.user .av { width: 19.31px; height: 19.31px; border-radius: 999px; object-fit: cover; background: #d7e3e8; }
+  .rkc-ctl.user span { flex: 1; }
+  .rkc-ctl.user img:last-child { width: 12.88px; height: 12.88px; }
+  .rkc-ctl.dots { background: none; border: 0; box-shadow: none; padding: 8.05px 9.66px; }
+
+  /* ---------- Kanban window ---------- */
+  .rkc-kanban {
+    left: 65px; top: 116px; width: 1158.79px; height: 772.53px;
+    background: #fff; border: 0.79px solid #e9eaeb; border-radius: 12px;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.22);
+    overflow: hidden;
+    opacity: 0; transform: translateY(36px);
+    transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); transition-delay: 150ms;
+  }
+  .rkc.is-in .rkc-kanban { opacity: 1; transform: none; }
+
+  /* Navigation, authored at native size then scaled 0.805 as in Figma */
+  .rkc-nav { position: absolute; left: 0; top: 0; width: 1439.5px; height: 73.1px; padding: 16px 32px; transform: scale(0.805); transform-origin: 0 0; display: flex; align-items: center; gap: 12px; }
+  .rkc-btngroup { display: flex; border: 1px solid #d5d7da; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 1px rgba(10, 13, 18, 0.05); }
+  .rkc-btngroup span { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 12px; border-right: 1px solid #d5d7da; background: #fff; }
+  .rkc-btngroup span:first-child { background: #fafafa; }
+  .rkc-btngroup span:last-child { border-right: 0; }
+  .rkc-btngroup img { width: 20px; height: 20px; }
+  .rkc-add { display: flex; align-items: center; gap: 4px; padding: 10px 14px; border-radius: 8px; background: #1a943e; border: 2px solid rgba(255, 255, 255, 0.12); color: #fff; font-size: 14px; font-weight: 600; line-height: 20px; white-space: pre; box-shadow: inset 0 0 0 1px rgba(10, 13, 18, 0.18), inset 0 -2px 0 rgba(10, 13, 18, 0.05); }
+  .rkc-add img { width: 20px; height: 20px; }
+  .rkc-dwt { padding: 8px 16px; font-size: 14px; color: #414651; line-height: 20px; white-space: nowrap; }
+  .rkc-search { position: absolute; left: 492px; top: 16px; width: 333px; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fdfdfd; border: 1px solid #d5d7da; border-radius: 8px; box-shadow: 0 1px 2px rgba(10, 13, 18, 0.05); font-size: 16px; line-height: 24px; color: #717680; }
+  .rkc-search img { width: 20px; height: 20px; }
+  .rkc-search span { flex: 1; }
+  .rkc-search kbd { font: 500 12px/18px "Inter", sans-serif; color: #717680; border: 1px solid #e9eaeb; border-radius: 4px; padding: 1px 4px; }
+
+  /* Board: a track of columns that can pan sideways */
+  .rkc-track { position: absolute; left: 0; top: 0; width: 1500px; height: 100%; }
+  .rkc-track.panning { transition: transform 1500ms var(--ease-in-out); }
+  .rkc-col-head { position: absolute; top: 78.95px; width: 249.46px; padding-bottom: 10px; }
+  .rkc-col-head .bar { height: 5.63px; background: var(--c); margin-bottom: 10px; }
+  .rkc-col-head .row { display: flex; align-items: center; justify-content: space-between; }
+  .rkc-col-head .name { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; line-height: 28px; color: #181d27; white-space: nowrap; }
+  .rkc-col-head .count { display: inline-block; background: #fafafa; border: 1px solid #e9eaeb; border-radius: 16px; padding: 2px 8px; font-size: 12px; font-weight: 500; line-height: 18px; color: #414651; font-variant-numeric: tabular-nums; }
+  .rkc-col-head .tools { display: flex; gap: 8px; }
+  .rkc-col-head .tools img { width: 20px; height: 20px; }
+  .rkc-col-head p { margin-top: 2px; font-size: 14px; line-height: 20px; color: #535862; white-space: nowrap; }
+  .rkc-col-head p b { font-weight: 400; color: #157432; display: inline-block; font-variant-numeric: tabular-nums; }
+
+  /* Deal card */
+  .rkc-card {
+    position: absolute; left: 0; top: 0; width: 249.46px; height: 121.71px;
+    padding: 10px 14px 9px; background: #fff;
+    border: 1px solid #d5d7da; border-radius: 12px;
+    transition: transform 650ms var(--ease-out), box-shadow 250ms ease, border-color 300ms ease;
+    will-change: transform;
+  }
+  .rkc-card.snap { transition: none; }
+  .rkc-card.carry { transition: transform var(--carry, 850ms) var(--ease-in-out), box-shadow 250ms ease, border-color 300ms ease; z-index: 5; }
+  .rkc-card .lift { position: absolute; inset: -1px; border-radius: 12px; pointer-events: none; transition: box-shadow 250ms ease; }
+  .rkc-card.held .lift { box-shadow: 0 18px 36px rgba(16, 24, 40, 0.22), 0 4px 10px rgba(16, 24, 40, 0.12); }
+  .rkc-card .body { transition: transform 250ms var(--ease-out); }
+  .rkc-card.held .body { transform: rotate(2.5deg) scale(1.04); }
+  .rkc-card.held { border-color: transparent; }
+  .rkc-card .sheet { position: absolute; inset: -1px; border-radius: 12px; border: 1px solid #d5d7da; background: #fff; transition: transform 250ms var(--ease-out), border-color 300ms ease, box-shadow 300ms ease; }
+  .rkc-card.held .sheet { transform: rotate(2.5deg) scale(1.04); box-shadow: 0 18px 36px rgba(16, 24, 40, 0.22), 0 4px 10px rgba(16, 24, 40, 0.12); }
+  .rkc-card.won .sheet { border: 1.5px solid #17b26a; box-shadow: 0 0 0 4px rgba(23, 178, 106, 0.18); }
+  .rkc-card .body { position: relative; }
+  .rkc-co { display: flex; align-items: center; gap: 4px; padding-right: 20px; }
+  .rkc-co h5 { flex: 1; min-width: 0; font-size: 16px; font-weight: 700; line-height: 24px; color: #181d27; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rkc-co img { width: 11px; height: 14px; }
+  .rkc-co small { font-size: 12px; line-height: 18px; color: #535862; }
+  .rkc-dots { position: absolute; right: -6px; top: 2px; width: 20px; height: 20px; }
+  .rkc-person { font-size: 14px; line-height: 20px; color: #535862; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 20px; }
+  .rkc-price { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+  .rkc-price b { flex: none; border: 1px solid #e9eaeb; border-radius: 6px; padding: 1px 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: #414651; }
+  .rkc-price img { width: 11px; height: 18px; }
+  .rkc-price span { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; color: #535862; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rkc-divider { height: 1px; margin: 5px 0 4px; }
+  .rkc-divider img { width: 100%; height: 1px; }
+  .rkc-foot { display: flex; align-items: center; justify-content: space-between; }
+  .rkc-foot .av { width: 24px; height: 24px; border-radius: 999px; object-fit: cover; border: 0.5px solid rgba(0, 0, 0, 0.08); background: #e0e0e0; }
+  .rkc-foot .stats { display: flex; gap: 10.7px; padding: 1px 8px; border-radius: 50px; background: #fafafa; font-size: 12px; line-height: 18px; color: #717680; }
+  .rkc-foot .stats span { display: flex; align-items: center; gap: 5.35px; }
+  .rkc-foot .stats img { width: 14.27px; height: 14.27px; }
+  .rkc-won { position: absolute; right: 12px; top: -11px; display: flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; background: #17b26a; color: #fff; font-size: 11px; font-weight: 700; line-height: 16px; box-shadow: 0 4px 12px rgba(23, 178, 106, 0.45); opacity: 0; transform: scale(0.6); z-index: 2; }
+
+  /* Cursor carried with the card */
+  .rkc-cursor { position: absolute; right: 36px; top: 58px; width: 22px; height: 22px; z-index: 3; opacity: 0; pointer-events: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35)); }
+
+  .rkc-confetti { position: absolute; left: 0; top: 0; z-index: 8; pointer-events: none; border-radius: 1.5px; }
+
+  /* ---------- Reduced motion: no loops, no movement ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rkc-kanban, .rkc-actions, .rkc-pie { transform: none !important; }
+    .rkc *, .rkc *::before { animation: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== RakanSales Lifecycle · 2.4 Close ===== -->
+<div class="rkc" data-rkc aria-label="A deal is dragged across the RakanSales pipeline and closed as won" role="img">
+  <div class="rkc-stage">
+    <div class="rkc-abs rkc-bg" style="left:293.1px;top:-130.31px;width:393.78px;height:397.7px"><img src="assets/glow-top.svg" alt=""></div>
+    <div class="rkc-abs rkc-pie glow" style="left:-7.04px;top:15.54px;width:229.16px;height:229.16px"><div class="spin"><img src="assets/pie-glow.svg" alt="" style="width:100%;height:100%"></div></div>
+    <div class="rkc-abs rkc-pie" data-pie style="left:10.04px;top:32.63px;width:195px;height:195px"><div class="spin"><img src="assets/pie.svg" alt="" style="width:100%;height:100%"></div></div>
+    <div class="rkc-abs rkc-bg rkc-breathe" style="left:392.65px;top:-23.93px;width:201.03px;height:201.03px"><img src="assets/ring.svg" alt=""></div>
+    <div class="rkc-abs rkc-bg" style="left:-111.78px;top:-4.53px;width:923.57px;height:590.68px"><img src="assets/glow-mint-big.svg" alt=""></div>
+
+    <div class="rkc-abs rkc-kanban">
+      <div class="rkc-nav">
+        <div class="rkc-btngroup">
+          <span><img src="assets/i-columns.svg" alt=""></span>
+          <span><img src="assets/i-menu.svg" alt=""></span>
+          <span><img src="assets/i-currency.svg" alt=""></span>
+        </div>
+        <div class="rkc-add" data-add><img src="assets/i-plus-white.svg" alt="">Add  Deal</div>
+        <div class="rkc-dwt">D 20 • W 5 • T 12</div>
+        <div class="rkc-search"><img src="assets/i-search.svg" alt=""><span>Search for Deals</span><kbd>⌘K</kbd></div>
+      </div>
+      <div class="rkc-track" data-track></div>
+    </div>
+
+    <div class="rkc-abs" style="left:243.21px;top:144.73px;width:766.68px;height:487.3px;pointer-events:none"><img src="assets/glow-lower.svg" alt=""></div>
+
+    <div class="rkc-abs rkc-actions">
+      <div class="rkc-ctl select"><img src="assets/i-pipeline.svg" alt=""><span>Sales Pipeline</span><img src="assets/i-chevron.svg" alt=""></div>
+      <div class="rkc-ctl filters"><img src="assets/i-filter.svg" alt="">Filters<b>1</b></div>
+      <div class="rkc-ctl user"><img class="av" src="assets/avatar-james.png" alt=""><span>James Doe</span><img src="assets/i-chevron-sm.svg" alt=""></div>
+      <div class="rkc-ctl dots"><img src="assets/i-dots.svg" alt=""></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkc]');
+  if (!root) return;
+  const stage = root.querySelector('.rkc-stage');
+  const track = root.querySelector('[data-track]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / 700)).observe(root);
+
+  // Board geometry (kanban-window coordinates, from Figma).
+  const COL_X0 = 26.54, COL_PITCH = 268.78, CARD_TOP = 151.94, CARD_PITCH = 131.38;
+  const PAN_TO_WON = -3 * COL_PITCH; // shows Proposal + Won; Won lands where Acknowledged was
+
+  // Columns. `hidden` = cards further down the column that never scroll into view,
+  // so counts and weighted values stay consistent as cards move.
+  const columns = [
+    { name: 'New',          color: '#2E91E5', hidden: { n: 3, v: 0 } },
+    { name: 'Acknowledged', color: '#2ED3E6', hidden: { n: 3, v: 0 } },
+    { name: 'Qualifying',   color: '#FAC515', hidden: { n: 3, v: 0 } },
+    { name: 'Proposal',     color: '#7A5AF8', hidden: { n: 2, v: 0 } },
+    { name: 'Won',          color: '#17B26A', hidden: { n: 1, v: 0 } },
+  ];
+  // Deals. The first one in New is the star of each cycle; the rest rotate in.
+  const D = (co, who, value, product, age, a, m, due, av) => ({ co, who, value, product, age, a, m, due, av });
+  const initial = [
+    [D('Tech Solutions Malaysia Sdn Bhd', 'Ahmad Faizal', 35500, 'Cybersecurity Assessment', '1h', 1, 3, '10d', 1),
+     D('Syarikat Deen Maju Sdn Bhd', 'Nur Aisyah', 25000, 'Website Design +2', '2h', 1, 2, '7d', 3)],
+    [D('Kawan Kreatif Sdn Bhd', 'Mohd Hafiz', 60000, 'IT Infrastructure Setup', '4h', 1, 2, '20d', 2),
+     D('Bina Jaya Construction', 'Tan Mei Ling', 18000, 'Site Survey App', '6h', 0, 1, '14d', 3)],
+    [D('Futuristic Ventures Sdn Bhd', 'Sharifah Aina', 55000, 'Cloud Migration', '1.5h', 1, 2, '7d', 3),
+     D('Pelangi Foods Bhd', 'Ravi Kumar', 22000, 'Inventory System', '1d', 2, 1, '12d', 2)],
+    [D('Nusantara Logistik Sdn Bhd', 'Lim Wei Ming', 42000, 'Fleet Tracking System', '2d', 2, 4, '5d', 2),
+     D('Seri Mutiara Hotels', 'Farah Nadia', 31000, 'Booking Portal', '3d', 1, 2, '9d', 1)],
+    [D('Mega Retail Group Bhd', 'Siti Nurhaliza', 28000, 'POS Integration', '3d', 3, 5, 'Done', 3),
+     D('Kemuncak Edu Sdn Bhd', 'Daniel Wong', 19500, 'LMS Rollout', '5d', 1, 2, 'Done', 1)],
+  ];
+  // New deals added each cycle via "Add Deal".
+  const incoming = [
+    D('Aras Digital Sdn Bhd', 'Hana Zulkifli', 27000, 'CRM Onboarding', 'now', 0, 0, '14d', 3),
+    D('Sinar Medik Sdn Bhd', 'Arjun Pillai', 33500, 'Clinic Booking App', 'now', 0, 0, '21d', 2),
+    D('Teguh Engineering', 'Chong Kah Wai', 29000, 'Asset Tracking', 'now', 0, 0, '10d', 1),
+  ];
+
+  // ---------- Build the board ----------
+  const heads = columns.map((col, c) => {
+    const el = document.createElement('div');
+    el.className = 'rkc-col-head';
+    el.style.left = `${COL_X0 + c * COL_PITCH}px`;
+    el.style.setProperty('--c', col.color);
+    el.innerHTML = `<div class="bar"></div>
+      <div class="row"><div class="name">${col.name}<span class="count"></span></div>
+      <div class="tools"><img src="assets/i-plus-gray.svg" alt=""><img src="assets/i-dots-gray.svg" alt=""></div></div>
+      <p>Weighted value <b></b></p>`;
+    track.appendChild(el);
+    return { el, count: el.querySelector('.count'), value: el.querySelector('p b') };
+  });
+
+  function cardEl(d) {
+    const el = document.createElement('div');
+    el.className = 'rkc-card snap';
+    el.innerHTML = `<div class="sheet"></div>
+      <div class="body">
+        <div class="rkc-co"><h5></h5><img src="assets/i-temp.svg" alt=""><small>${d.age}</small></div>
+        <img class="rkc-dots" src="assets/i-dots-gray.svg" alt="">
+        <div class="rkc-person"></div>
+        <div class="rkc-price"><b>RM ${d.value.toLocaleString('en-MY')}</b><img src="assets/i-dot.svg" alt=""><span></span></div>
+        <div class="rkc-divider"><img src="assets/divider.svg" alt=""></div>
+        <div class="rkc-foot"><img class="av" src="assets/avatar-${d.av}.png" alt="">
+          <div class="stats"><span><img src="assets/i-attach.svg" alt="">${d.a}</span><span><img src="assets/i-message.svg" alt="">${d.m}</span><span><img src="assets/i-time.svg" alt="">${d.due}</span></div></div>
+      </div>
+      <div class="rkc-won">✓ Won</div>
+      <svg class="rkc-cursor" viewBox="0 0 24 24"><path d="M5 2.5l13.5 10.8-6.2.7 3.6 6.9-2.6 1.3-3.5-7-4.8 4.2z" fill="#111" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+    el.querySelector('h5').textContent = d.co;
+    el.querySelector('.rkc-person').textContent = d.who;
+    el.querySelector('.rkc-price span').textContent = d.product;
+    d.el = el;
+    track.appendChild(el);
+    return d;
+  }
+
+  let decks, pool;
+  function reset() {
+    track.querySelectorAll('.rkc-card').forEach((el) => el.remove());
+    decks = initial.map((col) => col.map((d) => cardEl({ ...d })));
+    pool = 0;
+    track.classList.remove('panning');
+    track.style.transform = 'none';
+    layout();
+    headers(false);
+    requestAnimationFrame(() => track.querySelectorAll('.rkc-card').forEach((el) => el.classList.remove('snap')));
+  }
+
+  // Place every card at its slot; the carried card keeps its own (slower) transition.
+  function layout() {
+    decks.forEach((deck, c) => deck.forEach((d, i) => {
+      d.el.style.transform = `translate(${COL_X0 + c * COL_PITCH}px, ${CARD_TOP + i * CARD_PITCH}px)`;
+    }));
+  }
+
+  const fmt = (v) => `RM ${(Math.round(v / 100) / 10).toString()}k`;
+  const shown = columns.map(() => ({ n: 0, v: 0 }));
+  function headers(animate = true) {
+    decks.forEach((deck, c) => {
+      const n = columns[c].hidden.n + deck.length;
+      const v = columns[c].hidden.v + deck.reduce((s, d) => s + d.value, 0) + 14000 * columns[c].hidden.n;
+      const h = heads[c], prev = shown[c];
+      if (n !== prev.n) {
+        h.count.textContent = n;
+        if (animate) h.count.animate([{ transform: 'scale(1.45)', background: '#dcfae6' }, { transform: 'none', background: '#fafafa' }], { duration: 500, easing: EASE_OUT });
+      }
+      if (v !== prev.v) {
+        if (animate) countTo(h.value, prev.v, v); else h.value.textContent = fmt(v);
+      }
+      shown[c] = { n, v };
+    });
+  }
+  function countTo(el, from, to) {
+    const t0 = performance.now(), dur = 700;
+    el.animate([{ color: '#17b26a', transform: 'translateY(-2px)' }, { color: '#157432', transform: 'none' }], { duration: 900, easing: EASE_OUT });
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(from + (to - from) * e);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Drag helpers ----------
+  const cursorOf = (d) => d.el.querySelector('.rkc-cursor');
+  function grab(d) {
+    cursorOf(d).animate(
+      [{ opacity: 0, transform: 'translate(14px, 18px)' }, { opacity: 1, transform: 'none' }],
+      { duration: 350, easing: EASE_OUT, fill: 'forwards' }
+    );
+    later(320, () => d.el.classList.add('held'));
+  }
+  function drop(d) {
+    d.el.classList.remove('held');
+    d.el.querySelector('.sheet').animate([{ transform: 'scale(1.04)' }, { transform: 'scale(0.98)', offset: 0.5 }, { transform: 'none' }], { duration: 320, easing: EASE_OUT });
+  }
+  function hideCursor(d) {
+    cursorOf(d).animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(10px, 12px)' }], { duration: 300, easing: EASE_OUT, fill: 'forwards' });
+  }
+  function move(d, from, to, carryMs) {
+    decks[from].splice(decks[from].indexOf(d), 1);
+    decks[to].unshift(d);
+    d.el.style.setProperty('--carry', `${carryMs}ms`);
+    d.el.classList.add('carry');
+    layout();
+    later(carryMs, () => d.el.classList.remove('carry'));
+  }
+
+  function celebrate(d) {
+    d.el.classList.add('won');
+    d.el.querySelector('.rkc-won').animate(
+      [{ opacity: 0, transform: 'scale(0.6) rotate(-8deg)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.6 }, { opacity: 1, transform: 'none' }],
+      { duration: 500, easing: EASE_OUT, fill: 'forwards' }
+    );
+    root.querySelector('[data-pie]').animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 700, easing: EASE_OUT });
+    // Confetti from the card's top edge, in stage coordinates.
+    const s = stage.getBoundingClientRect(), r = d.el.getBoundingClientRect(), k = s.width / 700;
+    const cx = (r.left + r.width / 2 - s.left) / k, cy = (r.top - s.top) / k + 10;
+    const colors = ['#23b750', '#b1fe95', '#2E91E5', '#FAC515', '#F04438', '#ffffff', '#7A5AF8'];
+    for (let i = 0; i < 26; i++) {
+      const p = document.createElement('div');
+      p.className = 'rkc-confetti';
+      const w = 4 + Math.random() * 4, h = 6 + Math.random() * 5;
+      p.style.cssText = `width:${w}px;height:${h}px;background:${colors[i % colors.length]}`;
+      stage.appendChild(p);
+      const ang = -Math.PI / 2 + (Math.random() - 0.5) * 2.2, dist = 70 + Math.random() * 90;
+      const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist, rot = (Math.random() - 0.5) * 720;
+      p.animate([
+        { transform: `translate(${cx}px, ${cy}px) rotate(0deg)`, opacity: 1 },
+        { transform: `translate(${cx + dx}px, ${cy + dy}px) rotate(${rot / 2}deg)`, opacity: 1, offset: 0.45 },
+        { transform: `translate(${cx + dx * 1.15}px, ${cy + dy + 90}px) rotate(${rot}deg)`, opacity: 0 },
+      ], { duration: 1500 + Math.random() * 400, easing: 'cubic-bezier(0.2, 0.7, 0.4, 1)', fill: 'both' }).onfinish = () => p.remove();
+    }
+  }
+
+  // ---------- The cycle ----------
+  let timers = [], running = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  function cycle() {
+    const d = decks[0][0];
+
+    // 1. Pick up the top deal in New and drop it into Acknowledged.
+    later(600, () => grab(d));
+    later(1250, () => { move(d, 0, 1, 850); headers(); });
+    later(2150, () => drop(d));
+
+    // 2. Pick it up again; the board scrolls under it to Won.
+    later(3100, () => d.el.classList.add('held'));
+    later(3350, () => {
+      track.classList.add('panning');
+      track.style.transform = `translateX(${PAN_TO_WON}px)`;
+      move(d, 1, 4, 1500);
+      headers();
+    });
+    later(4900, () => { drop(d); hideCursor(d); });
+    later(5050, () => celebrate(d));
+
+    // 3. Scroll back; a new deal is added to New.
+    later(7600, () => { track.style.transform = 'none'; });
+    later(9000, () => {
+      // Won is off-screen now: put it back to its starting pair so the loop never drifts.
+      const won = decks[4].shift();
+      won.el.remove();
+      const add = root.querySelector('[data-add]');
+      add.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.94)', offset: 0.35 }, { transform: 'scale(1)' }], { duration: 380, easing: EASE_OUT });
+      add.animate([{ boxShadow: '0 0 0 0 rgba(35, 183, 80, 0.6)' }, { boxShadow: '0 0 0 10px rgba(35, 183, 80, 0)' }], { duration: 700, easing: EASE_OUT });
+      const fresh = cardEl({ ...incoming[pool++ % incoming.length] });
+      decks[0].push(fresh);
+      layout();
+      requestAnimationFrame(() => fresh.el.classList.remove('snap'));
+      headers(false);
+    });
+    later(9800, () => { if (running) cycle(); });
+  }
+
+  function start() {
+    root.classList.add('is-in');
+    if (reduce.matches) return;
+    root.classList.add('is-live');
+    if (!running) { running = true; later(1300, cycle); }
+  }
+  function stop() {
+    running = false;
+    timers.forEach(clearTimeout); timers = [];
+    root.classList.remove('is-live');
+    stage.querySelectorAll('.rkc-confetti').forEach((p) => p.remove());
+    reset();
+  }
+
+  reset();
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(root);
+})();
+</script>
+</body>
+</html>

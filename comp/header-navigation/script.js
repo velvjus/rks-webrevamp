@@ -523,19 +523,106 @@ if (workflowScroll) {
     setActiveStage(Math.floor(Math.min(rawProgress, 0.9999) * stageCards.length));
   };
 
+  // Mobile Timed Accordion with Progress Bar
+  const MOBILE_STAGE_DURATION = 10000; // 10s per stage
+  let mobileActiveIndex = 0;
+  let mobileTimerRaf = null;
+  let mobileTimerStartTime = null;
+  let mobileTimerPaused = false;
+
+  const setMobileCardFill = (card, fill) => {
+    card.style.setProperty('--card-fill', Math.min(Math.max(fill, 0), 1).toFixed(4));
+  };
+
+  const clearMobileFills = () => {
+    stageCards.forEach((c) => setMobileCardFill(c, 0));
+  };
+
+  const stopMobileTimer = () => {
+    if (mobileTimerRaf) {
+      cancelAnimationFrame(mobileTimerRaf);
+      mobileTimerRaf = null;
+    }
+    mobileTimerStartTime = null;
+  };
+
+  const startMobileTimer = () => {
+    stopMobileTimer();
+    if (pinQuery.matches || reduceQuery.matches) return;
+    
+    mobileTimerStartTime = performance.now();
+    const tick = (now) => {
+      if (pinQuery.matches) return;
+      if (!mobileTimerPaused) {
+        const elapsed = now - mobileTimerStartTime;
+        const progress = Math.min(elapsed / MOBILE_STAGE_DURATION, 1);
+        const currentCard = stageCards[mobileActiveIndex];
+        if (currentCard) setMobileCardFill(currentCard, progress);
+
+        if (progress >= 1) {
+          // Advance to next stage in carousel loop
+          const nextIndex = (mobileActiveIndex + 1) % stageCards.length;
+          setMobileActiveStage(nextIndex, false);
+          return;
+        }
+      } else {
+        // Extend start time while paused so progress doesn't jump
+        mobileTimerStartTime = performance.now() - (parseFloat(stageCards[mobileActiveIndex]?.style.getPropertyValue('--card-fill') || '0') * MOBILE_STAGE_DURATION);
+      }
+      mobileTimerRaf = requestAnimationFrame(tick);
+    };
+    mobileTimerRaf = requestAnimationFrame(tick);
+  };
+
+  const setMobileActiveStage = (index, userInitiated = false) => {
+    mobileActiveIndex = index;
+    stageCards.forEach((card, i) => {
+      const isCurrent = i === index;
+      card.classList.toggle('is-expanded', isCurrent);
+      const toggle = card.querySelector('.workflow-card-toggle');
+      if (toggle) toggle.setAttribute('aria-expanded', String(isCurrent));
+      setMobileCardFill(card, i < index ? 1 : 0);
+    });
+
+    startMobileTimer();
+  };
+
   const applyStageMode = () => {
     const pinned = pinQuery.matches;
     workflowScroll.classList.toggle('is-scroll-driven', pinned);
     activeStage = -1;
     if (pinned) {
+      stopMobileTimer();
+      clearMobileFills();
       updateStage();
+      stageCards.forEach((card) => {
+        const toggle = card.querySelector('.workflow-card-toggle');
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+      });
     } else {
       stageCards.forEach((card) => {
         card.classList.remove('is-active', 'is-past');
         card.inert = false;
       });
+      setMobileActiveStage(0, false);
     }
   };
+
+  // Mobile Accordion Click Handling
+  stageCards.forEach((card, idx) => {
+    const toggle = card.querySelector('.workflow-card-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+      if (pinQuery.matches) return; // Desktop is scroll-driven
+      setMobileActiveStage(idx, true);
+    });
+  });
+
+  // Pause timer on touch/hover so user can interact and read comfortably
+  stageCards.forEach((card) => {
+    card.addEventListener('pointerenter', () => { if (!pinQuery.matches) mobileTimerPaused = true; });
+    card.addEventListener('pointerleave', () => { if (!pinQuery.matches) mobileTimerPaused = false; });
+  });
 
   // Progress rail: jump to the middle of a stage's scroll window
   stageSteps.forEach((step, i) => {
@@ -549,9 +636,11 @@ if (workflowScroll) {
   window.addEventListener(
     'scroll',
     () => {
-      if (!stageTicking) {
-        stageTicking = true;
-        window.requestAnimationFrame(updateStage);
+      if (pinQuery.matches) {
+        if (!stageTicking) {
+          stageTicking = true;
+          window.requestAnimationFrame(updateStage);
+        }
       }
     },
     { passive: true }
