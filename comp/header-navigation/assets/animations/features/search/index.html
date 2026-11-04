@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features – 1.1 Search</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rks { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Poppins:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rks ---------- */
+  .rks {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 814px;           /* 2× the design width */
+    aspect-ratio: 407 / 380;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rks * { box-sizing: border-box; margin: 0; }
+  .rks img { display: block; max-width: none; }
+  .rks-stage { position: absolute; left: 0; top: 0; width: 407px; height: 380px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rks-abs { position: absolute; }
+  .rks-fill { position: absolute; }
+  .rks-fill > img { width: 100%; height: 100%; }
+
+  /* Map (Figma "MAP 6") */
+  .rks-map { left: 0; top: -412px; width: 443.892px; height: 997.776px; background: #f0f0f0; overflow: hidden; }
+
+  /* Search field */
+  .rks-input {
+    left: 77.7px; top: 162px; width: 252px; padding: 16px; display: flex; gap: 8px; align-items: center;
+    background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 173px 49px rgba(0,0,0,0), 0 111px 44px rgba(0,0,0,0.01), 0 62px 37px rgba(0,0,0,0.05), 0 28px 28px rgba(0,0,0,0.09), 0 7px 15px rgba(0,0,0,0.1);
+  }
+  .rks-input p { flex: 1 0 0; min-width: 0; font: 400 16px/24px "Altone", "Poppins", system-ui, sans-serif; color: #737373; white-space: nowrap; overflow: hidden; }
+  .rks-input .rks-icon { width: 20px; height: 20px; flex-shrink: 0; transform-origin: 45% 45%; }
+  .rks-input .rks-help { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .rks-vignette { inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(250,250,250,0) 76.3%, #fafafa 100%); }
+
+  /* Search ripple (fires once per search) */
+  .rks-ripple { left: 203.5px; top: 190px; width: 440px; height: 440px; margin: -220px 0 0 -220px; border-radius: 50%;
+    border: 2px solid rgba(35,183,80,0.6); box-shadow: 0 0 24px rgba(35,183,80,0.3), inset 0 0 24px rgba(35,183,80,0.2);
+    opacity: 0; transform: scale(0.15); pointer-events: none; }
+
+  /* Profile pins: --d is the outer diameter from Figma, everything else is proportional */
+  .rks-pin {
+    width: var(--d); height: var(--d); border-radius: 50%; background: rgba(255,255,255,0.12);
+    box-shadow: 0 calc(var(--d) * 0.762) calc(var(--d) * 0.212) rgba(0,0,0,0), 0 calc(var(--d) * 0.487) calc(var(--d) * 0.201) rgba(0,0,0,0.01), 0 calc(var(--d) * 0.275) calc(var(--d) * 0.169) rgba(0,0,0,0.05), 0 calc(var(--d) * 0.127) calc(var(--d) * 0.127) rgba(0,0,0,0.09), 0 calc(var(--d) * 0.032) calc(var(--d) * 0.064) rgba(0,0,0,0.1);
+    opacity: 0; scale: 0.4;
+    transition: opacity 250ms var(--ease-out), scale 300ms var(--ease-out);
+  }
+  .rks-pin > div { position: absolute; left: 12.7%; top: 12.7%; width: 74.6%; height: 74.6%; padding: 9.53%; border-radius: 50%; background: rgba(188,188,188,0.33); }
+  .rks-pin img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+  .rks-badge {
+    padding: 2px 8px; border-radius: 16px; background: #fafafa; border: 1px solid #e5e5e5;
+    font: 500 12px/18px "Inter", sans-serif; color: #404040; white-space: nowrap;
+    filter: drop-shadow(0 16px 4.5px rgba(0,0,0,0.05)) drop-shadow(0 7px 3.5px rgba(0,0,0,0.09)) drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+    opacity: 0; transform: translateY(6px) scale(0.8);
+    transition: opacity 200ms var(--ease-out), transform 250ms var(--ease-out);
+  }
+
+  /* Found state: pins pop in by distance from the search field, badges after their pin */
+  .rks.is-found .rks-pin { opacity: 1; scale: 1; transition: opacity 300ms var(--ease-out) var(--t), scale 650ms var(--pop) var(--t); }
+  .rks.is-found .rks-badge { opacity: 1; transform: none; transition: opacity 300ms var(--ease-out) var(--t), transform 550ms var(--pop) var(--t); }
+
+  /* ---------- Reduced motion: static final state ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rks .rks-pin, .rks .rks-badge { opacity: 1; scale: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Features · 1.1 Search ===== -->
+<div class="rks" data-rks role="img" aria-label="A Search Nearby field sends out a pulse and nearby customer profiles with deal values pop up on the map">
+  <div class="rks-stage">
+    <div class="rks-abs rks-map">
+      <div class="rks-abs" style="left:0.17px;top:334.33px;width:351.953px;height:345.343px"><div class="rks-fill" style="inset:0 0.16% 0.9% 0.56%"><img src="assets/map-v42.svg" alt=""></div></div>
+      <div class="rks-abs" style="left:-248.24px;top:-3.3px;width:988.662px;height:1036.58px"><div class="rks-fill" style="inset:-0.36% -0.38% -0.2% -0.38%"><img src="assets/map-lines.svg" alt=""></div></div>
+      <div class="rks-abs" style="left:-248.24px;top:683.53px;width:995.822px;height:313.948px"><div class="rks-fill" style="inset:0 0 21.36% 0"><img src="assets/map-v41.svg" alt=""></div></div>
+      <div class="rks-abs" style="left:-250.44px;top:-2.2px;width:1002.431px;height:1015.65px"><div class="rks-fill" style="inset:-0.52% -0.34% -0.71% -0.32%"><img src="assets/map-road.svg" alt=""></div></div>
+    </div>
+
+    <div class="rks-abs rks-ripple" data-ripple></div>
+    <div class="rks-abs rks-ripple" data-ripple></div>
+
+    <div class="rks-abs rks-input">
+      <img class="rks-icon" data-icon src="assets/search.svg" alt="">
+      <p>Search Nearby</p>
+      <img class="rks-help" src="assets/help.svg" alt="">
+    </div>
+
+    <div class="rks-abs rks-vignette"></div>
+
+    <!-- Pins: --t is the pop-in delay (nearest to the search field first) -->
+    <div class="rks-abs rks-pin" style="left:28.09px;top:194.24px;--d:65.612px;--t:0ms"><div><img src="assets/avatar-d.jpg" alt=""></div></div>
+    <div class="rks-abs rks-pin" style="left:164.55px;top:259.86px;--d:78.291px;--t:120ms"><div><img src="assets/avatar-c.jpg" alt=""></div></div>
+    <div class="rks-abs rks-pin" style="left:289.7px;top:190.11px;--d:91.223px;--t:240ms"><div><img src="assets/avatar-e.jpg" alt=""></div></div>
+    <div class="rks-abs rks-pin" style="left:264.09px;top:63.17px;--d:79.632px;--t:360ms"><div><img src="assets/avatar-b.jpg" alt=""></div></div>
+    <div class="rks-abs rks-pin" style="left:51.69px;top:42.22px;--d:106.72px;--t:480ms"><div><img src="assets/avatar-a.jpg" alt=""></div></div>
+
+    <div class="rks-abs rks-badge" style="left:54.7px;top:250.05px;--t:420ms">~RM 12k</div>
+    <div class="rks-abs rks-badge" style="left:303.69px;top:131.8px;--t:780ms">~RM 5k</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rks]');
+  if (!root) return;
+  const stage = root.querySelector('.rks-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  const DESIGN_W = 407;
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Loop timing (ms) ----------
+  const T = { search: 0, found: 450, hold: 3800, clear: 4400, next: 5200 };
+
+  let timers = [], running = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  function search() {
+    root.querySelector('[data-icon]').animate(
+      [{ transform: 'none' }, { transform: 'scale(1.25) rotate(-14deg)' }, { transform: 'none' }],
+      { duration: 500, easing: EASE_OUT }
+    );
+    root.querySelectorAll('[data-ripple]').forEach((r, i) => r.animate(
+      [{ opacity: 0, transform: 'scale(0.15)' }, { opacity: 0.9, offset: 0.1 }, { opacity: 0, transform: 'scale(1)' }],
+      { duration: 2200, delay: i * 280, easing: EASE_OUT, fill: 'backwards' }
+    ));
+  }
+
+  function cycle() {
+    if (!running) return;
+    later(T.search, search);
+    later(T.found, () => root.classList.add('is-found'));
+    later(T.found + T.hold, () => root.classList.remove('is-found'));
+    later(T.found + T.hold + (T.next - T.clear), cycle);
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    root.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    root.classList.remove('is-found');
+  }
+
+  function start() {
+    if (reduce.matches || running) return;
+    running = true;
+    later(400, cycle);
+  }
+  function stop() { running = false; reset(); }
+
+  reset();
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+})();
+</script>
+</body>
+</html>

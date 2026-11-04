@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Capabilities – Voice translation</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkvt-voice { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkvt-voice ---------- */
+  .rkvt-voice {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 700 / 405;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #021208;
+    font-family: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkvt-voice * { box-sizing: border-box; margin: 0; }
+  .rkvt-voice img { display: block; max-width: none; }
+  .rkvt-stage { position: absolute; left: 0; top: 0; width: 700px; height: 405px; transform-origin: 0 0; transform: scale(var(--s, 1)); overflow: hidden; }
+  .rkvt-abs { position: absolute; }
+  .rkvt-abs > img { width: 100%; height: 100%; }
+  .rkvt-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkvt-voice.is-out .rkvt-ui { opacity: 0; }
+  .rkvt-voice.is-snap *, .rkvt-voice.is-snap *::before, .rkvt-voice.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Chat window ---------- */
+  .rkvt-window { left: 109px; top: 16.8px; width: 481.85px; height: 439.9px; border-radius: 6.61px; overflow: hidden; background: #f3f3f3; border: 0.787px solid #e2e8f0; }
+  .rkvt-windowRing { left: 109px; top: 16.8px; width: 481.85px; height: 439.9px; border-radius: 6.61px; box-shadow: 0 0 0 8px rgba(255,255,255,0.25); }
+  .rkvt-head { position: absolute; left: 0; top: 0; width: 100%; height: 72.79px; background: #fff; border-bottom: 0.787px solid #f1f5f9; }
+  .rkvt-head img { position: absolute; left: 15.74px; top: 15px; width: 42px; height: 42px; border-radius: 50%; }
+  .rkvt-head b { position: absolute; left: 67.74px; top: 15.35px; font-weight: 600; font-size: 13.77px; line-height: 19.67px; letter-spacing: -0.34px; color: #0f172b; white-space: nowrap; }
+  .rkvt-head span { position: absolute; left: 67.74px; top: 40.92px; font-size: 11.8px; line-height: 15.74px; color: #62748e; white-space: nowrap; }
+
+  /* ---------- Voice note bubble ---------- */
+  .rkvt-bubble { left: 133px; top: 100.4px; width: 341px; height: 160px; border-radius: 21px; background: #fff; font-size: 13.77px; line-height: 19.67px; letter-spacing: -0.34px; color: #0f172b; }
+  .rkvt-note { position: absolute; left: 15.74px; top: 15.74px; width: 312px; height: 31px; border-radius: 5px; border: 0.5px solid #e4e4e4; }
+  .rkvt-play { position: absolute; left: 10.87px; top: 5px; width: 20px; height: 20px; }
+  .rkvt-play.press { animation: rkvt-press 420ms var(--ease-out); }
+  @keyframes rkvt-press { 40% { scale: 0.74; } }
+  .rkvt-bars { position: absolute; left: 38.74px; top: 5px; width: 221px; height: 20px; }
+  .rkvt-bars i { position: absolute; width: 2.42px; border-radius: 1px; background: #22b751; }
+  .rkvt-barsDim { opacity: 0.28; }
+  .rkvt-barsFill { clip-path: inset(0 100% 0 0); }
+  .rkvt-barsFill.on { clip-path: inset(0 0 0 0); transition: clip-path 1900ms linear; }
+  .rkvt-voice.is-live .rkvt-bars i { animation: rkvt-wave 420ms ease-in-out infinite alternate; animation-delay: calc(var(--i) * -37ms); }
+  @keyframes rkvt-wave { to { transform: scaleY(0.55); } }
+  .rkvt-time { position: absolute; left: 267.7px; top: 5px; font-variant-numeric: tabular-nums; }
+  .rkvt-zh { position: absolute; left: 24.74px; top: 52.74px; white-space: nowrap; }
+  .rkvt-zh span { opacity: 0; transition: opacity 120ms linear; transition-delay: calc(var(--i) * 46ms); }
+  .rkvt-zh.on span { opacity: 1; }
+  .rkvt-en { position: absolute; left: 15.74px; top: 78.4px; width: 309px; height: 39px; padding-left: 10px; }
+  .rkvt-en::before { content: ""; position: absolute; inset: 0; background: #e4e4e4; transform: scaleX(0); transform-origin: 0 50%; transition: transform 620ms var(--ease-in-out); }
+  .rkvt-en.on::before { transform: none; }
+  .rkvt-en p { position: relative; }
+  .rkvt-en span { display: inline-block; white-space: pre; opacity: 0; transform: translateY(5px); transition: opacity 260ms var(--ease-out), transform 360ms var(--ease-out); transition-delay: calc(240ms + var(--i) * 62ms); }
+  .rkvt-en.on span { opacity: 1; transform: none; }
+  .rkvt-stamp { position: absolute; right: 16.26px; top: 128px; color: #6a7282; }
+  .rkvt-tag { left: 482px; top: 179.8px; color: #6a7282; font-size: 13.77px; line-height: 19.67px; letter-spacing: -0.34px; white-space: nowrap; }
+
+  /* ---------- Rakan AI ---------- */
+  .rkvt-robot { left: -79px; top: 194px; width: 399px; height: 298px; transform-origin: 28% 90%; }
+  .rkvt-robot.nod { animation: rkvt-nod 860ms var(--ease-in-out); }
+  @keyframes rkvt-nod { 35% { rotate: 4deg; } 70% { rotate: -2.2deg; } }
+  .rkvt-stars { left: 14.4px; top: 241.9px; width: 54px; height: 54px; }
+
+  /* ---------- Reply ---------- */
+  .rkvt-reply { left: 238px; top: 280.5px; width: 332px; height: 105.7px; padding: 15.74px; border-radius: 21px; background: #22b751; color: #fff; font-size: 13.77px; line-height: 19.67px; letter-spacing: -0.34px; }
+  .rkvt-reply p:last-child { position: absolute; right: 26.8px; top: 67.7px; }
+
+  /* ---------- Sequence states ---------- */
+  .rkvt-in { opacity: 0; transition: opacity 420ms var(--ease-out), transform 640ms var(--ease-out); }
+  .rkvt-in.on { opacity: 1; transform: none; }
+  .rkvt-fromL { transform: translate(-16px, 12px) scale(0.96); transform-origin: 0 100%; }
+  .rkvt-grow { transform: translateY(16px) scale(0.88); transform-origin: 100% 100%; }
+  .rkvt-fromTag { transform: translateX(-10px); }
+  .rkvt-peek { opacity: 0; transform: translate(-60px, 90px) rotate(-8deg); transition: opacity 320ms var(--ease-out), transform 760ms var(--ease-back); }
+  .rkvt-peek.on { opacity: 1; transform: none; }
+  .rkvt-pop { opacity: 0; scale: 0.2; rotate: -30deg; transition: opacity 240ms var(--ease-out), scale 560ms var(--ease-back), rotate 560ms var(--ease-out); }
+  .rkvt-pop.on { opacity: 1; scale: 1; rotate: 0deg; }
+
+  /* ---------- Idle ---------- */
+  .rkvt-voice.is-idle .rkvt-float { animation: rkvt-float 3.6s ease-in-out infinite alternate; }
+  @keyframes rkvt-float { from { translate: 0 -2.5px; } to { translate: 0 2.5px; } }
+  .rkvt-voice.is-idle .rkvt-twinkle { animation: rkvt-twinkle 2.8s ease-in-out infinite; }
+  @keyframes rkvt-twinkle { 0%, 60%, 100% { scale: 1; opacity: 1; } 30% { scale: 1.14; opacity: 0.75; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkvt-voice *, .rkvt-voice *::before, .rkvt-voice *::after { animation: none !important; transition-property: opacity !important; transition-delay: 0ms !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 4 · 4.3 AI voice translation ===== -->
+<div class="rkvt-voice" data-rkvt-voice role="img" aria-label="A customer sends a Chinese voice note, it plays and is transcribed, Rakan AI translates it into English, and the agent replies">
+  <div class="rkvt-stage">
+    <div class="rkvt-abs" style="left:.56px;top:0;width:698.84px;height:405px"><img src="assets/bg.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:435.9px;top:-171.2px;width:391.4px;height:397.2px"><img src="assets/glow1.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:462.8px;top:140.7px;width:391.4px;height:397.2px"><img src="assets/glow2.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:103px;top:52.21px;width:152.04px;height:152.04px"><img src="assets/ring1.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:14px;top:-36.06px;width:328.6px;height:328.6px"><img src="assets/ring2.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:-72.8px;top:-123.06px;width:502.6px;height:502.6px"><img src="assets/ring3.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:-155.8px;top:-205.9px;width:668.3px;height:668.3px"><img src="assets/ring4.svg" alt=""></div>
+    <div class="rkvt-abs" style="left:-319.6px;top:-370.1px;width:996px;height:996px"><img src="assets/ring5.svg" alt=""></div>
+
+    <div class="rkvt-ui">
+      <div class="rkvt-abs rkvt-windowRing"></div>
+      <div class="rkvt-abs rkvt-window">
+        <div class="rkvt-head">
+          <img src="assets/av-amelia.jpg" alt="">
+          <b data-f="customer"></b>
+          <span data-f="channel"></span>
+        </div>
+      </div>
+
+      <div class="rkvt-abs rkvt-bubble rkvt-in rkvt-fromL" data-bubble>
+        <div class="rkvt-note">
+          <img class="rkvt-play" data-play src="assets/play.svg" alt="">
+          <div class="rkvt-bars rkvt-barsDim" data-bars></div>
+          <div class="rkvt-bars rkvt-barsFill" data-bars data-fill></div>
+          <div class="rkvt-time" data-time></div>
+        </div>
+        <div class="rkvt-zh" data-zh></div>
+        <div class="rkvt-en" data-en><p data-en-text></p></div>
+        <div class="rkvt-stamp" data-f="voiceTime"></div>
+      </div>
+      <div class="rkvt-abs rkvt-tag rkvt-in rkvt-fromTag" data-tag data-f="tag"></div>
+
+      <div class="rkvt-abs rkvt-peek" data-robot-wrap style="left:0;top:0;width:700px;height:405px;pointer-events:none">
+        <div class="rkvt-abs rkvt-float" style="inset:0">
+          <div class="rkvt-abs rkvt-robot" data-robot><img src="assets/robot.png" alt=""></div>
+        </div>
+      </div>
+      <div class="rkvt-abs rkvt-stars rkvt-pop" data-stars><div class="rkvt-abs rkvt-twinkle" style="inset:0"><img src="assets/stars.png" alt="" style="width:100%;height:100%"></div></div>
+
+      <div class="rkvt-abs rkvt-reply rkvt-in rkvt-grow" data-reply>
+        <p data-f="reply"></p>
+        <p data-f="replyTime"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkvt-voice]');
+  if (!root) return;
+  const stage = root.querySelector('.rkvt-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 700;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const copy = {
+    customer: 'Amelia Wong',
+    channel: 'WhatsApp/ Assigned to Olivia',
+    voiceSeconds: 8,
+    transcript: '您好，我想进一步了解您的产品。',
+    translation: 'Hi, I want to know more about your product.',
+    tag: 'AI translated',
+    voiceTime: '11:40am',
+    reply: 'Hey Amelia, thanks for reaching out! I’m glad to hear you’re interested in our product.',
+    replyTime: '11:41am',
+  };
+  root.querySelectorAll('[data-f]').forEach((el) => { el.textContent = copy[el.dataset.f]; });
+
+  // Waveform bars from the Figma layer: [x, height]
+  const bars = [[0,2],[4.85,2],[9.7,2],[14.55,12],[19.39,16],[24.24,20],[29.09,20],[33.94,16],[38.79,6],[43.64,10],[48.48,6],[53.33,12],[58.18,12],[63.03,10],[67.88,10],[72.73,20],[77.57,20],[82.42,16],[87.27,20],[92.12,16],[96.97,12],[101.82,10],[106.67,6],[111.51,2],[116.36,2],[121.21,6],[126.06,6],[130.91,10],[135.76,12],[140.6,20],[145.45,16],[150.3,16],[155.15,16],[160,6],[164.85,10],[169.7,6],[174.54,10],[179.39,16],[184.24,16],[189.09,10],[193.94,2],[198.79,2],[203.63,2],[208.48,2],[213.33,2],[218.18,2]];
+  root.querySelectorAll('[data-bars]').forEach((el) => {
+    el.innerHTML = bars.map(([x, h], i) => `<i style="--i:${i};left:${x}px;top:${(20 - h) / 2}px;height:${h}px"></i>`).join('');
+  });
+  const stagger = (el, parts) => {
+    el.innerHTML = parts.map((p, i) => `<span style="--i:${i}">${p}</span>`).join('');
+  };
+  stagger(root.querySelector('[data-zh]'), [...copy.transcript]);
+  stagger(root.querySelector('[data-en-text]'), copy.translation.split(/(?<= )/));
+
+  const $ = (s) => root.querySelector(s);
+  const on = (s) => () => $(s).classList.add('on');
+  const clock = (sec) => `00:${String(sec).padStart(2, '0')}`;
+  let timers = [], anims = [], raf = 0, playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const fx = (el, frames, opts) => { const a = el.animate(frames, { fill: 'both', ...opts }); anims.push(a); return a; };
+
+  const PLAY_MS = 1900;
+  const runClock = () => {
+    const t0 = performance.now();
+    root.classList.add('is-live');
+    $('[data-play]').classList.add('press');
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / PLAY_MS);
+      $('[data-time]').textContent = clock(Math.round(p * copy.voiceSeconds));
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else root.classList.remove('is-live');
+    };
+    raf = requestAnimationFrame(tick);
+  };
+  const nod = () => $('[data-robot]').classList.add('nod');
+
+  // ---------- The sequence: [time ms, state change, motion-only effect] ----------
+  const steps = [
+    [150,  on('[data-robot-wrap]')],
+    [560,  on('[data-bubble]')],
+    [1200, on('[data-fill]'), runClock],
+    [3150, on('[data-zh]')],
+    [3950, on('[data-stars]'), nod],
+    [4150, on('[data-en]')],
+    [4250, on('[data-tag]')],
+    [5450, on('[data-reply]')],
+  ];
+  const END = 6200;
+
+  function setStart() {
+    root.querySelectorAll('.on, .nod, .press').forEach((el) => el.classList.remove('on', 'nod', 'press'));
+    root.classList.remove('is-live');
+    $('[data-time]').textContent = clock(0);
+  }
+  function setFinal() { steps.forEach(([, fn]) => fn && fn()); $('[data-time]').textContent = clock(copy.voiceSeconds); }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); anims.forEach((a) => a.cancel()); anims = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn, effect]) => later(t, () => { fn && fn(); effect && effect(); }));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out', 'is-idle'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

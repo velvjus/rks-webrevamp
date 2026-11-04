@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity – Shared customer context</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkx-context { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkx-context ---------- */
+  .rkx-context {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkx-context * { box-sizing: border-box; margin: 0; }
+  .rkx-context img { display: block; max-width: none; }
+  .rkx-stage { position: absolute; left: 0; top: 0; width: 300px; height: 200px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkx-abs { position: absolute; }
+  .rkx-abs > img { width: 100%; height: 100%; }
+  .rkx-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkx-context.is-out .rkx-ui { opacity: 0; }
+  .rkx-context.is-snap *, .rkx-context.is-snap *::before, .rkx-context.is-snap *::after { transition: none !important; animation: none !important; }
+  .rkx-abs > svg { display: block; overflow: visible; }
+
+  /* ---------- Cards ---------- */
+  .rkx-sat { border: 0.5px solid #f7f7f7; }
+  .rkx-sat .rkx-t { position: absolute; font-weight: 700; color: #000; white-space: nowrap; line-height: normal; }
+  .rkx-fi { position: absolute; border-radius: 50%; }
+  .rkx-fi > img { position: absolute; }
+  .rkx-shadow {
+    box-shadow: 0 137px 39px rgba(5,168,106,0), 0 88px 35px rgba(5,168,106,0.01), 0 49px 29px rgba(5,168,106,0.03), 0 22px 22px rgba(5,168,106,0.04), 0 6px 12px rgba(5,168,106,0.05);
+  }
+
+  .rkx-file { left: 201.13px; top: 20.67px; width: 78.366px; height: 56.47px; border-radius: 8.067px; background: #fff; border-width: 0.58px;
+    filter: drop-shadow(0 21.9px 10.9px rgba(5,168,106,0.04)) drop-shadow(0 5.76px 5.76px rgba(5,168,106,0.05)); }
+  .rkx-doc { position: absolute; left: 5.18px; top: 25.93px; width: 66.842px; padding: 4.61px; border-radius: 3.457px; background: #eff6ff; overflow: hidden; display: flex; gap: 3.578px; }
+  .rkx-docIcon { position: relative; flex: none; width: 11.925px; height: 11.925px; }
+  .rkx-docIcon > img { position: absolute; left: 2.087px; top: 0; width: 9.54px; height: 11.925px; }
+  .rkx-docIcon > span { position: absolute; left: 0.298px; top: 5.366px; padding: 0.596px 0.894px; border-radius: 0.596px; background: #2563eb; font-weight: 700; font-size: 2.98px; line-height: normal; color: #fff; }
+  .rkx-doc p { font-size: 4.174px; line-height: 5.963px; white-space: nowrap; }
+
+  .rkx-profileWrap { left: 65px; top: 62.06px; padding: 8px; border-radius: 9px; background: rgba(255,255,255,0.12);
+    box-shadow: 0 117px 33px rgba(5,168,106,0), 0 75px 30px rgba(5,168,106,0.01), 0 42px 25px rgba(5,168,106,0.03), 0 19px 19px rgba(5,168,106,0.04), 0 5px 10px rgba(5,168,106,0.05); }
+  .rkx-profile { width: 154px; height: 59.885px; padding: 8.053px; border-radius: 7px; background: #fff; border: 0.503px solid #f7f7f7; display: flex; gap: 7.047px; align-items: center; }
+  .rkx-pAv { flex: none; width: 44.015px; height: 44.015px; border-radius: 50%; overflow: hidden; }
+  .rkx-pAv > img { width: 100%; height: 100%; }
+  .rkx-info { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.007px; }
+  .rkx-name { font-weight: 600; font-size: 9.06px; line-height: normal; color: #181d27; white-space: nowrap; }
+  .rkx-dots { position: absolute; right: 0.2px; top: 1.4px; width: 8.053px; height: 8.053px; }
+  .rkx-field { font-size: 6px; line-height: normal; color: #535862; opacity: 0.8; white-space: nowrap; }
+  .rkx-chips { display: flex; gap: 3.802px; padding-top: 2px; margin-top: 1px; }
+  .rkx-chip { display: flex; align-items: center; padding: 0.951px 5.703px 0.951px 3.802px; border-radius: 7.605px; background: #fafafa; border: 0.743px solid #e9eaeb; font-weight: 500; font-size: 5.7px; line-height: 8.555px; color: #414651; white-space: nowrap; }
+  .rkx-chip > img { width: 7.605px; height: 7.605px; }
+  .rkx-chip > img.wa { margin-right: 1.9px; }
+
+  .rkx-vip { left: 29.28px; top: 16.29px; }
+  .rkx-vipPill { display: flex; gap: 1.332px; align-items: center; padding: 1.332px 5.329px; border-radius: 10.658px; background: #f4f3ff; border: 0.666px solid #6938ef; }
+  .rkx-vipPill > img { width: 10.658px; height: 10.658px; }
+  .rkx-vipPill span { font-weight: 500; font-size: 7.994px; line-height: 11.991px; color: #7a5af8; }
+  .rkx-menu { left: 38.59px; top: 35.29px; width: 51.462px; }
+  .rkx-menuIn { position: relative; overflow: hidden; padding: 1.58px 0; border-radius: 3.16px; background: #fff; border: 0.395px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4.74px 6.32px -1.58px rgba(10,13,18,0.08), 0 1.58px 2.37px -0.79px rgba(10,13,18,0.03), 0 0.79px 0.79px -0.395px rgba(10,13,18,0.04); }
+  .rkx-scroll { position: absolute; right: 2.37px; top: 3.16px; width: 2.37px; height: 15.8px; border-radius: 3.16px; background: #000; opacity: 0.15; border: 0.395px solid #fff; }
+  .rkx-opt { position: relative; padding: 0.395px 2.37px; }
+  .rkx-optIn { display: flex; gap: 3.16px; align-items: center; padding: 3.16px 3.95px 3.16px 3.16px; border-radius: 2.37px; transition: background-color 300ms ease; }
+  .rkx-optIn img { width: 7.9px; height: 7.9px; }
+  .rkx-optIn span { flex: 1; font-weight: 500; font-size: 6.32px; line-height: 9.479px; color: #181d27; white-space: nowrap; }
+  .rkx-optIn .rkx-check { width: 6.32px; height: 6.32px; opacity: 0; scale: 0.4; transition: opacity 240ms ease, scale 420ms var(--ease-back); }
+  .rkx-opt.sel .rkx-optIn { background: #faf5ff; }
+  .rkx-opt.sel .rkx-check { opacity: 1; scale: 1; }
+
+  .rkx-activity { left: 210.69px; top: 144.49px; width: 79px; height: 62px; border-radius: 7px; border-width: 0.503px; background: linear-gradient(#fff, rgba(255,255,255,0.33)); }
+  .rkx-act { position: absolute; left: 12.46px; width: 61px; height: 11px; display: flex; flex-direction: column; gap: 1px; white-space: nowrap; }
+  .rkx-act div { display: flex; justify-content: space-between; align-items: center; line-height: normal; }
+  .rkx-act b { font-weight: 600; font-size: 3.753px; color: #14231d; }
+  .rkx-act i { font-style: normal; font-size: 3.086px; color: #a8b1ad; }
+  .rkx-act p { font-size: 3.169px; line-height: 1.25; color: #75827d; }
+
+  .rkx-note { left: 18.59px; top: 122.62px; width: 92.819px; height: 61.096px; border-radius: 8.224px; border-width: 0.591px; background: linear-gradient(#fff 29.5%, rgba(255,255,255,0.33) 161%); }
+  .rkx-noteBox { position: absolute; left: 5.28px; top: 26.43px; width: 81.07px; height: 25.848px; padding: 4.7px; background: #fefce8; font-size: 4.112px; line-height: 1.3; color: #2d312f; overflow: hidden; }
+
+  /* ---------- Sequence states ---------- */
+  .rkx-pop { opacity: 0; scale: 0.6; transition: opacity 320ms var(--ease-out), scale 560ms var(--ease-back); }
+  .rkx-pop.on { opacity: 1; scale: 1; }
+  .rkx-rise { opacity: 0; transform: translateY(4px); transition: opacity 360ms var(--ease-out), transform 520ms var(--ease-out); }
+  .rkx-rise.on { opacity: var(--o, 1); transform: none; }
+  .rkx-profileWrap.bump { animation: rkx-bump 420ms var(--ease-out); }
+  @keyframes rkx-bump { 40% { scale: 1.035; } }
+  .rkx-vipPill.ping { animation: rkx-bump 480ms var(--ease-out); }
+  path[data-line] { transition: stroke-dashoffset var(--dur, 600ms) var(--ease-in-out); }
+  circle[data-end] { opacity: 0; transition: opacity 300ms ease; }
+  circle[data-end].on { opacity: 0.9; }
+
+  /* ---------- Idle ---------- */
+  .rkx-context.is-idle .rkx-float { animation: rkx-float var(--d, 4s) ease-in-out var(--dl, 0s) infinite alternate; }
+  @keyframes rkx-float { from { translate: 0 -1.5px; } to { translate: 0 1.5px; } }
+  .rkx-context.is-idle .rkx-pulse { animation: rkx-pulse 2.6s ease-in-out infinite; }
+  @keyframes rkx-pulse { 0%, 60%, 100% { scale: 1; } 30% { scale: 1.12; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkx-context *, .rkx-context *::before, .rkx-context *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 3 · 3.3 Shared customer context ===== -->
+<div class="rkx-context" data-rkx-context role="img" aria-label="A customer profile connects to their files, notes, recent activity and VIP tag, so the whole team sees the same context">
+  <div class="rkx-stage">
+    <div class="rkx-ui">
+      <!-- Connector to the VIP tag (Vector 45) -->
+      <div class="rkx-abs" style="left:-10.9px;top:27.88px;width:206.741px;height:77.849px">
+        <svg width="206.741" height="77.849" viewBox="0 0 206.741 77.849" fill="none"><path data-line="vip" data-rev opacity="0.4" d="M0.459386 0.197394C29.1981 67.0797 98.1709 33.6385 139.45 11.6928C180.728 -10.253 240.295 6.99008 181.773 77.53" stroke="#23B750"/><circle data-dot="vip" r="1.1" fill="#23B750" opacity="0"/></svg>
+      </div>
+
+      <!-- VIP menu -->
+      <div class="rkx-abs rkx-menu rkx-float" style="--d:4.4s;--dl:-0.6s">
+        <div class="rkx-menuIn rkx-pop" data-menu>
+          <div class="rkx-scroll"></div>
+          <div class="rkx-opt sel" data-opt="0"><div class="rkx-optIn"><img src="assets/vip-off.svg" alt=""><span>Non VIP</span><img class="rkx-check" src="assets/check.svg" alt=""></div></div>
+          <div class="rkx-opt" data-opt="1"><div class="rkx-optIn"><img src="assets/vip-on.svg" alt=""><span>VIP</span><img class="rkx-check" src="assets/check.svg" alt=""></div></div>
+        </div>
+      </div>
+
+      <div class="rkx-abs" style="left:82.68px;top:-60.84px;width:323.68px;height:323.68px"><img src="assets/mint-glow.svg" alt=""></div>
+
+      <!-- White connector (Vector 43) -->
+      <div class="rkx-abs" style="left:118.32px;top:-12.87px;width:164.686px;height:247.177px">
+        <svg width="164.686" height="247.177" viewBox="0 0 164.686 247.177" fill="none"><path data-line="right" d="M0.532427 0.00955316C-0.343929 45.8685 16.2177 132.942 89.4753 114.365C181.047 91.1431 196.82 229.158 89.4753 246.684" stroke="white"/></svg>
+      </div>
+
+      <!-- File -->
+      <div class="rkx-abs rkx-float" style="left:201.13px;top:20.67px;--d:3.8s;--dl:-1.4s">
+        <div class="rkx-sat rkx-file rkx-pop" data-card="file" style="position:relative;left:0;top:0">
+          <div class="rkx-fi" style="left:5.23px;top:6.33px;width:14.026px;height:14.026px;background:#dbeafe"><img src="assets/paperclip.svg" alt="" style="left:3.51px;top:3.51px;width:7.013px;height:7.013px"></div>
+          <p class="rkx-t" style="left:23.32px;top:10.43px;font-size:5.186px">File</p>
+          <div class="rkx-doc">
+            <div class="rkx-docIcon"><img src="assets/page.svg" alt=""><span>DOC</span></div>
+            <div><p style="font-weight:500;color:#404040" data-f="fileName"></p><p style="color:#525252" data-f="fileSize"></p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer profile -->
+      <div class="rkx-abs rkx-profileWrap rkx-pop" data-profile>
+        <div class="rkx-profile">
+          <div class="rkx-pAv"><img src="assets/av-vivian.jpg" alt=""></div>
+          <div class="rkx-info">
+            <p class="rkx-name" data-f="name"></p>
+            <img class="rkx-dots" src="assets/dots.svg" alt="">
+            <p class="rkx-field" data-f="phone"></p>
+            <p class="rkx-field" data-f="email"></p>
+            <div class="rkx-chips">
+              <span class="rkx-chip"><img class="wa" src="assets/whatsapp.svg" alt="">WhatsApp</span>
+              <span class="rkx-chip"><img src="assets/flame.svg" alt="">Hot</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIP tag -->
+      <div class="rkx-abs rkx-vip">
+        <div class="rkx-vipPill rkx-pop" data-vip><img src="assets/crown.svg" alt=""><span>VIP</span></div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="rkx-abs rkx-float" style="left:210.69px;top:144.49px;--d:4.2s;--dl:-2.6s">
+        <div class="rkx-sat rkx-activity rkx-pop" data-card="activity" style="position:relative;left:0;top:0">
+          <div class="rkx-fi" style="left:4.97px;top:5.5px;width:12.171px;height:12.171px;background:#eaf7ef"><img src="assets/clock.svg" alt="" style="left:3.04px;top:3.04px;width:6.085px;height:6.085px"></div>
+          <p class="rkx-t" style="left:20.67px;top:9.05px;font-size:4.5px">Recent Activity</p>
+          <div data-acts></div>
+          <img src="assets/dot.svg" alt="" style="position:absolute;left:38.17px;top:0.5px;width:4.055px;height:4.055px">
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="rkx-abs rkx-float" style="left:18.59px;top:122.62px;--d:4s;--dl:-0.2s">
+        <div class="rkx-sat rkx-note rkx-shadow rkx-pop" data-card="note" style="position:relative;left:0;top:0">
+          <div class="rkx-fi" style="left:5.34px;top:6.46px;width:14.3px;height:14.3px;background:#fef9c3"><img src="assets/file.svg" alt="" style="left:3.57px;top:3.57px;width:7.15px;height:7.15px"></div>
+          <p class="rkx-t" style="left:23.78px;top:10.63px;font-size:5.287px">Note</p>
+          <div class="rkx-noteBox" data-f="note"></div>
+        </div>
+      </div>
+
+      <div class="rkx-abs" style="left:7.85px;top:120.57px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+
+      <!-- Note connector (Group 13) -->
+      <div class="rkx-abs" style="left:106.76px;top:133.05px;width:26.231px;height:28.197px">
+        <svg width="26.231" height="28.197" viewBox="0 0 26.231 28.197" fill="none"><g opacity="0.7">
+          <path data-line="note" data-rev opacity="0.9" d="M3.04004 24.5138C16.0417 34.9309 35.4451 17.6572 20.0644 3.22303" stroke-linecap="round" stroke="#23B750"/>
+          <circle data-end="note" opacity="0.9" cx="18.775" cy="2.02734" r="1.52734" stroke="#23B750"/>
+          <circle data-end="note" opacity="0.9" cx="2.02734" cy="23.2651" r="1.52734" stroke="#23B750"/>
+          <circle data-dot="note" r="1.1" fill="#23B750" opacity="0"/>
+        </g></svg>
+      </div>
+      <!-- Activity connector (Group 14) -->
+      <div class="rkx-abs" style="left:250.15px;top:45.49px;width:34.941px;height:100.831px">
+        <svg width="34.941" height="100.831" viewBox="0 0 34.941 100.831" fill="none"><path data-line="activity" data-rev opacity="0.9" d="M0.554455 100.331C-1.33705 61.1602 46.7786 29.6002 31.405 0.5001" stroke-linecap="round" stroke="#23B750"/><circle data-dot="activity" r="1.1" fill="#23B750" opacity="0"/></svg>
+      </div>
+      <img class="rkx-abs rkx-pop" data-enddot src="assets/dot.svg" alt="" style="left:278.39px;top:42.44px;width:4.055px;height:4.055px">
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkx-context]');
+  if (!root) return;
+  const stage = root.querySelector('.rkx-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 300;
+  const EASE_IN_OUT = 'cubic-bezier(0.77, 0, 0.175, 1)';
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const copy = {
+    name: 'Vivian Lim', phone: '+6012 3456 7890', email: 'vivian@email.com',
+    fileName: 'Insurance Policy.doc', fileSize: '1.2 MB',
+    note: 'Interested in premium plan options/ Prefer evening in person meet ups. Follow up after 1 week.',
+  };
+  const activity = [
+    { title: 'WhatsApp message', time: '12m',    detail: 'Sent insurance policy' },
+    { title: 'Phone Call',       time: '1h ago', detail: 'Discussed insurance options', faded: true },
+  ];
+  root.querySelectorAll('[data-f]').forEach((el) => { el.textContent = copy[el.dataset.f]; });
+  root.querySelector('[data-acts]').innerHTML = activity.map((a, i) => `
+    <div class="rkx-act rkx-rise" data-act style="top:${22.5 + i * 15}px;--o:${a.faded ? 0.5 : 1}">
+      <div><b>${a.title}</b><i>${a.time}</i></div><p>${a.detail}</p>
+    </div>`).join('');
+
+  const $ = (s) => root.querySelector(s);
+  const on = (s) => () => root.querySelectorAll(s).forEach((el) => el.classList.add('on'));
+  const lines = {};
+  root.querySelectorAll('[data-line]').forEach((p) => { lines[p.dataset.line] = { p, len: p.getTotalLength(), rev: p.hasAttribute('data-rev') }; });
+
+  let timers = [], anims = [], playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  // Lines with data-rev draw from their far end (the profile side) outward
+  function hideLine(k) { const l = lines[k]; l.p.style.strokeDasharray = `${l.len} ${l.len}`; l.p.style.strokeDashoffset = l.rev ? -l.len : l.len; }
+  function drawLine(k, ms) { const l = lines[k]; l.p.style.setProperty('--dur', ms + 'ms'); l.p.style.strokeDashoffset = 0; }
+  function showLine(k) { lines[k].p.style.strokeDashoffset = 0; }
+
+  // A dot travels along the line toward the profile card
+  function travel(k, ms = 800, from = 0, to = 1) {
+    const { p, len } = lines[k], dot = $(`[data-dot="${k}"]`), frames = [];
+    for (let i = 0; i <= 24; i++) {
+      const pt = p.getPointAtLength(len * (from + (to - from) * (i / 24)));
+      frames.push({ transform: `translate(${pt.x}px, ${pt.y}px)`, opacity: i === 0 || i === 24 ? 0 : 1 });
+    }
+    anims.push(dot.animate(frames, { duration: ms, easing: EASE_IN_OUT, fill: 'both' }));
+  }
+  function selectVip(i) { root.querySelectorAll('[data-opt]').forEach((el) => el.classList.toggle('sel', +el.dataset.opt === i)); }
+  const bump = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+
+  // ---------- The sequence: [time ms, action] ----------
+  const steps = [
+    [150,  on('[data-profile]')],
+    [650,  () => drawLine('note', 450)],
+    [1050, on('[data-card="note"], [data-end]')],
+    [1000, () => drawLine('right', 1100)],
+    [1350, on('[data-card="file"], [data-enddot]')],
+    [1650, () => drawLine('activity', 500)],
+    [2100, on('[data-card="activity"]')],
+    [2350, () => root.querySelectorAll('[data-act]')[0].classList.add('on')],
+    [2500, () => root.querySelectorAll('[data-act]')[1].classList.add('on')],
+    [2350, () => drawLine('vip', 750)],
+    [3000, on('[data-menu]')],
+    [3550, () => selectVip(1)],
+    [3800, on('[data-vip]')],
+    [4000, () => bump($('[data-vip]'), 'ping')],
+  ];
+  const TRAVEL_AT = 4400;
+  const END = 5600;
+
+  function setStart() {
+    anims.forEach((a) => a.cancel()); anims = [];
+    root.querySelectorAll('.on, .bump, .ping').forEach((el) => el.classList.remove('on', 'bump', 'ping'));
+    Object.keys(lines).forEach(hideLine);
+    selectVip(0);
+  }
+  function setFinal() {
+    steps.forEach(([, fn]) => fn());
+    Object.keys(lines).forEach(showLine);
+    root.querySelectorAll('.ping').forEach((el) => el.classList.remove('ping'));
+  }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn]) => later(t, fn));
+    later(TRAVEL_AT,       () => travel('note', 700, 0, 1));
+    later(TRAVEL_AT + 150, () => travel('vip', 1000, 0, 1));
+    later(TRAVEL_AT + 300, () => travel('activity', 800, 0, 1));
+    later(TRAVEL_AT + 750, () => bump($('[data-profile]'), 'bump'));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@
 <title>Lifecycle – Capture</title>
 <!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
 <script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
-<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rkcp-capture { border-radius: 0; }</style>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkcp-capture { border-radius: 0; }</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -550,7 +550,7 @@
       start();
       if (!reduce.matches) setTimeout(deliver, 1500);
     } else stop();
-  }, { threshold: 0.05 }).observe(root);
+  }, { threshold: 0.35 }).observe(root);
 })();
 </script>
 </body>

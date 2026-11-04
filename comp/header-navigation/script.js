@@ -650,26 +650,70 @@ if (workflowScroll) {
   applyStageMode();
 }
 
-// Section 09: RAKAN AI Modules Accordion & Dynamic Viewport Switcher
+// Section 09: RAKAN AI Modules Accordion & Dynamic Viewport Switcher (with 10s Timer & Progress Bar)
 const moduleTabs = [...document.querySelectorAll('.module-item')];
 const moduleScreens = [...document.querySelectorAll('.module-screen')];
+const moduleProgressFills = moduleTabs.map((tab) => tab.querySelector('.module-item__progress-fill'));
+
+const MODULE_DURATION = 10000; // 10 seconds per card
+let activeModuleIndex = 0;
+let moduleStartTime = performance.now();
+let moduleElapsedPaused = 0;
+let isModulePaused = false;
+let isModuleSectionVisible = true;
+let moduleAnimFrameId = null;
+
+function updateModuleProgress(ratio) {
+  moduleProgressFills.forEach((fill, i) => {
+    if (!fill) return;
+    if (i === activeModuleIndex) {
+      fill.style.transform = `scaleX(${ratio})`;
+    } else {
+      fill.style.transform = 'scaleX(0)';
+    }
+  });
+}
+
+function resetModuleTimer() {
+  moduleElapsedPaused = 0;
+  moduleStartTime = performance.now();
+  updateModuleProgress(0);
+}
 
 function switchModuleTab(targetIndex, focus = false) {
   const index = parseInt(targetIndex, 10);
   if (isNaN(index) || index < 0 || index >= moduleTabs.length) return;
+
+  const prevIndex = activeModuleIndex;
+  activeModuleIndex = index;
 
   moduleTabs.forEach((t, i) => {
     const isActive = i === index;
     t.classList.toggle('is-active', isActive);
     t.setAttribute('aria-selected', String(isActive));
     t.setAttribute('tabindex', isActive ? '0' : '-1');
+
+    if (isActive && prevIndex !== index) {
+      const inlineIframe = t.querySelector('.module-item__graphic iframe');
+      if (inlineIframe) {
+        inlineIframe.src = inlineIframe.src;
+      }
+    }
   });
 
   moduleScreens.forEach((screen) => {
     const isActive = parseInt(screen.dataset.moduleScreen, 10) === index;
     screen.classList.toggle('is-active', isActive);
     screen.hidden = !isActive;
+    if (isActive && prevIndex !== index) {
+      const iframe = screen.querySelector('iframe');
+      if (iframe) {
+        iframe.src = iframe.src;
+      }
+    }
   });
+
+  resetModuleTimer();
 
   if (focus && moduleTabs[index]) {
     moduleTabs[index].focus();
@@ -705,6 +749,81 @@ moduleTabs.forEach((tab, index) => {
     }
   });
 });
+
+// Pause / Resume interactions
+const modulesStageEl = document.querySelector('.modules-stage');
+if (modulesStageEl) {
+  modulesStageEl.addEventListener('mouseenter', () => {
+    if (!isModulePaused) {
+      moduleElapsedPaused += performance.now() - moduleStartTime;
+      isModulePaused = true;
+    }
+  });
+
+  modulesStageEl.addEventListener('mouseleave', () => {
+    if (isModulePaused) {
+      moduleStartTime = performance.now();
+      isModulePaused = false;
+    }
+  });
+
+  let touchPauseTimer;
+  modulesStageEl.addEventListener('touchstart', () => {
+    if (!isModulePaused) {
+      moduleElapsedPaused += performance.now() - moduleStartTime;
+      isModulePaused = true;
+    }
+    clearTimeout(touchPauseTimer);
+  }, { passive: true });
+
+  modulesStageEl.addEventListener('touchend', () => {
+    clearTimeout(touchPauseTimer);
+    touchPauseTimer = setTimeout(() => {
+      if (isModulePaused) {
+        moduleStartTime = performance.now();
+        isModulePaused = false;
+      }
+    }, 1800);
+  }, { passive: true });
+}
+
+// Section visibility handling via IntersectionObserver
+const capabilitiesSectionEl = document.getElementById('capabilities');
+if ('IntersectionObserver' in window && capabilitiesSectionEl) {
+  const capObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const wasVisible = isModuleSectionVisible;
+      isModuleSectionVisible = entry.isIntersecting;
+      if (!wasVisible && isModuleSectionVisible) {
+        moduleStartTime = performance.now();
+      } else if (wasVisible && !isModuleSectionVisible) {
+        moduleElapsedPaused += performance.now() - moduleStartTime;
+      }
+    });
+  }, { threshold: 0.15 });
+  capObserver.observe(capabilitiesSectionEl);
+}
+
+// 10-Second Auto-Advance Loop
+const prefersReducedMotionModules = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function moduleTimerTick(now) {
+  if (!isModulePaused && isModuleSectionVisible && !prefersReducedMotionModules) {
+    const totalElapsed = moduleElapsedPaused + (now - moduleStartTime);
+    const ratio = Math.min(totalElapsed / MODULE_DURATION, 1);
+    updateModuleProgress(ratio);
+
+    if (totalElapsed >= MODULE_DURATION) {
+      const nextIndex = (activeModuleIndex + 1) % moduleTabs.length;
+      switchModuleTab(nextIndex);
+    }
+  }
+  moduleAnimFrameId = requestAnimationFrame(moduleTimerTick);
+}
+
+if (!prefersReducedMotionModules && moduleTabs.length > 0) {
+  moduleAnimFrameId = requestAnimationFrame(moduleTimerTick);
+}
 
 // Section 09: Ambient Fluid Light WebGL / Canvas Shader
 (function initModulesShader() {
@@ -1082,5 +1201,34 @@ if (interactiveCta && window.matchMedia('(hover: hover) and (pointer: fine)').ma
     });
   }
 }
+
+// ==========================================================================
+// Global Scroll-Triggered Reveal Animation System (All Sections)
+// ==========================================================================
+(function initGlobalScrollReveals() {
+  const revealElements = document.querySelectorAll('[data-reveal]');
+  if (!revealElements.length) return;
+
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revealElements.forEach((el) => el.classList.add('is-revealed'));
+    return;
+  }
+
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    rootMargin: '0px 0px -6% 0px',
+    threshold: 0.08
+  });
+
+  revealElements.forEach((el) => {
+    revealObserver.observe(el);
+  });
+})();
 
 

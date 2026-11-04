@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="9.5403" height="11.9254" viewBox="0 0 9.5403 11.9254" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Page">
+<g id="Page background">
+<use xlink:href="#stroke0_0_325" fill="white"/>
+<mask id="stroke1_0_325" fill="white">
+<use xlink:href="#stroke0_0_325"/>
+</mask>
+<path d="M5.96269 0H1.19254C0.533917 0 0 0.533917 0 1.19254V10.7328C0 11.3915 0.533916 11.9254 1.19254 11.9254H8.34777C9.00639 11.9254 9.5403 11.3915 9.5403 10.7328V3.57761C9.5403 3.48217 9.50239 3.39063 9.4349 3.32314L6.21716 0.105406C6.14967 0.0379159 6.05814 0 5.96269 0Z" stroke-width="0.894404" stroke="#D4D4D4" mask="url(#stroke1_0_325)"/>
+</g>
+<path id="Earmark" d="M5.96269 0.149067V2.38507C5.96269 3.0437 6.49661 3.57761 7.15523 3.57761H9.39124" stroke-width="0.447202" stroke="#D4D4D4"/>
+</g>
+<defs>
+<path id="stroke0_0_325" d="M0 1.19254C0 0.533917 0.533917 0 1.19254 0H5.96269C6.05814 0 6.14967 0.0379159 6.21716 0.105406L9.4349 3.32314C9.50239 3.39063 9.5403 3.48217 9.5403 3.57761V10.7328C9.5403 11.3915 9.00639 11.9254 8.34777 11.9254H1.19254C0.533916 11.9254 0 11.3915 0 10.7328V1.19254Z"/>
+</defs>
+</svg>

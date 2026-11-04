@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Capabilities – Lead scoring &amp; routing</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkls-score { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkls-score ---------- */
+  .rkls-score {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 700 / 405;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #031a0c;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkls-score * { box-sizing: border-box; margin: 0; }
+  .rkls-score img { display: block; max-width: none; }
+  .rkls-stage { position: absolute; left: 0; top: 0; width: 700px; height: 405px; transform-origin: 0 0; transform: scale(var(--s, 1)); overflow: hidden; }
+  .rkls-abs { position: absolute; }
+  .rkls-abs > img { width: 100%; height: 100%; }
+  .rkls-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkls-score.is-out .rkls-ui { opacity: 0; }
+  .rkls-score.is-snap *, .rkls-score.is-snap *::before, .rkls-score.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Kanban column ---------- */
+  .rkls-kanban { left: 389.16px; top: -64.1px; width: 290px; height: 640px; }
+  .rkls-count { left: 453px; top: 28px; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1.5px #ececec; font-size: 10.5px; line-height: 1; color: #2b2f36; font-variant-numeric: tabular-nums; }
+  .rkls-value { left: 518.16px; top: 48px; width: 34px; height: 15px; padding-top: 2px; background: #f5f5f5; font-size: 11px; line-height: normal; color: #157432; font-variant-numeric: tabular-nums; }
+  /* Lower half of the list: slides down to open the slot for the new lead */
+  .rkls-lower { left: 396px; top: 329px; width: 280px; height: 180px; background: url(assets/kanban.png) -6.84px -393.1px / 290px 640px no-repeat #f5f5f5; transform: translateY(-127px); transition: transform 640ms var(--ease-out); }
+  .rkls-lower.on { transform: none; }
+
+  /* ---------- Sales team ---------- */
+  .rkls-rep { transform-origin: 50% 30.6%; }
+  .rkls-main { left: 82.16px; top: 154.9px; width: 94.44px; height: 94.44px; padding: 12px; border-radius: 50%; background: rgba(255,255,255,0.12);
+    box-shadow: 0 26px 16px rgba(0,0,0,0.05), 0 12px 12px rgba(0,0,0,0.09), 0 3px 6px rgba(0,0,0,0.1); }
+  .rkls-main > div { padding: 9px; border-radius: 50%; background: rgba(188,188,188,0.33); }
+  .rkls-main img { width: 52.45px; height: 52.45px; border-radius: 50%; }
+  .rkls-crown { left: 112px; top: 145px; width: 33.34px; height: 22.2px; border-radius: 20px; box-shadow: 0 4px 4px rgba(0,0,0,0.25); background: rgba(34,183,81,0.2); overflow: hidden; }
+  .rkls-crown::before { content: ""; position: absolute; inset: 0; background: #62d816; mix-blend-mode: soft-light; }
+  .rkls-crownIcon { left: 4.7px; top: -0.7px; width: 24px; height: 20px; }
+  .rkls-tag { left: 86.9px; top: 237px; width: 84.9px; height: 20.1px; border-radius: 20px; box-shadow: 0 4px 4px rgba(0,0,0,0.25); background: rgba(40,85,31,0.3); text-align: center; font-weight: 500; font-size: 12px; line-height: 18px; color: #62d816; text-shadow: 0 0 4px #b6ff87; white-space: nowrap; overflow: hidden; }
+  .rkls-tag::before { content: ""; position: absolute; inset: 0; background: #28551f; mix-blend-mode: soft-light; }
+  .rkls-ping { position: absolute; left: 129.4px; top: 202.1px; width: 94px; height: 94px; margin: -47px 0 0 -47px; border-radius: 50%; border: 1px solid #7cf2a0; opacity: 0; pointer-events: none; }
+
+  /* ---------- Route line ---------- */
+  .rkls-link { left: 229.5px; top: 147.6px; width: 45.59px; height: 155.79px; rotate: 90.87deg; }
+  .rkls-link svg { display: block; overflow: visible; }
+  .rkls-link path { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+  .rkls-link.on path { stroke-dashoffset: 0; opacity: 0.9; transition: stroke-dashoffset 620ms var(--ease-in-out), opacity 60ms linear; }
+  .rkls-head { position: absolute; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #d7ffc0; box-shadow: 0 0 9px 3px #4cff83; opacity: 0;
+    offset-path: path("M1.5 154.292C42.938 117.155 52.9712 53.7579 36.6716 1.5004"); offset-rotate: 0deg; }
+
+  /* ---------- Lead card ---------- */
+  .rkls-card { left: 329px; top: 151px; width: 309px; height: 143px; border-radius: 12px; background: #fff; border: 1px solid #e3e4e7; overflow: hidden;
+    box-shadow: 0 22px 22px rgba(0,0,0,0.09), 0 6px 12px rgba(0,0,0,0.12); transition: height 520ms var(--ease-out); }
+  .rkls-card.scored { height: 179px; }
+  .rkls-card > * { position: absolute; white-space: nowrap; }
+  .rkls-title { left: 15px; top: 13px; font-weight: 700; font-size: 16px; line-height: 24px; color: #181d27; }
+  .rkls-temp { left: 235px; top: 16px; display: flex; gap: 4px; align-items: center; font-size: 12px; line-height: 18px; color: #535862; }
+  .rkls-temp img { width: 11px; height: 14px; }
+  .rkls-card > .rkls-dots { left: 273px; top: 17px; width: 20px; height: 20px; }
+  .rkls-contact { left: 15px; top: 41px; font-size: 14px; line-height: 20px; color: #535862; }
+  .rkls-price { left: 15px; top: 65px; display: flex; gap: 4px; align-items: center; font-size: 14px; line-height: 20px; color: #535862; }
+  .rkls-price b { padding: 2px 8px; border-radius: 6px; border: 1px solid #e9eaeb; font-weight: 500; color: #414651; }
+  .rkls-price img { width: 11px; height: 18px; }
+  .rkls-chip { top: 97px; height: 23px; border-radius: 10px; font-weight: 500; font-size: 10px; line-height: 23px; }
+  .rkls-chipA { left: 14px; width: 110px; padding-left: 20.4px; background: #d9ffe1; color: #066128; }
+  .rkls-chipB { left: 133px; width: 122px; padding-left: 20px; background: #f3f4f6; color: #868990; }
+  .rkls-chipB img { position: absolute; left: 4px; top: 3px; width: 15.83px; height: 16px; }
+  .rkls-chipB.on img { animation: rkls-aim 620ms var(--ease-out); }
+  @keyframes rkls-aim { from { rotate: -200deg; scale: 0.5; } }
+  .rkls-bar { position: absolute; bottom: 4px; width: 2.75px; border-radius: 2px; background: #066128; transform-origin: 50% 100%; transform: scaleY(0.1); transition: transform 460ms var(--ease-back); }
+  .rkls-chipA.on .rkls-bar { transform: none; }
+  .rkls-foot { left: 0; top: 94px; width: 307px; height: 50px; transition: transform 520ms var(--ease-out); }
+  .rkls-card.scored .rkls-foot { transform: translateY(36px); }
+  .rkls-foot > * { position: absolute; white-space: nowrap; }
+  .rkls-divider { left: 15px; top: 0; width: 277px; height: 1px; background: #e9eaeb; }
+  .rkls-foot .rkls-av { left: 14px; top: 9px; width: 25px; height: 25px; border-radius: 50%; }
+  .rkls-assign { left: 43px; top: 6px; font-weight: 500; font-size: 10px; line-height: 18px; color: #535862; }
+  .rkls-closer { left: 43px; top: 19px; font-weight: 600; font-size: 11px; line-height: 18px; color: #15803d; text-shadow: 0 0 2.2px #22b751; }
+  .rkls-stats { right: 15px; top: 11px; display: flex; gap: 10.7px; align-items: center; padding: 1px 8px; border-radius: 50px; background: #fafafa; font-size: 12px; line-height: 18px; color: #717680; }
+  .rkls-stats span { display: flex; gap: 5.35px; align-items: center; }
+  .rkls-stats img { width: 14.27px; height: 14.27px; }
+
+  /* ---------- Sequence states ---------- */
+  .rkls-drop { opacity: 0; transform: translateY(-46px) rotate(2.5deg) scale(1.05); transition: opacity 300ms var(--ease-out), transform 680ms var(--ease-back); }
+  .rkls-drop.on { opacity: 1; transform: none; }
+  .rkls-pop { opacity: 0; scale: 0.3; transition: opacity 260ms var(--ease-out), scale 520ms var(--ease-back); }
+  .rkls-pop.on { opacity: 1; scale: 1; }
+  .rkls-fade { opacity: 0; transition: opacity 620ms var(--ease-out); }
+  .rkls-fade.on { opacity: 1; }
+  .rkls-rise { opacity: 0; transform: translateX(-8px); transition: opacity 360ms var(--ease-out), transform 480ms var(--ease-out); }
+  .rkls-rise.on { opacity: 1; transform: none; }
+
+  /* ---------- Idle ---------- */
+  .rkls-score.is-idle .rkls-halo { animation: rkls-breathe 3.4s ease-in-out infinite; }
+  @keyframes rkls-breathe { 0%, 100% { scale: 1; } 50% { scale: 1.035; } }
+  .rkls-score.is-idle .rkls-float { animation: rkls-float 3.6s ease-in-out infinite alternate; }
+  @keyframes rkls-float { from { translate: 0 -1.6px; } to { translate: 0 1.6px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkls-score *, .rkls-score *::before, .rkls-score *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 4 · 4.2 AI lead scoring & routing ===== -->
+<div class="rkls-score" data-rkls-score role="img" aria-label="A new lead joins the pipeline, AI scores it for engagement and buying intent, then checks the sales team and auto-assigns the lead to the top closer">
+  <div class="rkls-stage">
+    <div class="rkls-abs" style="left:.34px;top:0;width:699.84px;height:405px"><img src="assets/bg.svg" alt=""></div>
+    <div class="rkls-abs" style="left:-265.3px;top:221px;width:1134.3px;height:583.6px"><img src="assets/glow1.svg" alt=""></div>
+    <div class="rkls-abs rkls-fade" data-glow style="left:-5.84px;top:76.4px;width:268.8px;height:266.3px"><img src="assets/glow2.svg" alt=""></div>
+    <div class="rkls-abs" style="left:251.24px;top:-14.79px;width:152.04px;height:152.04px"><img src="assets/ring1.svg" alt=""></div>
+    <div class="rkls-abs" style="left:162.96px;top:-103.06px;width:328.6px;height:328.6px"><img src="assets/ring2.svg" alt=""></div>
+    <div class="rkls-abs" style="left:75.96px;top:-190.06px;width:502.6px;height:502.6px"><img src="assets/ring3.svg" alt=""></div>
+    <div class="rkls-abs" style="left:-6.88px;top:-272.9px;width:668.3px;height:668.3px"><img src="assets/ring4.svg" alt=""></div>
+
+    <div class="rkls-ui">
+      <div class="rkls-abs rkls-kanban"><img src="assets/kanban.png" alt=""></div>
+      <div class="rkls-abs rkls-count" data-count></div>
+      <div class="rkls-abs rkls-value" data-value></div>
+      <div class="rkls-abs rkls-lower" data-lower></div>
+
+      <div class="rkls-abs rkls-rep" data-rep style="left:254.92px;top:93.9px;width:102px;height:125px"><img src="assets/agent-b.png" alt=""></div>
+      <div class="rkls-abs rkls-rep" data-rep style="left:163.92px;top:333.9px;width:93px;height:114px"><img src="assets/agent-c.png" alt=""></div>
+      <div class="rkls-abs rkls-rep" data-rep style="left:-53.08px;top:325.9px;width:130px;height:159px"><img src="assets/agent-d.png" alt=""></div>
+      <div class="rkls-abs rkls-rep" data-rep style="left:118.92px;top:-29.1px;width:114px;height:140px"><img src="assets/agent-e.png" alt=""></div>
+
+      <div class="rkls-abs rkls-link" data-link>
+        <svg width="45.59" height="155.79" viewBox="0 0 45.5926 155.792" fill="none">
+          <path pathLength="1" d="M1.50001 154.292C42.938 117.155 52.9712 53.7579 36.6716 1.5004" stroke-width="3" stroke-linecap="round" stroke="#23B750"/>
+        </svg>
+        <div class="rkls-head" data-head></div>
+      </div>
+
+      <!-- Top closer -->
+      <div class="rkls-ping" data-ping></div>
+      <div class="rkls-abs rkls-main" data-main><div class="rkls-halo"><img src="assets/av-closer.jpg" alt=""></div></div>
+      <div class="rkls-abs rkls-pop" data-node-a style="left:168.35px;top:194.6px;width:14.66px;height:14.66px"><img src="assets/node.svg" alt=""></div>
+      <div class="rkls-abs rkls-pop" data-crown style="left:112px;top:145px;width:33.34px;height:22.2px;transform-origin:50% 100%">
+        <div class="rkls-abs rkls-crown" style="left:0;top:0"></div>
+        <div class="rkls-abs rkls-crownIcon"><img src="assets/crown.svg" alt=""></div>
+      </div>
+      <div class="rkls-abs rkls-tag rkls-pop" data-tag><span data-f="closer" style="position:relative"></span></div>
+
+      <!-- New lead -->
+      <div class="rkls-abs rkls-drop" data-card-wrap style="left:0;top:0;width:700px;height:405px;pointer-events:none">
+        <div class="rkls-float rkls-abs" style="inset:0">
+          <div class="rkls-abs rkls-card" data-card>
+            <div class="rkls-title" data-f="company"></div>
+            <div class="rkls-temp"><img src="assets/flame.svg" alt=""><span data-f="age"></span></div>
+            <img class="rkls-dots" src="assets/dots.svg" alt="">
+            <div class="rkls-contact" data-f="contact"></div>
+            <div class="rkls-price"><b data-f="amount"></b><img src="assets/dot.svg" alt=""><span data-f="service"></span></div>
+            <div class="rkls-chip rkls-chipA rkls-pop" data-chip-a>
+              <i class="rkls-bar" style="left:7px;height:5.5px"></i><i class="rkls-bar" style="left:11.1px;height:9.6px;transition-delay:80ms"></i><i class="rkls-bar" style="left:15.2px;height:13.75px;transition-delay:160ms"></i>
+              <span data-f="signalA"></span>
+            </div>
+            <div class="rkls-chip rkls-chipB rkls-pop" data-chip-b><img src="assets/target.svg" alt=""><span data-f="signalB"></span></div>
+            <div class="rkls-foot">
+              <div class="rkls-divider"></div>
+              <img class="rkls-av rkls-pop" data-assign-av src="assets/av-closer.jpg" alt="">
+              <div class="rkls-assign rkls-rise" data-assign-a data-f="assignLabel"></div>
+              <div class="rkls-closer rkls-rise" data-assign-b data-f="closer" style="transition-delay:70ms"></div>
+              <div class="rkls-stats">
+                <span><img src="assets/clip.svg" alt=""><span data-f="files"></span></span>
+                <span><img src="assets/msg.svg" alt=""><span data-f="notes"></span></span>
+                <span><img src="assets/clock.svg" alt=""><span data-f="days"></span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rkls-abs rkls-pop" data-node-b style="left:321.6px;top:232.6px;width:14.66px;height:14.66px"><img src="assets/node.svg" alt=""></div>
+
+      <div class="rkls-abs" style="left:675.76px;top:-3px;width:55px;height:424px;background:#f5f5f5"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkls-score]');
+  if (!root) return;
+  const stage = root.querySelector('.rkls-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 700;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const lead = {
+    company: 'Sistem Pintar Sdn Bhd',
+    contact: 'Siti Nur Aisyah',
+    value: 50,                 // RM thousands; added to the column's weighted value
+    service: 'Data Analytics',
+    age: '1.5h',
+    signalA: 'High Engagement',
+    signalB: 'Strong Buying Intent',
+    assignLabel: 'Auto-assigned to',
+    closer: 'Top Closer',
+    files: '1', notes: '2', days: '15d',
+  };
+  const column = { deals: 5, weightedK: 320 };  // totals once the new lead is in
+
+  const fields = { ...lead, amount: `RM ${lead.value},000` };
+  root.querySelectorAll('[data-f]').forEach((el) => { el.textContent = fields[el.dataset.f]; });
+
+  const $ = (s) => root.querySelector(s);
+  const on = (s) => () => $(s).classList.add('on');
+  const setColumn = (added) => {
+    $('[data-count]').textContent = column.deals - (added ? 0 : 1);
+    $('[data-value]').textContent = `${column.weightedK - (added ? 0 : lead.value)}k`;
+  };
+  let timers = [], anims = [], raf = 0, playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const fx = (el, frames, opts) => { const a = el.animate(frames, { fill: 'both', ...opts }); anims.push(a); return a; };
+  const OUT = 'cubic-bezier(0.23,1,0.32,1)';
+
+  const countUp = () => {
+    const from = column.weightedK - lead.value, t0 = performance.now(), D = 620;
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / D), e = 1 - (1 - p) ** 3;
+      $('[data-value]').textContent = `${Math.round(from + lead.value * e)}k`;
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    fx($('[data-count]'), [{ transform: 'scale(1)' }, { transform: 'scale(1.45)', offset: 0.4 }, { transform: 'scale(1)' }], { duration: 460, easing: OUT });
+  };
+  // AI checks each rep in turn before settling on the top closer
+  const checkRep = (i) => () => {
+    const el = root.querySelectorAll('[data-rep]')[i];
+    fx(el, [{ transform: 'scale(1)', filter: 'brightness(1)' }, { transform: 'scale(1.15)', filter: 'brightness(1.3)', offset: 0.4 }, { transform: 'scale(1)', filter: 'brightness(1)' }], { duration: 460, easing: OUT });
+  };
+  const crown = () => {
+    fx($('[data-main]'), [{ transform: 'scale(1)' }, { transform: 'scale(1.16)', offset: 0.4 }, { transform: 'scale(1)' }], { duration: 560, easing: OUT });
+    fx($('[data-ping]'), [{ opacity: 0.9, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(3.6)' }], { duration: 1000, easing: OUT });
+  };
+  const runHead = () => fx($('[data-head]'), [{ offsetDistance: '0%', opacity: 1 }, { offsetDistance: '100%', opacity: 1, offset: 0.97 }, { offsetDistance: '100%', opacity: 0 }], { duration: 620, easing: 'cubic-bezier(0.77,0,0.175,1)' });
+
+  // ---------- The sequence: [time ms, state change, motion-only effect] ----------
+  const steps = [
+    [200,  on('[data-card-wrap]')],
+    [220,  on('[data-lower]')],
+    [780,  () => setColumn(true), countUp],
+    [1500, () => $('[data-card]').classList.add('scored')],
+    [1680, on('[data-chip-a]')],
+    [2000, on('[data-chip-b]')],
+    [2550, null, checkRep(3)],
+    [2780, null, checkRep(0)],
+    [3010, null, checkRep(1)],
+    [3240, null, checkRep(2)],
+    [3560, on('[data-glow]'), crown],
+    [3700, on('[data-crown]')],
+    [3820, on('[data-tag]')],
+    [4250, on('[data-node-a]')],
+    [4400, on('[data-link]'), runHead],
+    [5000, on('[data-node-b]')],
+    [5060, on('[data-assign-av]')],
+    [5200, on('[data-assign-a]')],
+    [5200, on('[data-assign-b]')],
+  ];
+  const END = 6000;
+
+  function setStart() { root.querySelectorAll('.on, .scored').forEach((el) => el.classList.remove('on', 'scored')); setColumn(false); }
+  function setFinal() { steps.forEach(([, fn]) => fn && fn()); }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); anims.forEach((a) => a.cancel()); anims = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn, effect]) => later(t, () => { fn && fn(); effect && effect(); }));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out', 'is-idle'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

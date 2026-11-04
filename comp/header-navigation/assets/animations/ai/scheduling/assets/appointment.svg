@@ -1,0 +1,45 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="117.283" height="117.776" viewBox="0 0 117.283 117.776" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Appointment">
+<g id="Ellipse 31" filter="url(#filter0_f_0_4)">
+<use xlink:href="#stroke0_0_4" fill="url(#paint0_linear_0_4)"/>
+<mask id="stroke1_0_4" fill="white">
+<use xlink:href="#stroke0_0_4"/>
+</mask>
+<path d="M83.2829 58.9561C83.2449 72.7013 72.1817 83.8135 58.5727 83.7759C44.9636 83.7382 33.9621 72.565 34.0001 58.8198C34.0381 45.0746 45.1012 33.9625 58.7103 34.0001C72.3194 34.0377 83.3209 45.2109 83.2829 58.9561Z" stroke-width="2" stroke="#B1FD7E" stroke-opacity="0.44" mask="url(#stroke1_0_4)"/>
+</g>
+<g id="Ellipse 32" filter="url(#filter1_f_0_4)">
+<use xlink:href="#stroke2_0_4" fill="url(#paint1_linear_0_4)"/>
+<mask id="stroke3_0_4" fill="white">
+<use xlink:href="#stroke2_0_4"/>
+</mask>
+<path d="M83.2829 58.9561C83.2449 72.7013 72.1817 83.8135 58.5727 83.7759C44.9636 83.7382 33.9621 72.565 34.0001 58.8198C34.0381 45.0746 45.1012 33.9625 58.7103 34.0001C72.3194 34.0377 83.3209 45.2109 83.2829 58.9561Z" stroke-width="2" stroke="#B1FD7E" stroke-opacity="0.44" mask="url(#stroke3_0_4)"/>
+</g>
+<path id="Rectangle 27" d="M51.5198 41.2125C51.5198 40.4028 52.1763 39.7463 52.9861 39.7463V39.7463C53.7959 39.7463 54.4523 40.4028 54.4523 41.2125V47.9154C54.4523 48.7252 53.7959 49.3816 52.9861 49.3816V49.3816C52.1763 49.3816 51.5198 48.7252 51.5198 47.9154V41.2125Z" fill="#B1FD7E"/>
+<path id="Rectangle 29" d="M64.9255 41.2125C64.9255 40.4028 65.5819 39.7463 66.3917 39.7463V39.7463C67.2015 39.7463 67.858 40.4028 67.858 41.2125V47.9154C67.858 48.7252 67.2015 49.3816 66.3917 49.3816V49.3816C65.5819 49.3816 64.9255 48.7252 64.9255 47.9154V41.2125Z" fill="#B1FD7E"/>
+<path id="Vector 8" d="M43.5602 53.1017H75.6522" stroke-width="2.5" stroke="#B1FD7E"/>
+<path id="Rectangle 20" d="M51.8845 44.6922H67.0744C71.9069 44.6922 75.8244 48.6097 75.8244 53.4422V65.6997C75.8244 70.5322 71.9069 74.4497 67.0744 74.4497H51.8845C47.052 74.4497 43.1345 70.5322 43.1345 65.6997V53.4422C43.1345 48.6097 47.052 44.6922 51.8845 44.6922Z" stroke-width="2.5" stroke="#B1FD7E"/>
+<path id="Vector 13" d="M54.0335 64.6676L57.5944 67.8145L66.6013 59.8548" stroke-width="2.5" stroke-linecap="round" stroke="#B1FD7E"/>
+</g>
+<defs>
+<filter id="filter0_f_0_4" x="2.13832e-06" y="7.45058e-08" width="117.283" height="117.776" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="17" result="effect1_foregroundBlur_0_4"/>
+</filter>
+<filter id="filter1_f_0_4" x="2.13832e-06" y="7.45058e-08" width="117.283" height="117.776" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="17" result="effect1_foregroundBlur_0_4"/>
+</filter>
+<linearGradient id="paint0_linear_0_4" x1="58.7103" y1="34.0001" x2="58.5727" y2="83.7759" gradientUnits="userSpaceOnUse">
+<stop stop-color="#62D816" stop-opacity="0"/>
+<stop offset="1" stop-color="#62D816"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_4" x1="58.7103" y1="34.0001" x2="58.5727" y2="83.7759" gradientUnits="userSpaceOnUse">
+<stop stop-color="#62D816" stop-opacity="0"/>
+<stop offset="1" stop-color="#62D816"/>
+</linearGradient>
+<path id="stroke0_0_4" d="M83.2829 58.9561C83.2449 72.7013 72.1817 83.8135 58.5727 83.7759C44.9636 83.7382 33.9621 72.565 34.0001 58.8198C34.0381 45.0746 45.1012 33.9625 58.7103 34.0001C72.3194 34.0377 83.3209 45.2109 83.2829 58.9561Z"/>
+<path id="stroke2_0_4" d="M83.2829 58.9561C83.2449 72.7013 72.1817 83.8135 58.5727 83.7759C44.9636 83.7382 33.9621 72.565 34.0001 58.8198C34.0381 45.0746 45.1012 33.9625 58.7103 34.0001C72.3194 34.0377 83.3209 45.2109 83.2829 58.9561Z"/>
+</defs>
+</svg>

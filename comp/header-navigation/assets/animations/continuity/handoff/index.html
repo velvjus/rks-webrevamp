@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity – AI-assisted handoff</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkho-handoff { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkho-handoff ---------- */
+  .rkho-handoff {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkho-handoff * { box-sizing: border-box; margin: 0; }
+  .rkho-handoff img { display: block; max-width: none; }
+  .rkho-stage { position: absolute; left: 0; top: 0; width: 300px; height: 200px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkho-abs { position: absolute; }
+  .rkho-abs > img { width: 100%; height: 100%; }
+  .rkho-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkho-handoff.is-out .rkho-ui { opacity: 0; }
+  .rkho-handoff.is-snap *, .rkho-handoff.is-snap *::before, .rkho-handoff.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Chat messages ---------- */
+  .rkho-msg { display: flex; flex-direction: column; gap: 3.223px; }
+  .rkho-line { display: flex; gap: 5.371px; align-items: flex-end; }
+  .rkho-av { flex: none; width: 22.556px; height: 22.556px; border-radius: 50%; overflow: hidden; border: 0.352px solid rgba(0,0,0,0.16); }
+  .rkho-av > img { width: 100%; height: 100%; object-fit: cover; }
+  .rkho-av.ai { display: grid; place-items: center; background: linear-gradient(#49c5f2, #0e2b6c); }
+  .rkho-av.ai > img { width: 14.319px; height: 14.319px; }
+  .rkho-bubble { flex: 1; min-width: 0; padding: 4.297px 6.445px; border-radius: 4.297px; background: #fff; border: 0.537px solid #e5e5e5; font-size: 7.335px; line-height: 12.89px; color: #171717; }
+  .rkho-meta { font-size: 6.445px; line-height: 9.668px; color: #525252; text-align: right; padding-right: 27.9px; }
+  .rkho-ai .rkho-bubble { display: flex; flex-direction: column; gap: 3.223px; background: #eaf7ef; border: 0.667px solid #54fac9; }
+  .rkho-human .rkho-bubble { background: #d0eed9; }
+  .rkho-link { color: #1a943e; text-decoration: underline; }
+  .rkho-booking { display: flex; gap: 3.079px; padding: 4.106px 6.159px 4.106px 4.106px; border-radius: 4.106px; background: #fff; border: 0.513px solid #e5e5e5; }
+  .rkho-booking > img { width: 8.212px; height: 8.212px; margin-top: 1.026px; }
+  .rkho-booking b { display: block; font-weight: 700; font-size: 7.185px; line-height: 10.265px; color: #404040; white-space: nowrap; }
+  .rkho-bRow { display: flex; justify-content: space-between; align-items: center; font-size: 7.185px; line-height: 10.265px; color: #525252; }
+  .rkho-booked { padding: 1.026px 4.106px; border-radius: 8.212px; background: #23b750; border: 0.513px solid #e5e5e5; font-weight: 500; font-size: 6.16px; line-height: 9.238px; color: #fafafa; }
+
+  /* ---------- AI Handover badge ---------- */
+  .rkho-handover { left: 105.73px; top: 102.71px; width: 88.493px; height: 30.129px; display: grid; place-items: center; }
+  .rkho-hoIn { transform: rotate(7.12deg); }
+  .rkho-hoBadge {
+    position: relative; overflow: hidden;
+    display: flex; gap: 1.761px; align-items: center; width: 86.742px;
+    padding: 1.761px 7.045px 1.761px 5.284px; border-radius: 5.284px; border: 0.881px solid #d0eed9;
+    background: radial-gradient(ellipse 120% 160% at 0% -60%, #23b750 0%, #16dd52 23.6%, #13973b 61.8%, #11742f 80.9%, #0f5123 100%);
+    filter: drop-shadow(0.757px 9.843px 4.921px rgba(35,183,80,0.22)) drop-shadow(0 2.271px 2.65px rgba(35,183,80,0.26));
+  }
+  .rkho-hoBadge > img { width: 10.567px; height: 10.567px; }
+  .rkho-hoBadge span { font-weight: 500; font-size: 10.57px; line-height: 15.851px; color: #fafafa; white-space: nowrap; }
+  .rkho-hoBadge::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%); transform: translateX(-120%); }
+  .rkho-hoBadge.shine::after { transition: transform 900ms var(--ease-in-out); transform: translateX(120%); }
+
+  /* ---------- Sequence states ---------- */
+  .rkho-in { opacity: 0; transition: opacity 420ms var(--ease-out), transform 620ms var(--ease-out); }
+  .rkho-in.on { opacity: 1; transform: none; }
+  .rkho-fromL { transform: translate(-10px, 6px); }
+  .rkho-fromR { transform: translate(10px, 6px); }
+  .rkho-grow { transform: scale(0.9); transform-origin: 100% 100%; }
+  .rkho-pop { opacity: 0; scale: 0.3; transition: opacity 300ms var(--ease-out), scale 520ms var(--ease-back); }
+  .rkho-pop.on { opacity: 1; scale: 1; }
+  .rkho-drop { opacity: 0; transform: translateY(-14px) scale(1.35) rotate(-7deg); transition: opacity 260ms var(--ease-out), transform 620ms var(--ease-back); }
+  .rkho-drop.on { opacity: 1; transform: none; }
+  .rkho-av.think { animation: rkho-think 700ms ease-in-out 2; }
+  @keyframes rkho-think { 50% { scale: 1.14; } }
+
+  /* ---------- Idle ---------- */
+  .rkho-handoff.is-idle .rkho-float { animation: rkho-float 3.6s ease-in-out infinite alternate; }
+  @keyframes rkho-float { from { translate: 0 -1.6px; rotate: -0.8deg; } to { translate: 0 1.6px; rotate: 0.8deg; } }
+  .rkho-handoff.is-idle .rkho-pulse { animation: rkho-pulse 2.8s ease-in-out infinite; }
+  @keyframes rkho-pulse { 0%, 60%, 100% { scale: 1; } 30% { scale: 1.1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkho-handoff *, .rkho-handoff *::before, .rkho-handoff *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 3 · 3.2 AI-assisted handoff ===== -->
+<div class="rkho-handoff" data-rkho-handoff role="img" aria-label="A customer asks to book a session, the AI agent books it and sends a payment link, then hands the conversation over to a teammate who continues the chat">
+  <div class="rkho-stage">
+    <div class="rkho-ui">
+      <div class="rkho-abs" style="left:15.12px;top:-4.8px;width:175.554px;height:311.546px;border-radius:8.337px;background:linear-gradient(#f0f0f0, rgba(240,240,240,0) 75.4%)"></div>
+
+      <!-- AI reply -->
+      <div class="rkho-abs rkho-msg rkho-ai" style="left:69.18px;top:43.59px;width:197.371px">
+        <div class="rkho-line">
+          <div class="rkho-bubble rkho-in rkho-grow" data-ai-bubble>
+            <div class="rkho-booking">
+              <img src="assets/calendar.svg" alt="">
+              <div style="flex:1;min-width:0">
+                <b data-f="bookingTime"></b>
+                <div class="rkho-bRow"><span data-f="customerName"></span><span class="rkho-booked rkho-pop" data-booked>Booked</span></div>
+              </div>
+            </div>
+            <p class="rkho-in" data-ai-text><span data-f="aiReply"></span><span class="rkho-link" data-f="aiLink"></span></p>
+          </div>
+          <div class="rkho-pop" data-ai-av><div class="rkho-av ai rkho-pulse"><img src="assets/ai-chat.svg" alt=""></div></div>
+        </div>
+        <p class="rkho-meta rkho-in" data-ai-meta>Sent by AI Agent</p>
+      </div>
+
+      <div class="rkho-abs" style="left:-80.89px;top:68.23px;width:202px;height:202px"><img src="assets/mint-glow.svg" alt=""></div>
+
+      <!-- Customer message -->
+      <div class="rkho-abs rkho-msg rkho-in rkho-fromL" data-customer style="left:27.84px;top:12.25px;width:146.028px">
+        <div class="rkho-line">
+          <div class="rkho-av"><img src="assets/av-ahmad.jpg" alt=""></div>
+          <div class="rkho-bubble" data-f="customerMsg" style="white-space:nowrap"></div>
+        </div>
+      </div>
+
+      <!-- AI Handover -->
+      <div class="rkho-abs rkho-handover">
+        <div class="rkho-float"><div class="rkho-hoIn"><div class="rkho-drop" data-handover>
+          <div class="rkho-hoBadge" data-shine><img src="assets/star.svg" alt=""><span>AI Handover</span></div>
+        </div></div></div>
+      </div>
+
+      <!-- Teammate reply -->
+      <div class="rkho-abs rkho-msg rkho-human rkho-in rkho-fromR" data-human style="left:69.18px;top:138.94px;width:197.371px">
+        <div class="rkho-line">
+          <div class="rkho-bubble" data-f="humanReply"></div>
+          <div class="rkho-av"><img src="assets/av-melissa.jpg" alt=""></div>
+        </div>
+        <p class="rkho-meta">Sent by <span data-f="agentName"></span></p>
+      </div>
+
+      <div class="rkho-abs" style="left:62.21px;top:-67.63px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+      <div class="rkho-abs" style="left:204.26px;top:126.89px;width:236px;height:150px"><img src="assets/lower-glow2.svg" alt=""></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkho-handoff]');
+  if (!root) return;
+  const stage = root.querySelector('.rkho-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 300;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const copy = {
+    customerMsg: 'I’d like to book a chiro session.',
+    bookingTime: '18 September 2026, 15:00',
+    customerName: 'Ahmad Daniel',
+    aiReply: 'Alright! Review your summary and pay to confirm here: ',
+    aiLink: 'https://orchidchiro.com/ECD19',
+    humanReply: 'Hey Ahmad, we received your confirmation! Let me guide you through for the visit.',
+    agentName: 'Melissa M.',
+  };
+  root.querySelectorAll('[data-f]').forEach((el) => { el.textContent = copy[el.dataset.f]; });
+
+  const $ = (s) => root.querySelector(s);
+  const on = (s) => () => $(s).classList.add('on');
+  let timers = [], playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  // ---------- The sequence: [time ms, action] ----------
+  const steps = [
+    [150,  on('[data-customer]')],
+    [900,  on('[data-ai-av]')],
+    [1150, () => $('[data-ai-av] .rkho-av').classList.add('think')],
+    [2000, on('[data-ai-bubble]')],
+    [2350, on('[data-ai-text]')],
+    [2650, on('[data-booked]')],
+    [2800, on('[data-ai-meta]')],
+    [3400, on('[data-handover]')],
+    [3800, () => $('[data-shine]').classList.add('shine')],
+    [4500, on('[data-human]')],
+  ];
+  const END = 5300;
+
+  function setStart() { root.querySelectorAll('.on, .think, .shine').forEach((el) => el.classList.remove('on', 'think', 'shine')); }
+  function setFinal() { steps.forEach(([, fn]) => fn()); $('.think')?.classList.remove('think'); }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn]) => later(t, fn));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

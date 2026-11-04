@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="475.162" height="475.162" viewBox="0 0 475.162 475.162" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle id="Mint glow" opacity="0.5" cx="237.581" cy="237.581" r="237.581" fill="url(#paint0_radial_0_221)"/>
+<defs>
+<radialGradient id="paint0_radial_0_221" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(237.581 237.581) rotate(90) scale(237.581)">
+<stop stop-color="#23B750"/>
+<stop offset="1" stop-color="#23B750" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

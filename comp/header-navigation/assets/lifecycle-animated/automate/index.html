@@ -6,7 +6,7 @@
 <title>Lifecycle – Automate</title>
 <!-- ?embed strips the preview page chrome so the preview index can frame it edge to edge -->
 <script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
-<style>html, body { overflow: hidden !important; margin: 0 !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; overflow: hidden !important; } .embed .rka { border-radius: 0; }</style>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rka { border-radius: 0; }</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -397,7 +397,7 @@
     rows.forEach((row) => { row.chip.getAnimations().forEach((a) => a.cancel()); row.chip.style.opacity = 0; });
   }
 
-  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(root);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
 })();
 </script>
 </body>

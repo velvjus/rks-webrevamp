@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RakanSales Website Animations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* One gallery for every website section: a grid of live scene previews per section */
+  :root {
+    color-scheme: dark;
+    --bg: #0b0d10;
+    --panel: #14171c;
+    --line: #23272e;
+    --text: #e8eaed;
+    --muted: #8a919c;
+    --green: #23b750;
+    --green-soft: #7cf2a0;
+    --stage: #0e1115;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-padding-top: 64px; }
+  body { background: var(--bg); color: var(--text); font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding: 0 16px 64px; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  header { padding-block: 40px 8px; display: flex; flex-wrap: wrap; gap: 16px; align-items: end; justify-content: space-between; }
+  h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; }
+  header p { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  button, .btn {
+    font: inherit; font-size: 13px; font-weight: 500; color: var(--text);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 12px; cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 120ms var(--ease-out);
+  }
+  button:active, .btn:active { transform: scale(0.97); }
+  button:focus-visible, .btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    button:hover, .btn:hover { border-color: #3a4049; background: #1a1e24; }
+  }
+  button[aria-pressed="true"] { border-color: var(--green); color: var(--green-soft); }
+
+  nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; padding: 12px 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+  nav a { color: var(--muted); font-size: 13px; font-weight: 500; text-decoration: none; padding: 6px 10px; border-radius: 999px; }
+  nav a:hover { color: var(--text); background: var(--panel); }
+
+  section { padding-top: 32px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 20px; flex-wrap: wrap; }
+  .sec-head h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .sec-head span { color: var(--muted); font-size: 13px; }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--min)), 1fr)); }
+  .solo .grid { grid-template-columns: minmax(0, var(--solo-max)); justify-content: center; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-width: 0; }
+  .frame { position: relative; aspect-ratio: var(--ratio); background: var(--stage); }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); }
+  .meta > div:first-child { min-width: 0; }
+  .meta h3 { font-size: 15px; font-weight: 600; }
+  .meta h3 span { color: var(--muted); font-weight: 500; margin-right: 6px; font-variant-numeric: tabular-nums; }
+  .meta small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header>
+    <div>
+      <h1>RakanSales website animations</h1>
+      <p>Live previews of every animated scene, grouped by section of the site</p>
+    </div>
+    <div class="tools">
+      <button id="replayAll">Replay all</button>
+      <button id="layout" aria-pressed="false">One per row</button>
+    </div>
+  </header>
+  <nav id="nav"></nav>
+  <div id="sections"></div>
+</div>
+
+<script>
+  const sections = [
+    {
+      id: 'features', name: 'Feature cards', note: 'Section 1 · 407 × 380', ratio: '407 / 380', min: '320px', soloMax: '560px',
+      scenes: [
+        { n: '1.1', name: 'Search',      path: 'features/search/',      note: 'Search Nearby finds customers around you' },
+        { n: '1.4', name: 'Omnichannel', path: 'features/omnichannel/', note: 'One WhatsApp number, the whole team replies' },
+        { n: '1.7', name: 'AI follow-up', path: 'features/ai-followup-story/', note: 'Turn it on, AI follows up, the agent is notified' },
+      ],
+    },
+    {
+      id: 'lifecycle', name: 'Lifecycle', note: 'Section 2 · 700 × 400', ratio: '7 / 4', min: '520px', soloMax: '1200px',
+      scenes: [
+        { n: '2.1', name: 'Capture',  path: 'lifecycle/capture/',  note: 'Leads from every channel land in one inbox' },
+        { n: '2.2', name: 'Engage',   path: 'lifecycle/engage/',   note: 'AI answers customers from your knowledge base' },
+        { n: '2.3', name: 'Automate', path: 'lifecycle/automate/', note: 'Automations switch on and keep running' },
+        { n: '2.4', name: 'Close',    path: 'lifecycle/close/',    note: 'A deal is dragged through the pipeline to Won' },
+        { n: '2.5', name: 'Grow',     path: 'lifecycle/grow/',     note: 'Live dashboard updates as deals close and leads arrive' },
+      ],
+    },
+    {
+      id: 'continuity', name: 'Continuity', note: 'Section 3 · 3 : 2', ratio: '3 / 2', min: '440px', soloMax: '1200px',
+      scenes: [
+        { n: '3.1', name: 'Unified conversation hub', path: 'continuity/hub/',      note: 'Messages from every channel land in one inbox' },
+        { n: '3.2', name: 'AI-assisted handoff',      path: 'continuity/handoff/',  note: 'AI books the session, then hands over to a person' },
+        { n: '3.3', name: 'Shared customer context',  path: 'continuity/context/',  note: 'Files, notes and activity connect to one profile' },
+        { n: '3.4', name: 'Pipeline continuity',      path: 'continuity/pipeline/', note: 'A deal moves from New to Qualified' },
+      ],
+    },
+    {
+      id: 'ai', name: 'AI Capabilities', note: 'Section 4 · 700 × 405', ratio: '700 / 405', min: '520px', soloMax: '1200px',
+      scenes: [
+        { n: '4.1', name: 'Smart scheduling',          path: 'ai/scheduling/', ratio: '677 / 383', note: 'AI replies and books the meeting into the calendar' },
+        { n: '4.2', name: 'AI lead scoring & routing', path: 'ai/scoring/',    note: 'New leads are scored and routed to the top closer' },
+        { n: '4.3', name: 'AI voice translation',      path: 'ai/translate/',  note: 'A voice note is transcribed and translated' },
+        { n: '4.4', name: 'AI name card scanner',      path: 'ai/scanner/',    note: 'Scan a name card and it becomes a contact' },
+      ],
+    },
+  ];
+
+  document.getElementById('nav').innerHTML = sections.map((sec) => `<a href="#${sec.id}">${sec.name}</a>`).join('');
+
+  const root = document.getElementById('sections');
+  root.innerHTML = sections.map((sec) => `
+    <section id="${sec.id}" style="--ratio:${sec.ratio};--min:${sec.min};--solo-max:${sec.soloMax}">
+      <div class="sec-head"><h2>${sec.name}</h2><span>${sec.note}</span></div>
+      <div class="grid">
+        ${sec.scenes.map((s) => `
+          <article class="card">
+            <div class="frame"${s.ratio ? ` style="aspect-ratio:${s.ratio}"` : ''}><iframe src="${s.path}index.html?embed" title="${s.name} animation" loading="lazy"></iframe></div>
+            <div class="meta">
+              <div>
+                <h3><span>${s.n}</span>${s.name}</h3>
+                <small>${s.note}</small>
+              </div>
+              <div class="actions">
+                <button data-replay>Replay</button><a class="btn" href="${s.path}index.html" target="_blank">Open ↗</a>
+              </div>
+            </div>
+          </article>`).join('')}
+      </div>
+    </section>`).join('');
+
+  const replay = (iframe) => { iframe.src = iframe.src; };
+  root.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-replay]');
+    if (b) replay(b.closest('.card').querySelector('iframe'));
+  });
+  document.getElementById('replayAll').onclick = () => root.querySelectorAll('iframe').forEach(replay);
+
+  const app = document.getElementById('app');
+  const layoutBtn = document.getElementById('layout');
+  layoutBtn.onclick = () => {
+    const solo = app.classList.toggle('solo');
+    layoutBtn.setAttribute('aria-pressed', solo);
+    try { localStorage.setItem('rks-solo', solo ? '1' : ''); } catch {}
+  };
+  try { if (localStorage.getItem('rks-solo')) layoutBtn.click(); } catch {}
+</script>
+</body>
+</html>

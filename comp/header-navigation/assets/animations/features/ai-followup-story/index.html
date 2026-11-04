@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features – 1.7 AI Follow-up (story)</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkfs { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkfs ---------- */
+  .rkfs {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 814px;           /* 2× the design width */
+    aspect-ratio: 407 / 380;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rkfs * { box-sizing: border-box; margin: 0; }
+  .rkfs img { display: block; max-width: none; }
+  .rkfs-stage { position: absolute; left: 0; top: 0; width: 407px; height: 380px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkfs-abs { position: absolute; }
+  .rkfs-abs > img { width: 100%; height: 100%; }
+
+  /* Chat card */
+  .rkfs-card { left: 31.03px; top: 26px; width: 400px; height: 380px; border-radius: 14px; overflow: hidden; background: rgba(153,153,153,0.33); }
+  .rkfs-chat { position: absolute; left: 4.85px; top: 4.85px; width: 390.308px; height: 370.308px; display: flex; flex-direction: column;
+    background: #f5ede2; border: 0.5px solid #e5e5e5; border-radius: 12px; overflow: hidden; }
+  .rkfs-head { display: flex; gap: 10px; align-items: center; padding: 9px 0 9px 16px; flex-shrink: 0;
+    background: linear-gradient(79deg, #065e55 15.45%, #043631 70.45%); }
+  .rkfs-mt { width: 32px; height: 32px; border-radius: 16px; display: grid; place-items: center; flex-shrink: 0;
+    background: rgba(255,255,255,0.2); border: 0.75px solid rgba(255,255,255,0.45); font-weight: 700; font-size: 10.5px; color: #fff; }
+  .rkfs-head > div:last-child { display: flex; flex-direction: column; gap: 2px; white-space: nowrap; }
+  .rkfs-head b { font-weight: 600; font-size: 14px; letter-spacing: -0.07px; color: #fff; }
+  .rkfs-head span { font-weight: 400; font-size: 9.5px; color: rgba(255,255,255,0.8); }
+
+  .rkfs-msgs { display: flex; flex-direction: column; gap: 8px; padding: 12px 42.154px 14px 16px; }
+  .rkfs-row { display: flex; justify-content: flex-end; }
+  .rkfs-row.is-in { justify-content: flex-start; }
+  .rkfs-bubble { display: flex; flex-direction: column; gap: 4px; padding: 9px 14px 7px; border-radius: 14px; white-space: nowrap;
+    background: #eaf7ef; border: 0.75px solid rgba(167,223,186,0.7); filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.05)); }
+  .rkfs-bubble > p { font-weight: 400; font-size: 14px; color: #262626; }
+  .rkfs-meta { display: flex; gap: 3px; align-items: center; justify-content: flex-end; font-size: 8.5px; color: #a3a3a3; }
+  .rkfs-meta.is-split { justify-content: space-between; }
+  .rkfs-meta > div { display: flex; gap: 3px; align-items: center; font-weight: 500; color: #7c7c7c; }
+  .rkfs-ticks { width: 11px; height: 7px; }
+  .rkfs-tag { display: flex; gap: 3px; align-items: center; padding: 3px 8px 3px 6px; border-radius: 10px; background: #fff; border: 0.5px solid #a7dfba;
+    font-weight: 600; font-size: 9px; color: #1a943e; }
+  .rkfs-tag img { width: 11.7px; height: 11.7px; }
+  .rkfs-reply { background: #fff; border: 1.5px solid #23b750; filter: drop-shadow(0 4px 7px rgba(35,183,80,0.28)); }
+  .rkfs-reply > p { font-weight: 600; font-size: 15.5px; }
+
+  .rkfs-gap { display: flex; gap: 6px; align-items: center; }
+  .rkfs-line { flex: 1 0 0; min-width: 1px; height: 1px; overflow: hidden; }
+  .rkfs-line img { width: 100%; height: 1px; }
+  .rkfs-pill { display: flex; gap: 4px; align-items: center; padding: 4px 10px 4px 9px; border-radius: 10px; background: #fff; border: 0.5px solid #e5e5e5;
+    font-weight: 500; font-size: 9.5px; color: #b45309; white-space: nowrap; }
+  .rkfs-pill img { width: 11.25px; height: 11.25px; }
+
+  /* Floating badges */
+  .rkfs-auto { left: 14.8px; top: 197.04px; display: flex; gap: 1.945px; align-items: center; padding: 1.945px 7.781px 1.945px 5.836px; border-radius: 15.563px;
+    border: 0.973px solid #e9fff8; background: radial-gradient(ellipse 120% 160% at 20% 0%, #19d452 0%, #1fa557 100%); }
+  .rkfs-auto img { width: 11.672px; height: 11.672px; }
+  .rkfs-auto span { font-weight: 500; font-size: 11.67px; line-height: 17.508px; color: #fff; white-space: nowrap; }
+  .rkfs.is-live .rkfs-spin { animation: rkfs-spin 1s linear infinite; }
+  @keyframes rkfs-spin { to { transform: rotate(360deg); } }
+
+  .rkfs-done { left: 219.64px; top: 320.03px; display: flex; gap: 5.993px; align-items: center; padding: 5.993px 11.985px 5.993px 7.191px; border-radius: 23.971px;
+    background: #fff; border: 0.599px solid #e5e5e5;
+    box-shadow: 0 74.3px 44.35px rgba(0,0,0,0.05), 0 33.56px 33.56px rgba(0,0,0,0.09), 0 8.39px 17.98px rgba(0,0,0,0.1); }
+  .rkfs-done img { width: 16.779px; height: 16.779px; }
+  .rkfs-done span { font-weight: 600; font-size: 11.386px; color: #262626; white-space: nowrap; }
+
+  /* ---------- Loop states (JS toggles .is-on) ---------- */
+  .rkfs [data-step] { opacity: 0; transform: translateY(10px) scale(0.96); transition: opacity 250ms var(--ease-out), transform 250ms var(--ease-out); }
+  .rkfs .rkfs-row:not(.is-in) .rkfs-bubble { transform-origin: 100% 100%; }
+  .rkfs .rkfs-row.is-in .rkfs-bubble { transform-origin: 0 100%; }
+  .rkfs [data-step].is-on { opacity: 1; transform: none; transition: opacity 300ms var(--ease-out), transform 550ms var(--pop); }
+  .rkfs [data-step="seen"].is-on { opacity: 0.5; }
+  .rkfs [data-step="gap"] { transform: none; }
+  .rkfs [data-step="gap"] .rkfs-line img { transform: scaleX(0); transition: transform 200ms var(--ease-out); }
+  .rkfs [data-step="gap"] .rkfs-line:first-child img { transform-origin: 100% 50%; }
+  .rkfs [data-step="gap"] .rkfs-line:last-child img { transform-origin: 0 50%; }
+  .rkfs [data-step="gap"].is-on .rkfs-line img { transform: none; transition: transform 700ms var(--ease-out) 150ms; }
+  .rkfs [data-step="gap"] .rkfs-pill { scale: 0.6; transition: scale 200ms var(--ease-out); }
+  .rkfs [data-step="gap"].is-on .rkfs-pill { scale: 1; transition: scale 500ms var(--pop); }
+  .rkfs [data-step] .rkfs-tag { scale: 0.5; opacity: 0; transition: scale 200ms var(--ease-out), opacity 200ms var(--ease-out); }
+  .rkfs [data-step].is-on .rkfs-tag { scale: 1; opacity: 1; transition: scale 500ms var(--pop) 300ms, opacity 200ms var(--ease-out) 300ms; }
+  .rkfs [data-step="auto"] { transform: translateX(-12px) scale(0.6); }
+  .rkfs [data-step="done"] { transform: translateY(24px) scale(0.85); }
+  .rkfs [data-step="auto"].is-on, .rkfs [data-step="done"].is-on { transform: none; }
+
+  /* Chat steps back while a story card is on top */
+  .rkfs-card, .rkfs-auto, .rkfs-done { transition: opacity 400ms var(--ease-out); }
+  .rkfs-card { transition: opacity 400ms var(--ease-out), transform 500ms var(--ease-out); }
+  .rkfs.is-dim .rkfs-card { opacity: 0.4; transform: scale(0.97); transform-origin: 40% 50%; }
+  .rkfs.is-dim .rkfs-auto.is-on, .rkfs.is-dim .rkfs-done.is-on { opacity: 0.25; }
+
+  /* Story cards share the glass frame */
+  .rkfs-sheet { left: 53.5px; width: 300px; padding: 5px; border-radius: 16px; background: rgba(153,153,153,0.33);
+    box-shadow: 0 62px 37px rgba(0,0,0,0.05), 0 28px 28px rgba(0,0,0,0.09), 0 7px 15px rgba(0,0,0,0.1);
+    opacity: 0; pointer-events: none; }
+  .rkfs-sheet > div { padding: 14px; border-radius: 12px; background: #fff; border: 0.5px solid #e5e5e5; }
+  .rkfs-tile { display: grid; place-items: center; flex-shrink: 0; border-radius: 10px; background: radial-gradient(ellipse 120% 120% at 20% 0%, #19d452 0%, #1fa557 100%); }
+
+  /* Act 1: settings */
+  .rkfs-setup { top: 102px; transform: translateY(14px) scale(0.94); transition: opacity 300ms var(--ease-out), transform 550ms var(--pop); }
+  .rkfs-setup.is-on { opacity: 1; transform: none; }
+  .rkfs-setup.is-gone { opacity: 0; transform: translate(-138px, 26px) scale(0.3); transition: opacity 420ms var(--ease-out), transform 520ms var(--ease-out); }
+  .rkfs-sethead { display: flex; align-items: center; gap: 10px; }
+  .rkfs-sethead .rkfs-tile { width: 38px; height: 38px; }
+  .rkfs-sethead .rkfs-tile img { width: 23px; height: 23px; }
+  .rkfs-sethead > div:nth-child(2) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rkfs-sethead b { font-weight: 600; font-size: 15px; letter-spacing: -0.15px; color: #171717; }
+  .rkfs-sethead span { font-size: 9.5px; color: #737373; white-space: nowrap; }
+  .rkfs-switch { position: relative; width: 40px; height: 23px; flex-shrink: 0; border-radius: 12px; background: #d4d4d4; transition: background-color 250ms var(--ease-out); }
+  .rkfs-switch::after { content: ""; position: absolute; left: 2.5px; top: 2.5px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.25); transition: transform 350ms var(--pop); }
+  .rkfs-setup.is-active .rkfs-switch { background: #23b750; }
+  .rkfs-setup.is-active .rkfs-switch::after { transform: translateX(17px); }
+  .rkfs-setrows { display: flex; flex-direction: column; margin-top: 11px; border-top: 1px solid #efefef; opacity: 0.4; transition: opacity 350ms var(--ease-out); }
+  .rkfs-setup.is-active .rkfs-setrows { opacity: 1; }
+  .rkfs-setrow { display: flex; align-items: center; justify-content: space-between; min-height: 33px; border-bottom: 1px solid #f3f3f3; font-size: 11px; color: #404040; }
+  .rkfs-setrow:last-child { border-bottom: 0; margin-bottom: -5px; }
+  .rkfs-chip { display: flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; background: #f5f5f5; border: 0.5px solid #e5e5e5; font-weight: 600; font-size: 9.5px; color: #404040; }
+  .rkfs-chip img { width: 14px; height: 14px; border-radius: 50%; object-fit: cover; }
+  .rkfs-chip.has-photo { padding-left: 3px; }
+
+  .rkfs-cursor { left: 0; top: 0; width: 20px; height: 22px; opacity: 0; transition: transform 950ms cubic-bezier(0.77, 0, 0.175, 1), opacity 250ms var(--ease-out); }
+  .rkfs-cursor.is-on { opacity: 1; }
+
+  /* Act 3: the agent is told */
+  .rkfs-notify { top: 104px; transform: translateY(-34px) scale(0.95); transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out); }
+  .rkfs-notify.is-on { opacity: 1; transform: none; transition: opacity 300ms var(--ease-out), transform 600ms var(--pop); }
+  .rkfs-nottop { display: flex; align-items: center; gap: 6px; font-size: 9.5px; color: #737373; }
+  .rkfs-nottop .rkfs-tile { width: 17px; height: 17px; border-radius: 5px; }
+  .rkfs-nottop .rkfs-tile img { width: 11px; height: 11px; }
+  .rkfs-nottop b { flex: 1; font-weight: 600; color: #262626; }
+  .rkfs-notmain { display: flex; align-items: center; gap: 11px; margin-top: 11px; }
+  .rkfs-notav { position: relative; width: 46px; height: 46px; flex-shrink: 0; }
+  .rkfs-notav > img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 0 0 3px rgba(188,188,188,0.35); }
+  .rkfs-bell { position: absolute; right: -4px; bottom: -3px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: #23b750; border: 2px solid #fff; }
+  .rkfs-bell img { width: 11px; height: 11px; transform-origin: 50% 15%; }
+  .rkfs-notify.is-on .rkfs-bell img { animation: rkfs-ring 900ms ease-in-out 450ms 2; }
+  @keyframes rkfs-ring { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(18deg); } 45% { transform: rotate(-16deg); } 70% { transform: rotate(9deg); } }
+  .rkfs-nottext { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .rkfs-nottext b { font-weight: 600; font-size: 15px; letter-spacing: -0.15px; color: #171717; }
+  .rkfs-nottext span { font-size: 10.5px; line-height: 14px; color: #525252; }
+  .rkfs-open { margin-top: 12px; padding: 8px; border-radius: 9px; text-align: center; font-weight: 600; font-size: 11px; color: #fff; background: radial-gradient(ellipse 120% 160% at 20% 0%, #19d452 0%, #1fa557 100%); }
+
+  /* ---------- Reduced motion: static final state ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rkfs [data-step], .rkfs [data-step] .rkfs-tag, .rkfs [data-step] .rkfs-pill, .rkfs [data-step] .rkfs-line img { opacity: 1 !important; transform: none !important; scale: 1 !important; transition: none !important; }
+    .rkfs [data-step="seen"] { opacity: 0.5 !important; }
+    .rkfs .rkfs-card { opacity: 0.4; }
+    .rkfs .rkfs-auto, .rkfs .rkfs-done { opacity: 0.25 !important; }
+    .rkfs .rkfs-notify { opacity: 1; transform: none; }
+    .rkfs *, .rkfs *::before, .rkfs *::after { animation: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Features · 1.7 AI Follow-up (story): turn on → AI follows up → agent notified ===== -->
+<div class="rkfs" data-rkfs role="img" aria-label="A salesperson turns on Auto follow-up, Rakan AI follows up on a quiet quote until the customer agrees to go ahead, and Ahmad is notified to take over">
+  <div class="rkfs-stage">
+    <div class="rkfs-abs" style="left:155px;top:154px;width:210px;height:180px"><img src="assets/hub-glow.svg" alt=""></div>
+    <div class="rkfs-abs" style="left:94.87px;top:102.46px;width:330.254px;height:283.075px"><img src="assets/hub-glow-1.svg" alt=""></div>
+    <div class="rkfs-abs" style="left:119.37px;top:123.46px;width:281.254px;height:241.075px"><img src="assets/hub-glow-2.svg" alt=""></div>
+    <div class="rkfs-abs" style="left:-120px;top:224px;width:372.724px;height:236.901px"><img src="assets/lower-glow.svg" alt=""></div>
+    <div class="rkfs-abs" style="left:160px;top:-116px;width:372.724px;height:236.901px"><img src="assets/lower-glow.svg" alt=""></div>
+
+    <div class="rkfs-abs rkfs-card">
+      <div class="rkfs-chat">
+        <div class="rkfs-head">
+          <div class="rkfs-mt" data-initials></div>
+          <div><b data-name></b><span data-company></span></div>
+        </div>
+        <div class="rkfs-msgs" data-msgs></div>
+      </div>
+    </div>
+
+    <div class="rkfs-abs rkfs-auto" data-step="auto">
+      <img class="rkfs-spin" src="assets/loading.svg" alt="">
+      <span>Auto follow-up</span>
+    </div>
+
+    <div class="rkfs-abs rkfs-done" data-step="done">
+      <img src="assets/check.svg" alt="">
+      <span>Lead re-engaged</span>
+    </div>
+
+    <!-- Act 1: turn it on -->
+    <div class="rkfs-abs rkfs-sheet rkfs-setup" data-setup>
+      <div>
+        <div class="rkfs-sethead">
+          <div class="rkfs-tile"><img src="assets/sparkle-white.svg" alt=""></div>
+          <div><b>Auto follow-up</b><span>Rakan AI chases quiet leads for you</span></div>
+          <div class="rkfs-switch" data-switch></div>
+        </div>
+        <div class="rkfs-setrows">
+          <div class="rkfs-setrow"><span>Follow up after</span><div class="rkfs-chip">2 days, no reply</div></div>
+          <div class="rkfs-setrow"><span>On reply, notify</span><div class="rkfs-chip has-photo"><img src="assets/avatar-ahmad.jpg" alt="">Ahmad Faizal</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rkfs-abs rkfs-cursor" data-cursor><img src="assets/cursor.svg" alt=""></div>
+
+    <!-- Act 3: tell the salesperson -->
+    <div class="rkfs-abs rkfs-sheet rkfs-notify" data-notify>
+      <div>
+        <div class="rkfs-nottop">
+          <div class="rkfs-tile"><img src="assets/sparkle-white.svg" alt=""></div>
+          <b>Rakan AI</b><span>now</span>
+        </div>
+        <div class="rkfs-notmain">
+          <div class="rkfs-notav"><img src="assets/avatar-ahmad.jpg" alt=""><div class="rkfs-bell"><img src="assets/bell.svg" alt=""></div></div>
+          <div class="rkfs-nottext"><b>Mei Ting replied</b><span>Ready to go ahead. Over to you, Ahmad.</span></div>
+        </div>
+        <div class="rkfs-open">Open chat</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkfs]');
+  if (!root) return;
+  const stage = root.querySelector('.rkfs-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 407;
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const contact = { initials: 'MT', name: 'Mei Ting', company: 'Acme Corp' };
+  const quote = { text: "Here's your quote.", meta: 'Day 0 · Seen' };
+  const silence = '2 days, no reply';
+  const followUps = [                       // sent by Rakan AI, one after another
+    { text: 'Any questions on the quote?',       day: 'Day 2' },
+    { text: 'Happy to add free onboarding too.', day: 'Day 4' },
+  ];
+  const reply = { text: "Yes, let's go ahead!", day: 'Day 5' };
+
+  root.querySelector('[data-initials]').textContent = contact.initials;
+  root.querySelector('[data-name]').textContent = contact.name;
+  root.querySelector('[data-company]').textContent = contact.company;
+
+  const ticks = '<img class="rkfs-ticks" src="assets/ticks.svg" alt="">';
+  const line = '<div class="rkfs-line"><img src="assets/line.svg" alt=""></div>';
+  root.querySelector('[data-msgs]').innerHTML = `
+    <div class="rkfs-row" data-step="seen"><div class="rkfs-bubble"><p></p><div class="rkfs-meta"><span>${quote.meta}</span>${ticks}</div></div></div>
+    <div class="rkfs-gap" data-step="gap">${line}<div class="rkfs-pill"><img src="assets/clock.svg" alt=""><span>${silence}</span></div>${line}</div>
+    ${followUps.map((f, i) => `
+    <div class="rkfs-row" data-step="ai${i}"><div class="rkfs-bubble"><p></p>
+      <div class="rkfs-meta is-split"><div class="rkfs-tag"><img src="assets/sparkle.svg" alt="">Rakan AI</div><div><span>${f.day}</span>${ticks}</div></div></div></div>`).join('')}
+    <div class="rkfs-row is-in" data-step="reply"><div class="rkfs-bubble rkfs-reply"><p></p><div class="rkfs-meta"><span>${reply.day}</span></div></div></div>`;
+  // message text via textContent so apostrophes and the like stay plain text
+  const texts = [quote.text, ...followUps.map((f) => f.text), reply.text];
+  root.querySelectorAll('[data-msgs] .rkfs-bubble > p').forEach((p, i) => { p.textContent = texts[i]; });
+
+  const step = (name) => root.querySelector(`[data-step="${name}"]`);
+  const steps = [...root.querySelectorAll('[data-step]')];
+
+  let timers = [], running = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const on = (name) => step(name).classList.add('is-on');
+  const setup = root.querySelector('[data-setup]');
+  const cursor = root.querySelector('[data-cursor]');
+  const notify = root.querySelector('[data-notify]');
+  const CURSOR_FROM = 'translate(372px, 330px)';
+
+  // Glide the cursor onto the toggle (measured, so it survives copy changes)
+  function aimCursor() {
+    const scale = root.getBoundingClientRect().width / DESIGN_W;
+    const box = stage.getBoundingClientRect(), sw = root.querySelector('[data-switch]').getBoundingClientRect();
+    const x = (sw.left + sw.width / 2 - box.left) / scale, y = (sw.top + sw.height / 2 - box.top) / scale;
+    cursor.style.transform = `translate(${x}px, ${y}px)`;
+  }
+  function press() {
+    cursor.firstElementChild.animate([{ transform: 'none' }, { transform: 'scale(0.78)' }, { transform: 'none' }], { duration: 260, easing: 'ease-out' });
+    setup.classList.add('is-active');
+  }
+
+  // Act 1: toggle on → Act 2: quote, silence, AI follows up, customer replies → Act 3: agent notified
+  function cycle() {
+    if (!running) return;
+    let t = 0;
+    root.classList.add('is-dim');
+    later(t += 100, () => setup.classList.add('is-on'));
+    later(t += 500, () => cursor.classList.add('is-on'));
+    later(t += 100, aimCursor);
+    later(t += 1050, press);
+    later(t += 1250, () => { cursor.classList.remove('is-on'); setup.classList.add('is-gone'); root.classList.remove('is-dim'); });
+    later(t += 300, () => on('auto'));
+    later(t += 400, () => on('seen'));
+    later(t += 900, () => on('gap'));
+    followUps.forEach((_, i) => later(t += (i ? 1300 : 1500), () => on(`ai${i}`)));
+    later(t += 1500, () => on('reply'));
+    later(t += 600, () => on('done'));
+    later(t += 1500, () => { root.classList.add('is-dim'); notify.classList.add('is-on'); });
+    later(t += 3600, clear);
+    later(t += 700, cycle);
+  }
+
+  function clear() {
+    steps.forEach((el) => el.classList.remove('is-on'));
+    root.classList.remove('is-dim');
+    notify.classList.remove('is-on');
+    setup.classList.remove('is-on', 'is-gone', 'is-active');
+    cursor.classList.remove('is-on');
+    cursor.style.transform = CURSOR_FROM;
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    root.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    clear();
+  }
+
+  function start() {
+    if (reduce.matches || running) return;
+    running = true;
+    root.classList.add('is-live');
+    later(400, cycle);
+  }
+  function stop() { running = false; root.classList.remove('is-live'); reset(); }
+
+  reset();
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+})();
+</script>
+</body>
+</html>

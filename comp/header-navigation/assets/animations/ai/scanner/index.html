@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Capabilities – Name card scanner</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkns-scan { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkns-scan ---------- */
+  .rkns-scan {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 700 / 405;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #010a05;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkns-scan * { box-sizing: border-box; margin: 0; }
+  .rkns-scan img { display: block; max-width: none; }
+  .rkns-stage { position: absolute; left: 0; top: 0; width: 700px; height: 405px; transform-origin: 0 0; transform: scale(var(--s, 1)); overflow: hidden; }
+  .rkns-abs { position: absolute; }
+  .rkns-abs > img { width: 100%; height: 100%; }
+  .rkns-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkns-scan.is-out .rkns-ui { opacity: 0; }
+  .rkns-scan.is-snap *, .rkns-scan.is-snap *::before, .rkns-scan.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Contacts phone ---------- */
+  .rkns-glass { left: 385.21px; top: 54.84px; width: 245.41px; height: 394.17px; border-radius: 20px; background: rgba(255,255,255,0.45); }
+  .rkns-contacts { left: 371px; top: 52px; width: 272.89px; height: 574.2px; }
+  .rkns-total { left: 494px; top: 122px; width: 23.6px; height: 13px; background: #f1f2f6; font-weight: 500; font-size: 9px; line-height: 13px; letter-spacing: -0.1px; color: #09614d; }
+  /* Rows below the new contact: they sit one row up, then slide down to make room */
+  .rkns-rows { left: 391.2px; top: 305.4px; width: 214.4px; height: 321px; background: url(assets/contacts.png) -20.2px -253.4px / 272.89px 574.2px no-repeat #fff; transform: translateY(-45.85px); transition: transform 560ms var(--ease-in-out); }
+  .rkns-rows.on { transform: none; }
+  .rkns-alpha { left: 605.4px; top: 148.5px; width: 16px; height: 16px; border-radius: 50%; border: 1px solid #23b750; opacity: 0; pointer-events: none; }
+
+  /* ---------- Scanner phone ---------- */
+  .rkns-phone { left: 145px; top: 20px; width: 254px; height: 447px; }
+  .rkns-title { left: 191px; top: 35.87px; width: 162.26px; text-align: center; font-weight: 600; font-size: 13.64px; line-height: 19.09px; letter-spacing: -0.34px; color: #fff; }
+  .rkns-card { left: 152px; top: 170px; width: 239.98px; height: 164.4px; }
+  .rkns-shade { left: 161px; top: 171.5px; width: 221.6px; height: 131.07px; border-radius: 5px; overflow: hidden; background: rgba(0,0,0,0.4); }
+  .rkns-trail { position: absolute; left: 4px; top: 0; width: 214.18px; height: 64px; background: linear-gradient(#fff, rgba(255,255,255,0)); transform-origin: 50% 0; }
+  .rkns-line { left: 155px; top: 171.5px; width: 233.14px; height: 0.8px; border-radius: 20px; background: #fff; }
+  .rkns-status { left: 183.29px; top: 226.57px; width: 177.61px; text-align: center; font-weight: 600; font-size: 13.64px; line-height: 19.09px; letter-spacing: -0.34px; color: #fff; }
+
+  /* ---------- New contact ---------- */
+  .rkns-row { left: 377px; top: 259px; width: 261px; height: 54px; border-radius: 8px; border: 2px solid #ededed; overflow: hidden; background: #fff;
+    box-shadow: 0 22px 22px rgba(0,0,0,0.09), 0 6px 12px rgba(0,0,0,0.1); }
+  .rkns-row > img { position: absolute; left: -29.2px; top: -272px; width: 352.8px; height: 738px; }
+
+  /* ---------- Sequence states ---------- */
+  .rkns-slide { opacity: 0; transform: translateY(150px) rotate(-7deg) scale(0.9); transition: opacity 300ms var(--ease-out), transform 860ms var(--ease-out); }
+  .rkns-slide.on { opacity: 1; transform: none; }
+  .rkns-lock { opacity: 0; transform: scale(var(--from)); transition: opacity 220ms var(--ease-out), transform 520ms var(--ease-back); }
+  .rkns-lock.on { opacity: 1; transform: none; }
+  .rkns-fade { opacity: 0; transition: opacity 320ms var(--ease-out); }
+  .rkns-fade.on { opacity: 1; }
+  .rkns-fade.done { opacity: 0; }
+  .rkns-dots::after { content: ""; animation: rkns-dots 900ms steps(1) infinite; }
+  @keyframes rkns-dots { 0% { content: "."; } 33% { content: ".."; } 66% { content: "..."; } }
+  .rkns-landed { opacity: 0; }
+  .rkns-landed.on { opacity: 1; }
+
+  /* ---------- Idle ---------- */
+  .rkns-scan.is-idle .rkns-float { animation: rkns-float 3.6s ease-in-out infinite alternate; }
+  @keyframes rkns-float { from { translate: 0 -2px; } to { translate: 0 2px; } }
+  .rkns-scan.is-idle .rkns-pulse { animation: rkns-pulse 2.8s ease-in-out infinite; }
+  @keyframes rkns-pulse { 0%, 60%, 100% { scale: 1; } 30% { scale: 1.022; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkns-scan *, .rkns-scan *::before, .rkns-scan *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 4 · 4.4 AI name card scanner ===== -->
+<div class="rkns-scan" data-rkns-scan role="img" aria-label="A name card is placed in the scanner, AI reads it, and Amelia Wong is added to the contacts list as a new contact">
+  <div class="rkns-stage">
+    <div class="rkns-abs" style="left:1.34px;top:1.4px;width:697.85px;height:405px"><img src="assets/bg.svg" alt=""></div>
+    <div class="rkns-abs" style="left:342.1px;top:68.1px;width:391px;height:397.3px"><img src="assets/glow1.svg" alt=""></div>
+    <div class="rkns-abs" style="left:71.5px;top:-23.9px;width:405.7px;height:602.6px"><img src="assets/glow2.svg" alt=""></div>
+    <div class="rkns-abs" style="left:116.24px;top:135.61px;width:152.04px;height:152.04px"><img src="assets/ring1.svg" alt=""></div>
+    <div class="rkns-abs" style="left:27.96px;top:47.34px;width:328.6px;height:328.6px"><img src="assets/ring2.svg" alt=""></div>
+    <div class="rkns-abs" style="left:-59.04px;top:-39.66px;width:502.6px;height:502.6px"><img src="assets/ring3.svg" alt=""></div>
+    <div class="rkns-abs" style="left:-141.88px;top:-122.5px;width:668.3px;height:668.3px"><img src="assets/ring4.svg" alt=""></div>
+    <div class="rkns-abs" style="left:-223.24px;top:-204.6px;width:832px;height:833px"><img src="assets/ring5.svg" alt=""></div>
+    <div class="rkns-abs" style="left:-305.24px;top:-286.6px;width:996px;height:997px"><img src="assets/ring6.svg" alt=""></div>
+
+    <div class="rkns-ui">
+      <div class="rkns-abs" style="left:.76px;top:1.4px;width:699px;height:405px">
+        <div class="rkns-abs rkns-glass"></div>
+        <div class="rkns-abs rkns-contacts"><img src="assets/contacts.png" alt=""></div>
+        <div class="rkns-abs rkns-total" data-total></div>
+        <div class="rkns-abs rkns-rows" data-rows></div>
+        <div class="rkns-abs rkns-alpha" data-alpha></div>
+
+        <div class="rkns-abs rkns-phone"><img src="assets/phone.svg" alt=""></div>
+        <div class="rkns-abs rkns-title" data-f="title"></div>
+
+        <div class="rkns-abs rkns-slide" data-card style="left:0;top:0;width:699px;height:405px;pointer-events:none">
+          <div class="rkns-abs rkns-card"><img src="assets/namecard.png" alt=""></div>
+        </div>
+        <div class="rkns-abs rkns-shade rkns-fade" data-shade><div class="rkns-trail" data-trail></div></div>
+        <div class="rkns-abs rkns-status rkns-fade" data-status><span data-f="status"></span><span class="rkns-dots"></span></div>
+        <div class="rkns-abs rkns-line rkns-fade" data-line></div>
+
+        <div class="rkns-abs rkns-lock" data-lock-l style="--from:1.16;left:158px;top:168px;width:43px;height:138px;transform-origin:100% 50%"><div class="rkns-abs rkns-pulse" style="inset:0"><img src="assets/bracket-l.svg" alt="" style="width:100%;height:100%"></div></div>
+        <div class="rkns-abs rkns-lock" data-lock-r style="--from:1.16;left:344px;top:168px;width:43px;height:138px;transform-origin:0 50%"><div class="rkns-abs rkns-pulse" style="inset:0"><img src="assets/bracket-r.svg" alt="" style="width:100%;height:100%;transform:scaleX(-1)"></div></div>
+
+        <div class="rkns-abs rkns-landed" data-row style="left:0;top:0;width:699px;height:405px;pointer-events:none">
+          <div class="rkns-abs rkns-float" style="inset:0">
+            <div class="rkns-abs rkns-row" data-row-card><img src="assets/contacts.png" alt=""></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkns-scan]');
+  if (!root) return;
+  const stage = root.querySelector('.rkns-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 700;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  const copy = { title: 'Processing card', status: 'Analyzing 1 card' };
+  const totalContacts = 1531;  // shown once the scanned contact is saved
+  root.querySelectorAll('[data-f]').forEach((el) => { el.textContent = copy[el.dataset.f]; });
+
+  const $ = (s) => root.querySelector(s);
+  const on = (s) => () => $(s).classList.add('on');
+  const done = (s) => () => $(s).classList.add('done');
+  const setTotal = (n) => { $('[data-total]').textContent = n.toLocaleString('en-US'); };
+  let timers = [], anims = [], playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const fx = (el, frames, opts) => { const a = el.animate(frames, { fill: 'both', ...opts }); anims.push(a); return a; };
+  const OUT = 'cubic-bezier(0.23,1,0.32,1)', INOUT = 'cubic-bezier(0.77,0,0.175,1)';
+
+  // Line sweeps down, then back up, with the light trailing behind it
+  const SWEEP = 131, SCAN_MS = 2000;
+  const scan = () => {
+    fx($('[data-line]'), [{ transform: 'translateY(0)' }, { transform: `translateY(${SWEEP}px)` }, { transform: 'translateY(0)' }], { duration: SCAN_MS, easing: 'ease-in-out' });
+    fx($('[data-trail]'), [
+      { transform: 'translateY(0) scaleY(-1)' },
+      { transform: `translateY(${SWEEP}px) scaleY(-1)`, offset: 0.5 },
+      { transform: `translateY(${SWEEP}px) scaleY(1)`, offset: 0.501 },
+      { transform: 'translateY(0) scaleY(1)' },
+    ], { duration: SCAN_MS, easing: 'ease-in-out' });
+  };
+  // The contact lifts off the card and flies across into the list
+  const fly = () => {
+    fx($('[data-row-card]'), [
+      { transform: 'translate(-122px, -28px) scale(0.56) rotate(-3deg)', opacity: 0, boxShadow: '0 40px 40px rgba(0,0,0,0.3)' },
+      { transform: 'translate(-92px, -44px) scale(0.86) rotate(-2.5deg)', opacity: 1, offset: 0.26, boxShadow: '0 40px 40px rgba(0,0,0,0.3)' },
+      { transform: 'translate(0, -8px) scale(1.05) rotate(1.5deg)', opacity: 1, offset: 0.78, boxShadow: '0 40px 40px rgba(0,0,0,0.26)' },
+      { transform: 'none', opacity: 1, boxShadow: '0 22px 22px rgba(0,0,0,0.09), 0 6px 12px rgba(0,0,0,0.1)' },
+    ], { duration: 1050, easing: INOUT });
+  };
+  const land = () => {
+    fx($('[data-total]'), [{ transform: 'scale(1)' }, { transform: 'scale(1.4)', offset: 0.4 }, { transform: 'scale(1)' }], { duration: 440, easing: OUT });
+    fx($('[data-alpha]'), [{ opacity: 0.9, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.8)' }], { duration: 760, easing: OUT });
+  };
+
+  // ---------- The sequence: [time ms, state change, motion-only effect] ----------
+  const steps = [
+    [200,  on('[data-card]')],
+    [950,  on('[data-lock-l]')],
+    [950,  on('[data-lock-r]')],
+    [1400, on('[data-shade]')],
+    [1400, on('[data-status]')],
+    [1400, on('[data-line]'), scan],
+    [3420, done('[data-line]')],
+    [3460, on('[data-row]'), fly],
+    [3960, on('[data-rows]')],
+    [4500, () => setTotal(totalContacts), land],
+    [4650, done('[data-shade]')],
+    [4650, done('[data-status]')],
+  ];
+  const END = 5400;
+
+  function setStart() { root.querySelectorAll('.on, .done').forEach((el) => el.classList.remove('on', 'done')); setTotal(totalContacts - 1); }
+  function setFinal() { steps.forEach(([, fn]) => fn && fn()); }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; anims.forEach((a) => a.cancel()); anims = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn, effect]) => later(t, () => { fn && fn(); effect && effect(); }));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out', 'is-idle'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

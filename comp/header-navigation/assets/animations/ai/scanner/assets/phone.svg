@@ -1,0 +1,18 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="254" height="447" viewBox="0 0 254 447" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Sidebar (RakanSales Prototype)">
+<g clip-path="url(#clip0_0_10)">
+<rect x="6" y="6" width="242" height="435" rx="20" fill="black" fill-opacity="0.6"/>
+<g id="Container">
+</g>
+<g id="Placeholder for Container">
+</g>
+<path id="Union" d="M33.502 20.2783C33.8731 19.9074 34.4745 19.9074 34.8457 20.2783C35.2169 20.6495 35.2169 21.2518 34.8457 21.623L29.4062 27.0615L34.7217 32.377C35.0929 32.7482 35.0929 33.3505 34.7217 33.7217C34.3505 34.0929 33.7482 34.0929 33.377 33.7217L28.0615 28.4062L22.7471 33.7217C22.3758 34.0928 21.7735 34.0929 21.4023 33.7217C21.0313 33.3505 21.0313 32.7481 21.4023 32.377L26.7168 27.0615L21.2783 21.623C20.9071 21.2518 20.9071 20.6495 21.2783 20.2783C21.6495 19.9071 22.2518 19.9071 22.623 20.2783L28.0615 25.7168L33.502 20.2783Z" fill="white"/>
+</g>
+<rect x="3" y="3" width="248" height="441" rx="23" stroke="white" stroke-opacity="0.33" stroke-width="6"/>
+</g>
+<defs>
+<clipPath id="clip0_0_10">
+<rect x="6" y="6" width="242" height="435" rx="20" fill="white"/>
+</clipPath>
+</defs>
+</svg>

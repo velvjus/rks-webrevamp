@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity – Pipeline continuity</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkp-pipeline { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkp-pipeline ---------- */
+  .rkp-pipeline {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkp-pipeline * { box-sizing: border-box; margin: 0; }
+  .rkp-pipeline img { display: block; max-width: none; }
+  .rkp-stage { position: absolute; left: 0; top: 0; width: 300px; height: 200px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkp-abs { position: absolute; }
+  .rkp-abs > img { width: 100%; height: 100%; }
+  .rkp-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkp-pipeline.is-out .rkp-ui { opacity: 0; }
+  .rkp-pipeline.is-snap *, .rkp-pipeline.is-snap *::before, .rkp-pipeline.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Deal card, authored at board size (1x) ---------- */
+  .rkp-card { position: relative; width: 54.405px; height: 34.255px; padding: 4.045px; overflow: hidden; border-radius: 3.034px; background: #fff; border: 0.253px solid #e5e7eb; }
+  .rkp-card .rkp-nm { position: relative; padding-right: 5.057px; font-weight: 600; font-size: 4.05px; line-height: 6.068px; color: #181d27; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rkp-card .rkp-pr { position: relative; display: flex; gap: 1.011px; align-items: center; font-size: 3.54px; line-height: 5.057px; white-space: nowrap; }
+  .rkp-card .rkp-pr b { font-weight: 500; color: #414651; }
+  .rkp-card .rkp-pr span { color: #535862; }
+  .rkp-card .rkp-pr img { width: 2.781px; height: 4.551px; }
+  .rkp-card .rkp-as { position: relative; height: 11.418px; margin-top: 1.343px; }
+  .rkp-card .rkp-as img { position: absolute; left: 0; top: 0; width: 12.09px; height: 12.09px; border-radius: 50%; border: 0.154px solid rgba(0,0,0,0.08); }
+  .rkp-card .rkp-as i { position: absolute; left: 16.78px; height: 2.015px; border-radius: 12.642px; background: #e5e7eb; opacity: 0.7; }
+
+  /* ---------- Board ---------- */
+  .rkp-board { left: 87.33px; top: 16.67px; padding: 8.06px; border-radius: 10.747px; background: rgba(255,255,255,0.12); }
+  .rkp-boardIn { position: relative; padding: 10.075px; border-radius: 8.06px; background: linear-gradient(204.38deg, #fff 46.08%, #c6deca 107.86%); }
+  .rkp-head { display: flex; gap: 4.03px; height: 10.747px; align-items: flex-start; margin-bottom: 9.403px; font-weight: 600; font-size: 7.771px; line-height: 11.101px; color: #000; white-space: nowrap; }
+  .rkp-bars { display: flex; gap: 1.059px; align-items: flex-end; height: 10.747px; padding-bottom: 1.2px; }
+  .rkp-bars i { width: 2.647px; border-radius: 2.015px; background: #23b750; }
+  .rkp-cols { display: flex; gap: 6.717px; width: 283.441px; }
+  .rkp-col { position: relative; flex: none; width: 65.823px; height: 134.332px; overflow: hidden; border-radius: 5.373px; background: #f8f9fa; }
+  .rkp-colHead { position: absolute; left: 6.72px; top: 6.7px; display: flex; gap: 3.358px; align-items: center; font-weight: 600; font-size: 5.709px; line-height: normal; color: #000; white-space: nowrap; }
+  .rkp-count { display: inline-block; padding: 0.672px 4.03px; border-radius: 8.06px; background: #e5e7eb; font-weight: 700; font-size: 4.231px; line-height: normal; color: #4b5563; }
+  .rkp-list { position: absolute; left: 5.37px; top: 19.48px; display: flex; flex-direction: column; gap: 3.358px; transition: transform 520ms var(--ease-out); }
+  .rkp-list.shift { transform: translateY(37.613px); }
+
+  /* ---------- Front "New" column ---------- */
+  .rkp-new { left: 70.01px; top: 53.41px; width: 96.147px; height: 196.219px; overflow: hidden; border-radius: 7.849px; background: #f8f9fa; border: 1px solid #cbeadc; }
+  .rkp-new .rkp-colHead { left: 7.81px; top: 7.79px; gap: 4.905px; font-size: 8.339px; }
+  .rkp-new .rkp-count { padding: 0.981px 5.887px; border-radius: 11.773px; font-size: 6.181px; }
+  .rkp-count.green { background: #dcfce7; color: #16a34a; }
+  .rkp-newList { position: absolute; left: 5.85px; top: 26.45px; width: 79.469px; transition: transform 560ms var(--ease-out); }
+  .rkp-newList.up { transform: translateY(-54.941px); }
+  .rkp-x146 { width: 79.469px; height: 50.036px; }
+  .rkp-x146 > .rkp-card { transform: scale(1.4607); transform-origin: 0 0; }
+
+  /* ---------- Dragged deal ---------- */
+  .rkp-drag {
+    position: absolute; left: 0; top: 0; width: 54.405px; height: 34.255px;
+    transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) translate(-50%, -50%) rotate(calc(var(--r) * 1deg)) scale(var(--k));
+    transition: transform 560ms var(--ease-out), opacity 400ms var(--ease-out);
+  }
+  .rkp-drag.travel { transition: transform 900ms var(--ease-in-out); }
+  .rkp-dragIn { position: absolute; inset: 0; }
+  .rkp-drag .rkp-card { position: absolute; inset: 0; transition: border-color 300ms ease, box-shadow 400ms ease; }
+  .rkp-drag .rkp-cardGlow { position: absolute; left: -6.31px; top: -67.36px; width: 109.24px; height: 109.24px; rotate: -6.46deg; opacity: 0; transition: opacity 400ms ease; }
+  .rkp-lifted { opacity: 0; transition: opacity 360ms var(--ease-out); }
+  .rkp-drag.lifted .rkp-lifted { opacity: 1; }
+  .rkp-drag.lifted .rkp-cardGlow, .rkp-drag.placed .rkp-cardGlow { opacity: 1; }
+  .rkp-drag.lifted .rkp-card, .rkp-drag.placed .rkp-card { border: 0.27px solid #54fac9; box-shadow: 0 11.8px 11.8px rgba(5,168,106,0.04), 0 3.1px 6.2px rgba(5,168,106,0.05); }
+  .rkp-glass { left: -4.67px; top: -4.44px; width: 63.746px; height: 43.128px; border-radius: 4.326px; background: rgba(255,255,255,0.12); rotate: -0.65deg; }
+  .rkp-outline { left: 1.71px; top: 1.13px; width: 50.98px; height: 32.282px; border-radius: 3.034px; border: 1.62px solid #54fac9; filter: blur(1.54px); rotate: -0.65deg; mix-blend-mode: color-burn; }
+  .rkp-drag.lifted .rkp-outline { opacity: 0.23; }
+  .rkp-trail { position: absolute; left: 27.2px; top: 17.13px; rotate: calc(var(--r) * -1deg); }
+  .rkp-trail img { position: absolute; }
+  .rkp-trail { opacity: 0; transition: opacity 300ms ease; }
+  .rkp-drag.moving .rkp-trail { opacity: 1; }
+
+  .rkp-count.bump { animation: rkp-bump 420ms var(--ease-out); }
+  @keyframes rkp-bump { 40% { scale: 1.45; } }
+
+  /* ---------- Sequence states ---------- */
+  .rkp-in { opacity: 0; transition: opacity 500ms var(--ease-out), transform 700ms var(--ease-out); }
+  .rkp-pipeline .rkp-in.on { opacity: 1; transform: none; }
+  .rkp-board.rkp-in { transform: translateY(8px); }
+  .rkp-new.rkp-in { transform: translateX(-16px); }
+  .rkp-swoosh { transition: translate 1400ms var(--ease-in-out); }
+  .rkp-pipeline.swept .rkp-swoosh { translate: 5px -3px; }
+
+  /* ---------- Idle ---------- */
+  .rkp-pipeline.is-idle .rkp-dragIn { animation: rkp-float 3.4s ease-in-out infinite alternate; }
+  @keyframes rkp-float { from { translate: 0 -0.9px; rotate: -0.6deg; } to { translate: 0 0.9px; rotate: 0.6deg; } }
+  .rkp-pipeline.is-idle [data-count="qualified"] { animation: rkp-pulse 3s ease-in-out infinite; }
+  @keyframes rkp-pulse { 0%, 70%, 100% { scale: 1; } 35% { scale: 1.3; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkp-pipeline *, .rkp-pipeline *::before, .rkp-pipeline *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 3 · 3.4 Pipeline continuity ===== -->
+<div class="rkp-pipeline" data-rkp-pipeline role="img" aria-label="A deal card is lifted out of the New column of the sales pipeline and dropped into Qualified, and the column counts update">
+  <div class="rkp-stage">
+    <div class="rkp-ui">
+      <div class="rkp-abs rkp-swoosh" style="left:-134.5px;top:-37.65px;width:334.424px;height:237.829px"><img src="assets/swoosh1.svg" alt=""></div>
+      <div class="rkp-abs rkp-swoosh" style="left:-42.03px;top:102.19px;width:334.424px;height:237.829px;rotate:-30.41deg"><img src="assets/swoosh2.svg" alt=""></div>
+      <div class="rkp-abs" style="left:-10.36px;top:-1px;width:202px;height:202px"><img src="assets/mint-glow.svg" alt=""></div>
+      <div class="rkp-abs" style="left:86.33px;top:-34.63px;width:339.646px;height:339.646px"><img src="assets/mint-glow-big.svg" alt=""></div>
+
+      <!-- Sales pipeline board -->
+      <div class="rkp-abs rkp-board rkp-in" data-board>
+        <div class="rkp-boardIn">
+          <div class="rkp-head"><span class="rkp-bars"><i style="height:5.823px;background:none;border:0.529px solid #23b750"></i><i style="height:8.47px"></i><i style="height:4.764px;opacity:0.5"></i></span>Sales Pipeline</div>
+          <div class="rkp-cols" data-cols></div>
+          <div class="rkp-abs" style="left:53.58px;top:74.87px;width:236px;height:150px"><img src="assets/lower-glow-board.svg" alt=""></div>
+        </div>
+      </div>
+
+      <!-- Front "New" column -->
+      <div class="rkp-abs rkp-new rkp-in" data-newcol>
+        <div class="rkp-abs" style="left:-62.35px;top:-34.35px;width:198.181px;height:198.181px"><img src="assets/mint-glow-new.svg" alt=""></div>
+        <div class="rkp-colHead">New<span class="rkp-count green" data-count="new"></span></div>
+        <div class="rkp-newList" data-newlist></div>
+      </div>
+
+      <div class="rkp-abs" style="left:-74.45px;top:113.66px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+
+      <!-- The deal that moves -->
+      <div class="rkp-drag" data-drag>
+        <div class="rkp-dragIn">
+          <div class="rkp-trail">
+            <img src="assets/streak.svg" alt="" style="left:-73.44px;top:-18.81px;width:61.03px;height:28.13px">
+            <img src="assets/tick1.svg" alt="" style="left:-34.14px;top:-21.98px;width:8.973px;height:1.521px">
+            <img src="assets/tick2.svg" alt="" style="left:-42.58px;top:-20.24px;width:8.973px;height:1.521px">
+            <img src="assets/tick3.svg" alt="" style="left:-36.15px;top:12.12px;width:5.799px;height:1.152px">
+            <img src="assets/tick4.svg" alt="" style="left:-43.62px;top:8.46px;width:5.799px;height:1.152px">
+          </div>
+          <div class="rkp-abs rkp-glass rkp-lifted"></div>
+          <div class="rkp-card" data-dragcard></div>
+          <div class="rkp-abs rkp-outline rkp-lifted"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkp-pipeline]');
+  if (!root) return;
+  const stage = root.querySelector('.rkp-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 300;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  // `moving` is the deal that goes New -> Qualified. Column counts are totals (more cards than fit on screen).
+  const moving = { name: 'Ms. Rani Kumar', value: 'RM 300', item: 'Poster', avatar: 'av-rani.jpg' };
+  const newCol = { count: 3, deals: [{ name: 'Mr. Jake Goh', value: 'RM 400', item: 'Business Card', avatar: 'av-jake.jpg' }] };
+  const boardCols = [
+    { key: 'qualified', title: 'Qualified', count: 3, deals: [
+      { name: 'Mr. Ravi Pillai',  value: 'RM 700', item: 'Label',   avatar: 'av-ravi.jpg' },
+      { name: 'Mr. Idris Wong',   value: 'RM 450', item: 'Banner',  avatar: 'av-idris.jpg' },
+      { name: 'Miss Siti Mariam', value: 'RM 300', item: 'Sticker', avatar: 'av-siti.jpg' },
+    ] },
+    { key: 'proposal', title: 'Proposal', count: 7, deals: [
+      { name: 'Mrs. Mei Ling',  value: 'RM 600', item: 'Catalog',  avatar: 'av-meiling.jpg' },
+      { name: 'Kingston Low',   value: 'RM 60',  item: 'Postcard', avatar: 'av-kingston.jpg' },
+      { name: 'Ling',           value: 'RM 800', item: 'Menu',     avatar: 'av-ling.jpg' },
+    ] },
+  ];
+
+  // Drag poses: centre (x, y) in stage px, rotation r (deg), scale k relative to a board card
+  const POSE = {
+    slot:   { x: 116.59, y: 105.88, r: 0,    k: 1.4607 },  // sitting in the front New column
+    lifted: { x: 113,    y: 98,     r: 6.46, k: 1.8492 },  // picked up (the Figma pose's tilt and size)
+    placed: { x: 210.58, y: 91.61,  r: 0,    k: 1.06 },    // dropped at the top of Qualified
+  };
+
+  // ---------- Build markup from data ----------
+  const cardHTML = (d) => `
+    <p class="rkp-nm">${d.name}</p>
+    <div class="rkp-pr"><b>${d.value}</b><img src="assets/dot.svg" alt=""><span>${d.item}</span></div>
+    <div class="rkp-as"><img src="assets/${d.avatar}" alt=""><i style="top:4.76px;width:22.836px"></i><i style="top:8.79px;width:14.777px"></i></div>`;
+  root.querySelector('[data-cols]').innerHTML = '<div class="rkp-col" style="visibility:hidden"></div>' + boardCols.map((c) => `
+    <div class="rkp-col">
+      <div class="rkp-colHead">${c.title}<span class="rkp-count" data-count="${c.key}">${c.count}</span></div>
+      <div class="rkp-list" data-list="${c.key}">${c.deals.map((d) => `<div class="rkp-card">${cardHTML(d)}</div>`).join('')}</div>
+    </div>`).join('');
+  root.querySelector('[data-newlist]').innerHTML = `<div class="rkp-x146" style="margin-bottom:4.905px"></div>` +
+    newCol.deals.map((d) => `<div class="rkp-x146" style="margin-bottom:4.905px"><div class="rkp-card">${cardHTML(d)}</div></div>`).join('');
+  root.querySelector('[data-dragcard]').innerHTML = `<img class="rkp-cardGlow" src="assets/mint-glow-card.svg" alt="">` + cardHTML(moving);
+
+  const $ = (s) => root.querySelector(s);
+  const drag = $('[data-drag]');
+  const qualified = boardCols.find((c) => c.key === 'qualified');
+  let timers = [], playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+  function pose(p) { for (const [k, v] of Object.entries(POSE[p])) drag.style.setProperty('--' + k, v); }
+  function setCount(key, n) { const el = $(`[data-count="${key}"]`); el.textContent = n; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+
+  // ---------- The sequence: [time ms, action] ----------
+  const steps = [
+    [100,  () => $('[data-board]').classList.add('on')],
+    [400,  () => { $('[data-newcol]').classList.add('on'); drag.style.opacity = 1; }],
+    [1500, () => { drag.classList.add('lifted'); pose('lifted'); }],
+    [1750, () => setCount('new', newCol.count - 1)],
+    [1900, () => $('[data-newlist]').classList.add('up')],
+    [2200, () => { drag.classList.add('travel', 'moving'); root.classList.add('swept'); pose('placed'); }],
+    [2650, () => $('[data-list="qualified"]').classList.add('shift')],
+    [3100, () => { drag.classList.remove('travel', 'moving', 'lifted'); drag.classList.add('placed'); }],
+    [3250, () => setCount('qualified', qualified.count + 1)],
+  ];
+  const END = 3900;
+
+  function setStart() {
+    root.querySelectorAll('.on, .up, .shift, .bump').forEach((el) => el.classList.remove('on', 'up', 'shift', 'bump'));
+    root.classList.remove('swept');
+    drag.classList.remove('lifted', 'travel', 'moving', 'placed');
+    drag.style.opacity = 0;
+    pose('slot');
+    $('[data-count="new"]').textContent = newCol.count;
+    $('[data-count="qualified"]').textContent = qualified.count;
+  }
+  function setFinal() {
+    steps.forEach(([, fn]) => fn());
+    root.querySelectorAll('.bump').forEach((el) => el.classList.remove('bump'));
+  }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    steps.forEach(([t, fn]) => later(t, fn));
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

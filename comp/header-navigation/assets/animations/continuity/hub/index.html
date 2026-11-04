@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuity – Unified conversation hub</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rkh-hub { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rkh-hub ---------- */
+  .rkh-hub {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rkh-hub * { box-sizing: border-box; margin: 0; }
+  .rkh-hub img { display: block; max-width: none; }
+  .rkh-stage { position: absolute; left: 0; top: 0; width: 300px; height: 200px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rkh-abs { position: absolute; }
+  .rkh-abs > img { width: 100%; height: 100%; }
+  .rkh-ui { position: absolute; inset: 0; transition: opacity 260ms var(--ease-out); }
+  .rkh-hub.is-out .rkh-ui { opacity: 0; }
+  .rkh-hub.is-snap *, .rkh-hub.is-snap *::before, .rkh-hub.is-snap *::after { transition: none !important; animation: none !important; }
+
+  /* ---------- Message card (em-based, so one card scales by font-size) ---------- */
+  .rkh-msg {
+    position: absolute; width: 15.482em; font-size: 8.397px;
+    display: flex; flex-direction: column; overflow: hidden;
+    padding: 1.1429em 1.1429em 1.1429em 0.8572em;
+    border-radius: 0.9527em; background: #fafafa; border: 0.0714em solid #e5e5e5;
+  }
+  .rkh-row { position: relative; display: flex; gap: 1.1429em; align-items: flex-start; }
+  .rkh-who { flex: 1; display: flex; gap: 0.5714em; align-items: flex-start; min-width: 0; }
+  .rkh-av { position: relative; flex: none; width: 2.857em; height: 2.857em; border-radius: 50%; border: 0.0714em solid rgba(0,0,0,0.08); background: #d9d0e6; }
+  .rkh-av > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .rkh-av::after { content: ""; position: absolute; right: -0.0714em; bottom: -0.0714em; width: 0.714em; height: 0.714em; border-radius: 50%; background: #17b26a; border: 0.107em solid #fff; }
+  .rkh-txt { display: flex; flex-direction: column; gap: 0.143em; min-width: 0; }
+  .rkh-name { display: flex; gap: 0.2857em; align-items: center; font-weight: 600; font-size: 1em; line-height: 1.4286em; color: #181d27; white-space: nowrap; }
+  .rkh-name img { width: 1.1429em; height: 1.1429em; }
+  .rkh-line { font-size: 0.9039em; line-height: 1.3em; color: #525252; white-space: nowrap; }
+  .rkh-time { font-weight: 600; font-size: 0.8813em; line-height: 1.62em; color: #404040; white-space: nowrap; }
+  .rkh-badge {
+    position: absolute; right: 0.025em; top: 1.572em; min-width: 1.6em; text-align: center;
+    padding: 0.0714em 0.4286em; border-radius: 1.1429em; background: #f04438; color: #fff;
+    font-weight: 500; font-size: 0.8575em; line-height: 1.5em;
+  }
+  /* Ghost cards (placeholders fading into the background) */
+  .rkh-ghost { font-size: 7.009px; background: #f3f4f6; border: 0; border-radius: 0.9527em; }
+  .rkh-ghost .rkh-av { background: #f5f5f5; border-color: #e9eaeb; display: grid; place-items: center; }
+  .rkh-ghost .rkh-av > img { width: 60%; height: 60%; border-radius: 0; }
+  .rkh-ghost .rkh-av::after { display: none; }
+  .rkh-ghost .rkh-bar { width: 5.24em; height: 0.51em; margin-top: 0.46em; border-radius: 1em; background: #c0c0c0; opacity: 0.5; }
+  .rkh-ghost .rkh-badge { background: #9ca3af; }
+
+  .rkh-hani { left: 26.01px; top: 37.28px; font-size: 7.59px; background: #eaf7ef; border-color: #d0eed9; }
+  .rkh-afif { left: 20.71px; top: 118.5px; }
+  .rkh-jamesWrap {
+    left: 54.71px; top: 69.37px; width: 150px; padding: 8px; border-radius: 9px; background: rgba(255,255,255,0.12);
+    box-shadow: 0 117px 33px rgba(5,168,106,0), 0 75px 30px rgba(5,168,106,0.01), 0 42px 25px rgba(5,168,106,0.03), 0 19px 19px rgba(5,168,106,0.04), 0 5px 10px rgba(5,168,106,0.05);
+  }
+  .rkh-jamesWrap .rkh-msg { position: relative; width: 100%; }
+
+  /* ---------- Inbox filter pill + menu ---------- */
+  .rkh-pill { left: 232.74px; top: 29.24px; display: flex; translate: -50% 0; }
+  .rkh-pill [data-pill] { display: flex; }
+  .rkh-pill .rkh-seg1, .rkh-pill .rkh-seg2 { display: flex; align-items: center; height: 16.497px; background: #f6fcf8; border: 0.75px solid #23b750; }
+  .rkh-pill .rkh-seg1 { gap: 3px; padding: 1.5px 6px 1.5px 4.5px; border-radius: 12px 0 0 12px; }
+  .rkh-pill .rkh-seg2 { padding: 1.5px 3px 1.5px 2.25px; border-radius: 0 12px 12px 0; }
+  .rkh-pill .rkh-seg1 img { width: 9px; height: 9px; }
+  .rkh-pill .rkh-seg2 img { width: 12px; height: 12px; }
+  .rkh-pill span { font-weight: 500; font-size: 9px; line-height: 13.5px; color: #157432; white-space: nowrap; }
+  .rkh-menu {
+    left: 217.33px; top: 52.65px; width: 111.27px; padding: 2.225px 0;
+    background: #fff; border: 0.556px solid rgba(0,0,0,0.08); border-radius: 4.451px;
+    box-shadow: 0 142px 40px rgba(52,213,138,0), 0 91px 36px rgba(52,213,138,0.01), 0 51px 31px rgba(52,213,138,0.03), 0 23px 23px rgba(52,213,138,0.05), 0 6px 12px rgba(52,213,138,0.06);
+  }
+  .rkh-menuHead { display: flex; justify-content: space-between; align-items: center; padding: 4.451px 8.901px 2.225px; font-weight: 500; font-size: 6.676px; line-height: 10.014px; color: #414651; }
+  .rkh-menuHead img { width: 8.901px; height: 8.901px; }
+  .rkh-items { position: relative; }
+  .rkh-hl { position: absolute; left: 3.338px; right: 10.014px; top: 0.556px; height: 22.254px; border-radius: 3.338px; background: #eaf7ef; transition: transform 420ms var(--ease-in-out); }
+  .rkh-item { position: relative; padding: 0.556px 10.014px 0.556px 3.338px; }
+  .rkh-item span { display: block; padding: 4.451px; font-weight: 500; font-size: 8.901px; line-height: 13.352px; color: #181d27; white-space: nowrap; transition: color 300ms ease; }
+  .rkh-item.on span { color: #1a943e; }
+
+  /* ---------- Intro / state transitions ---------- */
+  .rkh-pop { opacity: 0; scale: 0.4; transition: opacity 360ms var(--ease-out), scale 560ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .rkh-pop.on { opacity: 1; scale: 1; }
+  .rkh-slide { opacity: 0; transform: translate(-14px, 8px); transition: opacity 420ms var(--ease-out), transform 640ms var(--ease-out), filter 400ms ease; }
+  .rkh-slide.on { opacity: 1; transform: none; }
+  .rkh-jamesWrap.rkh-slide { transform: translateY(10px) scale(0.9); }
+  .rkh-jamesWrap.rkh-slide.on { transform: none; }
+  .rkh-ghostIn { opacity: 0; transition: opacity 900ms var(--ease-out); }
+  .rkh-ghostIn.on { opacity: var(--o); }
+  .rkh-menu { opacity: 0; transform: translateY(-6px) scaleY(0.85); transform-origin: 50% 0; transition: opacity 300ms var(--ease-out), transform 420ms var(--ease-out); }
+  .rkh-menu.on { opacity: 1; transform: none; }
+  .rkh-slide.dim { opacity: 0.35; filter: saturate(0.4); }
+  .rkh-badge.bump { animation: rkh-bump 360ms var(--ease-out); }
+  @keyframes rkh-bump { 40% { scale: 1.35; } }
+  .rkh-icon.ping { animation: rkh-ping 520ms var(--ease-out); }
+  @keyframes rkh-ping { 35% { scale: 1.18; } }
+
+  /* ---------- Idle: gentle float + badge pulse after the sequence ---------- */
+  .rkh-hub.is-idle .rkh-float { animation: rkh-float var(--d, 4s) ease-in-out var(--dl, 0s) infinite alternate; }
+  @keyframes rkh-float { from { translate: 0 -1.6px; } to { translate: 0 1.6px; } }
+  .rkh-hub.is-idle .rkh-pulse { animation: rkh-pulse 2.4s ease-in-out infinite; }
+  @keyframes rkh-pulse { 0%, 60%, 100% { scale: 1; } 30% { scale: 1.22; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rkh-hub *, .rkh-hub *::before, .rkh-hub *::after { animation: none !important; transition-property: opacity !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Section 3 · 3.1 Unified conversation hub ===== -->
+<div class="rkh-hub" data-rkh-hub role="img" aria-label="Messages from WhatsApp, Messenger and email arrive in one shared inbox, which can be filtered by each teammate's inbox">
+  <div class="rkh-stage">
+    <div class="rkh-ui">
+      <!-- Ghost cards -->
+      <div class="rkh-msg rkh-ghost rkh-ghostIn" data-step style="left:20px;top:10.22px;--o:0.2">
+        <div class="rkh-row"><div class="rkh-who"><div class="rkh-av"><img src="assets/user-01.svg" alt=""></div><div class="rkh-txt"><div class="rkh-name">Divya<img src="assets/linkedin.svg" alt=""></div><div class="rkh-bar"></div></div></div><span class="rkh-time">1h</span><span class="rkh-badge">2</span></div>
+      </div>
+
+      <div class="rkh-abs" style="left:-77.98px;top:-58.44px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+      <div class="rkh-abs" style="left:165.31px;top:51.47px;width:202px;height:202px"><img src="assets/mint-glow.svg" alt=""></div>
+
+      <!-- Channel icons -->
+      <div class="rkh-abs rkh-float" style="left:4.89px;top:99.57px;width:31.638px;height:31.638px;--d:3.6s"><div class="rkh-pop rkh-icon" data-icon="tiktok" style="width:100%;height:100%"><img src="assets/tiktok.svg" alt="" style="width:100%;height:100%"></div></div>
+      <div class="rkh-abs rkh-float" style="left:133.79px;top:17.06px;width:42.619px;height:42.619px;--d:4.4s;--dl:-1.2s"><div class="rkh-pop rkh-icon" data-icon="telegram" style="width:100%;height:100%"><img src="assets/telegram.svg" alt="" style="width:100%;height:100%"></div></div>
+      <div class="rkh-abs rkh-float" style="left:161.23px;top:143.61px;width:42.137px;height:42.137px;--d:4s;--dl:-2.4s"><div class="rkh-pop rkh-icon" data-icon="gmail" style="width:100%;height:100%"><img src="assets/gmail.svg" alt="" style="width:100%;height:100%"></div></div>
+
+      <div class="rkh-msg rkh-ghost rkh-ghostIn" data-step style="left:56.81px;top:154.7px;--o:0.1">
+        <div class="rkh-row"><div class="rkh-who"><div class="rkh-av"><img src="assets/user-01.svg" alt=""></div><div class="rkh-txt"><div class="rkh-name">Robert<img src="assets/instagram.svg" alt=""></div><div class="rkh-bar"></div></div></div><span class="rkh-time">1h</span><span class="rkh-badge">2</span></div>
+      </div>
+
+      <!-- Conversations (filled from the convos array) -->
+      <div class="rkh-msg rkh-hani rkh-slide" data-convo="hani"></div>
+      <div class="rkh-msg rkh-afif rkh-slide" data-convo="afif"></div>
+
+      <!-- Inbox filter -->
+      <div class="rkh-abs rkh-pill">
+        <div class="rkh-pop" data-pill>
+          <div class="rkh-seg1"><img src="assets/chat-circle.svg" alt=""><span data-pill-label>All inbox</span></div>
+          <div class="rkh-seg2"><img src="assets/chevron-down.svg" alt=""></div>
+        </div>
+      </div>
+      <div class="rkh-abs rkh-menu" data-menu>
+        <div class="rkh-menuHead">Inbox<img src="assets/refresh.svg" alt=""></div>
+        <div class="rkh-items"><div class="rkh-hl" data-hl></div></div>
+      </div>
+
+      <!-- Front conversation -->
+      <div class="rkh-abs rkh-jamesWrap rkh-slide" data-convo-wrap>
+        <div class="rkh-msg" data-convo="james"></div>
+      </div>
+
+      <div class="rkh-abs" style="left:188.96px;top:-20.71px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+      <div class="rkh-abs" style="left:-87.99px;top:99.57px;width:236px;height:150px"><img src="assets/lower-glow.svg" alt=""></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rkh-hub]');
+  if (!root) return;
+  const stage = root.querySelector('.rkh-stage');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const DESIGN_W = 300;
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content ----------
+  // inbox: which teammate's inbox the conversation belongs to (used by the filter beat)
+  const convos = {
+    hani:  { name: 'Hani',  channel: 'whatsapp.svg',  text: 'Like a 3m sofa?',      time: '5m', unread: 2, avatar: 'av-hani.jpg',  inbox: "Siti’s inbox" },
+    james: { name: 'James', channel: 'messenger.svg', text: 'Full kitchen set wo..', time: '5m', unread: 6, avatar: 'av-james.jpg', inbox: "Amy’s inbox" },
+    afif:  { name: 'Afif',  channel: 'mail.svg',      text: 'Sure, let’s do red!',  time: '5m', unread: 1, avatar: 'av-afif.jpg',  inbox: "Luke’s inbox" },
+  };
+  const inboxes = ['All inbox', 'Siti’s inbox', 'Amy’s inbox', 'Luke’s inbox'];
+  const arrivalOrder = [['afif', 'gmail'], ['hani', 'tiktok'], ['james', 'telegram']];
+
+  // ---------- Build markup from data ----------
+  for (const [key, c] of Object.entries(convos)) {
+    root.querySelector(`[data-convo="${key}"]`).innerHTML = `
+      <div class="rkh-row">
+        <div class="rkh-who">
+          <div class="rkh-av"><img src="assets/${c.avatar}" alt=""></div>
+          <div class="rkh-txt"><div class="rkh-name">${c.name}<img src="assets/${c.channel}" alt=""></div><div class="rkh-line">${c.text}</div></div>
+        </div>
+        <span class="rkh-time">${c.time}</span><span class="rkh-badge" data-badge>${c.unread}</span>
+      </div>`;
+  }
+  const items = root.querySelector('.rkh-items');
+  inboxes.forEach((label) => items.insertAdjacentHTML('beforeend', `<div class="rkh-item"><span>${label}</span></div>`));
+
+  const $ = (s) => root.querySelector(s);
+  const card = (k) => (k === 'james' ? $('[data-convo-wrap]') : $(`[data-convo="${k}"]`));
+  const badge = (k) => $(`[data-convo="${k}"] [data-badge]`);
+  const hl = $('[data-hl]'), pillLabel = $('[data-pill-label]');
+  const itemEls = [...root.querySelectorAll('.rkh-item')];
+
+  let timers = [], playing = false, played = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const replayAnim = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+
+  function countUp(k, at, step = 110) {
+    const el = badge(k), to = convos[k].unread;
+    for (let n = 1; n <= to; n++) later(at + (n - 1) * step, () => { el.textContent = n; replayAnim(el, 'bump'); });
+  }
+  function select(i) {
+    hl.style.transform = `translateY(${itemEls[i].offsetTop}px)`;
+    itemEls.forEach((el, j) => el.classList.toggle('on', j === i));
+    pillLabel.textContent = inboxes[i];
+    for (const k of Object.keys(convos)) card(k).classList.toggle('dim', i > 0 && convos[k].inbox !== inboxes[i]);
+  }
+
+  // ---------- The sequence: [time ms, action] ----------
+  const steps = [
+    [0,    () => root.querySelectorAll('.rkh-ghostIn').forEach((el) => el.classList.add('on'))],
+    [150,  () => $('[data-icon="telegram"]').classList.add('on')],
+    [280,  () => $('[data-icon="tiktok"]').classList.add('on')],
+    [410,  () => $('[data-icon="gmail"]').classList.add('on')],
+    ...arrivalOrder.flatMap(([k, icon], i) => {
+      const t = 800 + i * 650;
+      return [
+        [t,       () => replayAnim($(`[data-icon="${icon}"]`), 'ping')],
+        [t + 120, () => card(k).classList.add('on')],
+      ];
+    }),
+    [2500, () => $('[data-pill]').classList.add('on')],
+    [2750, () => $('[data-menu]').classList.add('on')],
+    [3500, () => select(1)],
+    [4400, () => select(2)],
+    [5300, () => select(3)],
+    [6200, () => select(0)],
+  ];
+  const END = 6800;
+  const BADGE_AT = { afif: 1100, hani: 1750, james: 2400 };
+
+  function setStart() {
+    root.querySelectorAll('.on, .dim, .bump, .ping').forEach((el) => el.classList.remove('on', 'dim', 'bump', 'ping'));
+    for (const k of Object.keys(convos)) badge(k).textContent = convos[k].unread;
+    select(0);
+  }
+  function setFinal() {
+    steps.forEach(([, fn]) => fn());
+    root.querySelectorAll('.bump, .ping').forEach((el) => el.classList.remove('bump', 'ping'));
+  }
+
+  function snap(fn) { root.classList.add('is-snap'); fn(); void root.offsetWidth; root.classList.remove('is-snap'); }
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+
+  function play() {
+    playing = true; played = true;
+    root.classList.remove('is-idle');
+    for (const k of Object.keys(convos)) badge(k).textContent = 0;
+    steps.forEach(([t, fn]) => later(t, fn));
+    for (const [k, t] of Object.entries(BADGE_AT)) countUp(k, t, convos[k].unread > 3 ? 90 : 160);
+    later(END, () => { playing = false; root.classList.add('is-idle'); });
+  }
+  function replay() {
+    if (playing || reduce.matches) return;
+    playing = true;
+    root.classList.add('is-out');
+    later(280, () => { clear(); snap(setStart); root.classList.remove('is-out'); play(); });
+  }
+  function stop() { clear(); playing = false; played = false; root.classList.remove('is-idle', 'is-out'); snap(setStart); }
+  function start() {
+    if (played) return;
+    if (reduce.matches) { played = true; snap(setFinal); return; }
+    play();
+  }
+
+  snap(setStart);
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+  root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') replay(); });
+  root.addEventListener('click', replay);
+})();
+</script>
+</body>
+</html>

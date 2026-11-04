@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features – 1.4 Omnichannel</title>
+<!-- ?embed strips the preview page chrome so the gallery / an iframe shows only the scene -->
+<script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add('embed');</script>
+<style>.embed, .embed body { overflow: hidden !important; } .embed body { padding: 0 !important; background: transparent !important; min-height: 0 !important; display: block !important; } .embed .rko { border-radius: 0; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Embed: everything below is scoped to .rko ---------- */
+  .rko {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Channel theme: swapped by data-channel on .rko */
+    --tint: hue-rotate(0deg);
+    --pulse: #19d452;
+    --glass: rgba(172,255,196,0.33);
+    --chat-bg: #f5ede2;
+    --out-bg: #eaf7ef;
+    --out-line: rgba(167,223,186,0.7);
+    position: relative;
+    width: 100%;
+    max-width: 814px;           /* 2× the design width */
+    aspect-ratio: 407 / 380;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fafafa;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rko[data-channel="telegram"] { --tint: hue-rotate(68deg); --pulse: #2aabee; --glass: rgba(170,222,250,0.4); --chat-bg: #dfeaf3; --out-bg: #dbf0fd; --out-line: rgba(140,205,243,0.8); }
+  .rko[data-channel="gmail"] { --tint: hue-rotate(-132deg) saturate(0.85); --pulse: #ea4335; --glass: rgba(120,124,130,0.3); --chat-bg: #f1f3f4; }
+  .rko * { box-sizing: border-box; margin: 0; }
+  .rko img { display: block; max-width: none; }
+  .rko-stage { position: absolute; left: 0; top: 0; width: 407px; height: 380px; transform-origin: 0 0; transform: scale(var(--s, 1)); }
+  .rko-abs { position: absolute; }
+  .rko-abs > img, .rko-fill > img { width: 100%; height: 100%; }
+  .rko-fill { position: absolute; }
+  .rko [data-tint] { filter: var(--tint); transition: filter 600ms var(--ease-out); }
+
+  /* Agent cards */
+  .rko-agent {
+    top: 18px; width: 114px; display: flex; gap: 7px; align-items: center; padding: 6px 8px 6px 6px;
+    background: #fff; border: 0.75px solid #ebebeb; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 62px 37px rgba(0,0,0,0.05), 0 28px 28px rgba(0,0,0,0.09), 0 7px 15px rgba(0,0,0,0.1);
+  }
+  .rko-av { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
+  .rko-av > div { position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.12);
+    box-shadow: 0 8.81px 5.42px rgba(0,0,0,0.05), 0 4.07px 4.07px rgba(0,0,0,0.09), 0 1px 2px rgba(0,0,0,0.1); }
+  .rko-av > div > div { position: absolute; left: 1.25px; top: 1px; width: 30px; height: 30px; padding: 1.58px; border-radius: 50%; background: rgba(188,188,188,0.33); }
+  .rko-av img.rko-photo { width: 26.845px; height: 26.845px; border-radius: 50%; object-fit: cover; }
+  .rko-av .rko-status { position: absolute; left: 24px; top: 23.5px; width: 8px; height: 8px; }
+  .rko-agent-text { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+  .rko-agent-text p { font-weight: 600; font-size: 8.5px; letter-spacing: -0.085px; color: #1f1f1f; white-space: nowrap; }
+  .rko-role { padding: 1.95px 5.2px; border-radius: 7.8px; border: 0.65px solid #e5e5e5; background: #f5f5f5; font-weight: 500; font-size: 6.76px; color: #525252; white-space: nowrap; }
+  .rko-role.is-assignee { background: #eaf7ef; border-color: #a7dfba; color: #1a943e; }
+
+  /* Channel hub: one card per channel, stacked and swapped */
+  .rko-glass { left: 103.62px; top: 93.5px; width: 199.77px; height: 56.77px; border-radius: 10px; overflow: hidden; background: var(--glass); transition: background-color 600ms var(--ease-out); }
+  .rko-wa {
+    position: absolute; left: 4.85px; top: 4.85px; width: 190.07px; height: 47.07px; display: flex; gap: 9px; align-items: center;
+    padding: 9px 14px 9px 12px; border: 1.212px solid #e9fff8; border-radius: 8px; overflow: hidden;
+    background: radial-gradient(ellipse 200% 95% at 17% 8%, #19d452 0%, #1fa557 100%);
+    opacity: 0; transform: translateY(70%); transition: opacity 450ms var(--ease-out), transform 600ms var(--ease-out);
+  }
+  .rko-wa.is-on { opacity: 1; transform: none; }
+  .rko-wa.is-past { transform: translateY(-70%); }
+  .rko-wa[data-ch="telegram"] { border-color: #e4f4fe; background: radial-gradient(ellipse 200% 95% at 17% 8%, #37bbf5 0%, #1c8fcb 100%); }
+  .rko-wa[data-ch="gmail"] { border-color: #5f6368; background: radial-gradient(ellipse 200% 95% at 17% 8%, #3c4043 0%, #1f2023 100%); }
+  .rko-wa > img { width: 26.654px; height: 26.654px; flex-shrink: 0; object-fit: contain; }
+  .rko-wa div { display: flex; flex-direction: column; gap: 2px; color: #fff; white-space: nowrap; }
+  .rko-wa b { font-weight: 700; font-size: 9.329px; }
+  .rko-wa span { font-weight: 500; font-size: 8px; }
+
+  /* Phone */
+  .rko-phone { left: 133.5px; top: 163.06px; width: 140px; height: 380px; border-radius: 20px; overflow: hidden; background: rgba(255,255,255,0.12);
+    box-shadow: 0 21.9px 13.5px rgba(0,0,0,0.05), 0 10.1px 10.1px rgba(0,0,0,0.09), 0 2.5px 5px rgba(0,0,0,0.1); }
+  .rko-bezel { position: absolute; left: 3px; top: 3px; width: 134px; height: 374px; border-radius: 18px; overflow: hidden; background: rgba(188,188,188,0.33); }
+  .rko-screen { position: absolute; left: 4px; top: 4px; width: 126px; height: 366px; border: 2px solid #000; border-radius: 16px; overflow: hidden; background: var(--chat-bg); transition: background-color 600ms var(--ease-out); }
+  .rko-header { position: absolute; left: -1px; top: -1px; width: 126px; height: 54px; overflow: hidden; z-index: 1;
+    color: #fff; }
+  .rko-hdbg { position: absolute; inset: 0; opacity: 0; transition: opacity 600ms var(--ease-out); background: linear-gradient(86.68deg, #065e55 15.45%, #043631 70.45%); }
+  .rko-hdbg.is-on { opacity: 1; }
+  .rko-hdbg[data-ch="telegram"] { background: linear-gradient(86.68deg, #2aabee 15.45%, #1b84bd 70.45%); }
+  .rko-hdbg[data-ch="gmail"] { background: linear-gradient(86.68deg, #303134 15.45%, #17181a 70.45%); }
+  .rko-header .rko-clock { position: absolute; left: 15px; top: 6px; font-weight: 600; font-size: 6px; }
+  .rko-island { position: absolute; left: 46px; top: 5px; width: 34px; height: 9px; border-radius: 5px; background: #171717; }
+  .rko-header .rko-icons { position: absolute; left: 91px; top: 7px; width: 22px; height: 6px; }
+  .rko-contact { position: absolute; left: 10px; top: 23px; display: flex; gap: 5px; align-items: center; opacity: 0; transform: translateY(4px); transition: opacity 450ms var(--ease-out), transform 600ms var(--ease-out); }
+  .rko-contact.is-on { opacity: 1; transform: none; }
+  .rko.no-swap * { transition: none !important; }
+  .rko-initials { width: 21px; height: 21px; border-radius: 11px; display: grid; place-items: center; background: rgba(255,255,255,0.22); border: 0.75px solid rgba(255,255,255,0.5); font-weight: 700; font-size: 6.5px; }
+  .rko-contact div:last-child { display: flex; flex-direction: column; gap: 1.5px; white-space: nowrap; }
+  .rko-contact b { font-weight: 600; font-size: 7.5px; }
+  .rko-contact span { font-weight: 400; font-size: 5.2px; color: rgba(255,255,255,0.85); }
+
+  .rko-chatclip { position: absolute; left: -1px; top: 53px; width: 126px; height: 320px; overflow: hidden; }
+  .rko-chat { display: flex; flex-direction: column; gap: 5px; align-items: center; padding: 7px 5px 0; transition: transform 600ms var(--ease-out); }
+  .rko-today { padding: 1.5px 5px; border-radius: 6px; background: #fff; border: 0.5px solid #e5e5e5; font-weight: 500; font-size: 4.8px; color: #737373; }
+  .rko-row { display: flex; align-items: flex-end; width: 100%; }
+  .rko-row.is-out { justify-content: flex-end; }
+  .rko-bubble { display: flex; flex-direction: column; gap: 2px; padding: 4.5px 6px 4px; background: #fff; border: 0.5px solid #e5e5e5;
+    border-radius: 2px 8px 8px 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transform-origin: 0 0; }
+  .rko-row.is-out .rko-bubble { background: var(--out-bg); border-color: var(--out-line); border-radius: 8px 8px 2px 8px; transform-origin: 100% 100%; }
+  .rko-bubble p { width: 84px; font-weight: 400; font-size: 6px; line-height: 8px; color: #262626; }
+  .rko-row.is-out .rko-bubble p { width: 72px; }
+  .rko-meta { display: flex; gap: 2px; align-items: center; justify-content: flex-end; font-size: 4.2px; color: #a3a3a3; }
+  .rko-meta img { width: 8px; height: 5px; }
+  /* Email cards: Gmail replaces chat bubbles with a thread */
+  .rko-mail .rko-bubble, .rko-row.rko-mail.is-out .rko-bubble { width: 100%; gap: 3px; padding: 5px 6px; background: #fff; border-color: #e3e5e8; border-radius: 6px; transform-origin: 50% 0; }
+  .rko-mail .rko-bubble p, .rko-row.rko-mail.is-out .rko-bubble p { width: auto; }
+  .rko-mailhead { display: flex; align-items: center; gap: 3.5px; font-size: 4.4px; color: #80868b; }
+  .rko-mailhead img, .rko-mailhead i { width: 11px; height: 11px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .rko-mailhead i { display: grid; place-items: center; background: #ea4335; color: #fff; font-style: normal; font-weight: 700; font-size: 5.4px; }
+  .rko-mailhead b { flex: 1; font-weight: 600; font-size: 5.6px; color: #202124; }
+  .rko-input { position: absolute; left: 4px; top: 267px; width: 116px; padding: 5px 8px; border-radius: 10px; background: #fff; border: 0.5px solid #e5e5e5; font-size: 5.6px; color: #a3a3a3; }
+
+  .rko-fade { left: 0; top: 315.56px; width: 407px; height: 90px; background: linear-gradient(to bottom, rgba(250,250,250,0), #fafafa 85%); }
+
+  /* Signal pulses that travel along the connector lines */
+  .rko-pulses path { fill: none; stroke: var(--pulse); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 26 300; stroke-dashoffset: 26; filter: drop-shadow(0 0 3px var(--pulse)); }
+
+  /* ---------- Reduced motion: static final state ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .rko *, .rko *::before, .rko *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#1a1d21;padding:16px;box-sizing:border-box">
+
+<!-- ===== Features · 1.4 Omnichannel ===== -->
+<div class="rko" data-rko data-channel="whatsapp" role="img" aria-label="Customers reach one shared WhatsApp number, Telegram account or Gmail inbox, and three team members reply in the same conversation">
+  <div class="rko-stage">
+    <!-- Background circuit -->
+    <div class="rko-abs" style="left:0;top:0;width:407px;height:380px;overflow:hidden">
+      <div class="rko-abs" style="left:-6.5px;top:16.88px;width:420px;height:210px;opacity:0.5"><img src="assets/ring2.png" alt=""></div>
+      <div class="rko-abs" style="left:-76.5px;top:-28.12px;width:560px;height:300px;opacity:0.35"><img src="assets/ring3.png" alt=""></div>
+      <div class="rko-abs" style="left:-10px;top:78px;width:113.615px;height:35.885px"><div class="rko-fill" style="inset:-1.39% -0.44%"><img src="assets/trace0.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:303.38px;top:78px;width:113.62px;height:35.885px"><div class="rko-fill" style="inset:-1.39% -0.44%"><img src="assets/trace1.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:-10px;top:127.88px;width:113.615px;height:0"><div class="rko-fill" style="inset:-0.5px -0.44%"><img src="assets/trace2.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:303.38px;top:127.88px;width:113.62px;height:0"><div class="rko-fill" style="inset:-0.5px -0.44%"><img src="assets/trace3.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:30px;top:150.27px;width:91.615px;height:149.73px"><div class="rko-fill" style="inset:-0.33% -0.55%"><img src="assets/trace4.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:285.38px;top:150.27px;width:91.62px;height:149.73px"><div class="rko-fill" style="inset:-0.33% -0.55%"><img src="assets/trace5.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:-10px;top:250px;width:86px;height:90px"><div class="rko-fill" style="inset:-0.56% -0.58%"><img src="assets/trace6.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:331px;top:250px;width:86px;height:90px"><div class="rko-fill" style="inset:-0.56% -0.58%"><img src="assets/trace7.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:94px;top:150.27px;width:49.615px;height:71.73px"><div class="rko-fill" style="inset:-0.7% -1.01%"><img src="assets/trace8.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:263.38px;top:150.27px;width:49.62px;height:71.73px"><div class="rko-fill" style="inset:-0.7% -1.01%"><img src="assets/trace9.svg" alt=""></div></div>
+      <div class="rko-abs" style="left:36px;top:125.88px;width:4px;height:4px"><img src="assets/joint4.svg" alt=""></div>
+      <div class="rko-abs" style="left:366.5px;top:125.38px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:92px;top:220px;width:4px;height:4px"><img src="assets/joint4.svg" alt=""></div>
+      <div class="rko-abs" style="left:310.5px;top:219.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:27.5px;top:297.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:374.5px;top:297.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:73.5px;top:337.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:328.5px;top:337.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:27.5px;top:247.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+      <div class="rko-abs" style="left:374.5px;top:247.5px;width:5px;height:5px"><img src="assets/joint5.svg" alt=""></div>
+    </div>
+    <div class="rko-abs" data-glow style="left:98.5px;top:31.88px;width:210px;height:180px"><img data-tint src="assets/hub-glow0.svg" alt=""></div>
+    <div class="rko-abs" style="left:38.37px;top:-19.65px;width:330.254px;height:283.075px"><img data-tint src="assets/hub-glow1.svg" alt=""></div>
+    <div class="rko-abs" style="left:62.87px;top:1.35px;width:281.254px;height:241.075px"><img data-tint src="assets/hub-glow2.svg" alt=""></div>
+    <div class="rko-abs" style="left:-120px;top:210px;width:372.724px;height:236.901px"><img src="assets/lower-glow.svg" alt=""></div>
+    <div class="rko-abs" style="left:160px;top:-130px;width:372.724px;height:236.901px"><img src="assets/lower-glow.svg" alt=""></div>
+    <div class="rko-abs" style="inset:0;background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(250,250,250,0) 55%, #fafafa 100%)"></div>
+
+    <!-- Team -->
+    <div class="rko-abs rko-agent" data-agent="ahmad" style="left:22.5px">
+      <div class="rko-av"><div><div><img class="rko-photo" src="assets/avatar-ahmad.jpg" alt=""></div></div><img class="rko-status" src="assets/status.svg" alt=""></div>
+      <div class="rko-agent-text"><p>Ahmad Faizal</p><span class="rko-role is-assignee">Assignee</span></div>
+    </div>
+    <div class="rko-abs rko-agent" data-agent="rajesh" style="left:146.5px">
+      <div class="rko-av"><div><div><img class="rko-photo" src="assets/avatar-rajesh.jpg" alt=""></div></div><img class="rko-status" src="assets/status.svg" alt=""></div>
+      <div class="rko-agent-text"><p>Rajesh Kumar</p><span class="rko-role">Participant</span></div>
+    </div>
+    <div class="rko-abs rko-agent" data-agent="nurul" style="left:270.5px">
+      <div class="rko-av"><div><div><img class="rko-photo" src="assets/avatar-nurul.jpg" alt=""></div></div><img class="rko-status" src="assets/status.svg" alt=""></div>
+      <div class="rko-agent-text"><p>Nurul Huda</p><span class="rko-role">Participant</span></div>
+    </div>
+
+    <div class="rko-abs rko-glass" data-hub>
+      <div class="rko-wa is-on" data-ch="whatsapp">
+        <img src="assets/whatsapp.svg" alt="">
+        <div><b>+012 3456 7890</b><span>One WhatsApp business number</span></div>
+      </div>
+      <div class="rko-wa" data-ch="telegram">
+        <img src="assets/telegram.svg" alt="">
+        <div><b>Acme Sales</b><span>One Telegram business account</span></div>
+      </div>
+      <div class="rko-wa" data-ch="gmail">
+        <img src="assets/gmail.svg" alt="">
+        <div><b>Acme Sales</b><span>One shared Gmail inbox</span></div>
+      </div>
+    </div>
+
+    <div class="rko-abs rko-phone">
+      <div class="rko-bezel">
+        <div class="rko-screen">
+          <div class="rko-header">
+            <div class="rko-hdbg is-on" data-ch="whatsapp"></div>
+            <div class="rko-hdbg" data-ch="telegram"></div>
+            <div class="rko-hdbg" data-ch="gmail"></div>
+            <span class="rko-clock">9:41</span>
+            <div class="rko-island"></div>
+            <img class="rko-icons" src="assets/status-icons.svg" alt="">
+            <div class="rko-contact is-on" data-ch="whatsapp">
+              <div class="rko-initials">AS</div>
+              <div><b>Acme Sales</b><span>+60 12-555 0188</span></div>
+            </div>
+            <div class="rko-contact" data-ch="telegram">
+              <div class="rko-initials">AS</div>
+              <div><b>Acme Sales</b><span>3 agents online</span></div>
+            </div>
+            <div class="rko-contact" data-ch="gmail">
+              <div class="rko-initials">AS</div>
+              <div><b>Quote for 20 users</b><span>Inbox · 4 messages</span></div>
+            </div>
+          </div>
+          <div class="rko-chatclip">
+            <div class="rko-chat" data-chat><div class="rko-today">Today</div></div>
+          </div>
+          <div class="rko-input" data-input>Message</div>
+        </div>
+      </div>
+    </div>
+
+    <img class="rko-abs" style="left:0;top:0;width:407px;height:380px" data-tint src="assets/connectors.svg" alt="">
+    <!-- Same paths as the connectors, drawn on top as travelling pulses -->
+    <svg class="rko-abs rko-pulses" style="left:0;top:0;overflow:visible" width="407" height="380" viewBox="0 0 407 380" aria-hidden="true">
+      <path data-wire="ahmad" pathLength="100" d="M79.5 63.5V71.5C79.5 76.1667 81.8333 78.5 86.5 78.5H196.5C201.167 78.5 203.5 80.8333 203.5 85.5V93.5"/>
+      <path data-wire="rajesh" pathLength="100" d="M203.5 63.5V93.5"/>
+      <path data-wire="nurul" pathLength="100" d="M327.5 63.5V71.5C327.5 76.1667 325.167 78.5 320.5 78.5H210.5C205.833 78.5 203.5 80.8333 203.5 85.5V93.5"/>
+      <path data-wire="phone" pathLength="100" d="M203.5 150.27V163.062"/>
+    </svg>
+
+    <div class="rko-abs rko-fade"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-rko]');
+  if (!root) return;
+  const stage = root.querySelector('.rko-stage');
+  const chat = root.querySelector('[data-chat]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  const EASE_IN_OUT = 'cubic-bezier(0.77, 0, 0.175, 1)';
+  const POP = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+  const DESIGN_W = 407;
+  const CHAT_LIMIT = 128;   // px of chat that stays readable above the bottom fade; older messages scroll up
+
+  new ResizeObserver(([e]) => stage.style.setProperty('--s', e.contentRect.width / DESIGN_W)).observe(root);
+
+  // ---------- Editable content: each channel and its conversation, in order ----------
+  const channels = [
+    {
+      id: 'whatsapp', flash: '25,212,82', accent: '#23b750', input: 'Message',
+      customer: { text: "Hi, I'm Mei Ting from Acme Corp. We're looking for a WhatsApp CRM — could we get a demo?", time: '10:41 AM' },
+      replies: [
+        { agent: 'ahmad',  text: 'Hi Mei Ting! Happy to set up a demo.', time: '10:50 AM' },
+        { agent: 'rajesh', text: 'Sending our pricing deck now.',        time: '10:51 AM' },
+        { agent: 'nurul',  text: 'Booked you in for Thursday, 2 pm.',    time: '10:52 AM' },
+      ],
+    },
+    {
+      id: 'telegram', flash: '42,171,238', accent: '#2aabee', input: 'Message',
+      customer: { text: 'Hello! Saw your Telegram post. Do you deliver to Penang?', time: '2:14 PM' },
+      replies: [
+        { agent: 'ahmad',  text: 'Hi Daniel! Yes, we do.',              time: '2:15 PM' },
+        { agent: 'rajesh', text: 'Delivery is 2–3 working days.',       time: '2:16 PM' },
+        { agent: 'nurul',  text: 'Your order is confirmed. Thank you!', time: '2:18 PM' },
+      ],
+    },
+    {
+      id: 'gmail', email: true, sendAs: 'ahmad', flash: '234,67,53', accent: '#ea4335', input: 'Reply',
+      customer: { from: 'Farah Aziz', text: 'Hi team, could you send a quote for 20 users?', time: '9:02 AM' },
+      replies: [
+        { agent: 'ahmad',  text: 'Hi Farah, thanks for reaching out!', time: '9:10 AM' },
+        { agent: 'rajesh', text: 'Your quote is attached.',            time: '9:24 AM' },
+        { agent: 'nurul',  text: 'Happy to walk you through it.',      time: '9:31 AM' },
+      ],
+    },
+  ];
+  const AGENT_NAMES = { ahmad: 'Ahmad Faizal', rajesh: 'Rajesh Kumar', nurul: 'Nurul Huda' };
+  let current = 0;
+
+  let timers = [], running = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const wire = (k) => root.querySelector(`[data-wire="${k}"]`);
+
+  // A glowing pulse travels along a connector (reverse = toward the agents)
+  function pulse(k, ms, reverse = false) {
+    const from = reverse ? -100 : 26, to = reverse ? 26 : -100;
+    wire(k).animate([{ strokeDashoffset: from }, { strokeDashoffset: to }], { duration: ms, easing: 'linear' });
+  }
+  function hubFlash() {
+    const rgb = channels[current].flash;
+    root.querySelector('[data-hub]').animate(
+      [{ transform: 'none', boxShadow: `0 0 0 0 rgba(${rgb},0)` }, { transform: 'scale(1.05)', boxShadow: `0 0 0 6px rgba(${rgb},0.18), 0 0 24px rgba(${rgb},0.45)`, offset: 0.3 }, { transform: 'none', boxShadow: `0 0 0 0 rgba(${rgb},0)` }],
+      { duration: 700, easing: EASE_OUT }
+    );
+  }
+  function agentFlash(k, ms = 1100) {
+    const accent = channels[current].accent;
+    root.querySelector(`[data-agent="${k}"]`).animate(
+      [{ transform: 'none', borderColor: '#ebebeb' }, { transform: 'translateY(-3px) scale(1.06)', borderColor: accent, offset: 0.25 }, { transform: 'translateY(-3px) scale(1.06)', borderColor: accent, offset: 0.7 }, { transform: 'none', borderColor: '#ebebeb' }],
+      { duration: ms, easing: EASE_IN_OUT }
+    );
+  }
+
+  function bubble({ text, time, from, agent }, out) {
+    const row = document.createElement('div');
+    const { email, sendAs } = channels[current];
+    const sender = sendAs || agent;   // Gmail: everyone replies under the assignee's name
+    row.className = 'rko-row' + (out ? ' is-out' : '') + (email ? ' rko-mail' : '');
+    row.innerHTML = email
+      ? `<div class="rko-bubble"><div class="rko-mailhead">${out ? `<img src="assets/avatar-${sender}.jpg" alt="">` : `<i>${from[0]}</i>`}<b>${out ? AGENT_NAMES[sender] : from}</b><span>${time}</span></div><p></p></div>`
+      : `<div class="rko-bubble"><p></p><div class="rko-meta"><span>${time}</span>${out ? '<img src="assets/read.svg" alt="">' : ''}</div></div>`;
+    row.querySelector('p').textContent = text;
+    chat.appendChild(row);
+    row.firstChild.animate(
+      [{ opacity: 0, transform: 'translateY(8px) scale(0.85)' }, { opacity: 1, transform: 'none' }],
+      { duration: 500, easing: POP, fill: 'backwards' }
+    );
+    const over = row.offsetTop + row.offsetHeight - CHAT_LIMIT;
+    chat.style.transform = over > 0 ? `translateY(${-over}px)` : '';
+  }
+
+  // Flip the hub, header and chat colours over to another channel
+  function setChannel(i, instant = false) {
+    const id = channels[i].id;
+    current = i;
+    if (instant) root.classList.add('no-swap');
+    root.dataset.channel = id;
+    root.querySelectorAll('[data-ch]').forEach((el) => {
+      const on = el.dataset.ch === id;
+      el.classList.toggle('is-past', el.classList.contains('is-on') && !on);
+      el.classList.toggle('is-on', on);
+    });
+    root.querySelector('[data-input]').textContent = channels[i].input;
+    if (instant) { root.offsetHeight; root.classList.remove('no-swap'); }
+  }
+
+  function cycle() {
+    if (!running) return;
+    const { customer, replies } = channels[current];
+    // 1. The customer writes in; the message reaches the whole team through one number
+    later(0, () => bubble(customer, false));
+    later(350, () => pulse('phone', 300, true));
+    later(600, hubFlash);
+    later(700, () => ['ahmad', 'rajesh', 'nurul'].forEach((k) => pulse(k, 550, true)));
+    later(1150, () => ['ahmad', 'rajesh', 'nurul'].forEach((k) => agentFlash(k, 700)));
+    // 2. Each teammate replies from the same number
+    replies.forEach((r, i) => {
+      const t = 2000 + i * 1600;
+      later(t, () => agentFlash(r.agent));
+      later(t + 250, () => pulse(r.agent, 550));
+      later(t + 750, hubFlash);
+      later(t + 800, () => pulse('phone', 300));
+      later(t + 1050, () => bubble(r, true));
+    });
+    // 3. Clear, swap to the next channel and go again
+    const end = 2000 + replies.length * 1600 + 1400;
+    later(end, () => [...chat.querySelectorAll('.rko-row')].forEach((el) => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, easing: EASE_OUT, fill: 'forwards' })));
+    later(end + 450, () => { clearChat(); setChannel((current + 1) % channels.length); });
+    later(end + 1300, cycle);
+  }
+
+  function clearChat() {
+    chat.querySelectorAll('.rko-row').forEach((el) => el.remove());
+    chat.style.transition = 'none'; chat.style.transform = ''; chat.offsetHeight; chat.style.transition = '';
+  }
+
+  function reset() {
+    timers.forEach(clearTimeout); timers = [];
+    root.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    clearChat();
+  }
+
+  // Static final state: whole conversation visible
+  function showAll() {
+    clearChat();
+    setChannel(0, true);
+    const { customer, replies } = channels[0];
+    bubble(customer, false);
+    replies.forEach((r) => bubble(r, true));
+    root.getAnimations({ subtree: true }).forEach((a) => a.finish());
+  }
+
+  function start() {
+    if (running) return;
+    if (reduce.matches) { showAll(); return; }
+    running = true;
+    clearChat();
+    later(300, cycle);
+  }
+  function stop() { running = false; reset(); setChannel(0, true); }
+
+  showAll();
+  new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(root);
+})();
+</script>
+</body>
+</html>
