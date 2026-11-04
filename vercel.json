@@ -1,6 +1,8 @@
 ﻿{
-  "rewrites": [
-    { "source": "/", "destination": "/comp/header-navigation/index.html" },
-    { "source": "/(.*)", "destination": "/comp/header-navigation/" }
+  "redirects": [
+    { "source": "/comp/header-navigation", "destination": "/", "permanent": true },
+    { "source": "/comp/header-navigation/", "destination": "/", "permanent": true },
+    { "source": "/comp/header-navigation/index.html", "destination": "/", "permanent": true },
+    { "source": "/comp/header-navigation/:path*", "destination": "/:path*", "permanent": true }
   ]
 }

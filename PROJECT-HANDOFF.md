@@ -8,7 +8,7 @@
 
 RakanSales is being repositioned and redesigned as one connected **sales operating system**, not as a collection of unrelated CRM features. The website must feel immediately understandable to Malaysian SME owners while remaining credible to sales managers and enterprise buyers.
 
-Work completed so far is primarily strategy, information architecture, homepage copy planning, visual direction, and static HTML review comps. The most current implemented review artifact is `comp/header-navigation/`. It currently combines:
+Work completed so far is primarily strategy, information architecture, homepage copy planning, visual direction, and static HTML review comps. The current implemented review artifact is at the root (`index.html`, `styles.css`, `script.js`). It combines:
 
 - A fixed, responsive header and navigation system.
 - An interactive hero review comp.

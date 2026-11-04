@@ -14,7 +14,7 @@ These instructions apply to every Codex task working anywhere in this repository
 
 - `PRODUCT.md` is the source of truth for audience, product positioning, confirmed capabilities, evidence, brand commitments, constraints, and accessibility expectations.
 - `planning/sitemap.md` and `planning/homepage-content-draft.md` are planning artifacts. They may evolve and do not override `PRODUCT.md` or an explicit user decision.
-- `comp/header-navigation/` is the current homepage review comp and visual baseline. Its `README.md` records pinned decisions for the header and navigation.
+- Root (`index.html`, `styles.css`, `script.js`, `assets/`, `fonts/`) is the current homepage review comp and visual baseline. `comp/header-navigation/index.html` preserves backwards compatibility via an instant redirect to root. Its `README.md` records pinned decisions for the header and navigation.
 - `planning/wireframe/` is an earlier planning artifact. Do not treat it as the latest visual baseline when the current comp covers the same area.
 - `design-qa.md` records design QA state; it is evidence, not a substitute for these instructions.
 - Explicit instructions from the user take precedence. When the user approves or changes a durable project decision, update the appropriate repository document so new chats inherit it.
